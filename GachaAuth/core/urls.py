@@ -5,6 +5,7 @@ user_urls = [
     path('create/', views.createUser),
     path('list/', views.listOfUsers),
     path('<int:id>/', views.userDetails),
+    path('<int:id>/delete', views.deleteUser),
 ]
 
 urlpatterns = [

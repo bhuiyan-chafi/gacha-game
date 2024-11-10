@@ -18,3 +18,16 @@ class UserSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'status', 'updated_at']  # Exclude 'password'
+        read_only_fields = ['updated_at']  # Prevent updating the updated_at field manually
+
+    def update(self, instance, validated_data):
+        # Update fields and save the instance
+        instance.username = validated_data.get('username', instance.username)
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance
