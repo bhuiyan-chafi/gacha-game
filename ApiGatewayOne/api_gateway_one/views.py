@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view
 def authAppTest(request):
     # Proxy to core service
     try:
+        print(f"{settings.AUTH_SERVICE_URL}/test")
         response = requests.get(f"{settings.AUTH_SERVICE_URL}/test")
         return Response(response.json(), status=response.status_code)
     except requests.exceptions.RequestException as e:

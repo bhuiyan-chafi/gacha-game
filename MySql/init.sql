@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS gacha_auth;
+CREATE DATABASE IF NOT EXISTS gacha_user;
+CREATE USER IF NOT EXISTS 'myuser'@'%' IDENTIFIED BY 'mypassword';
+GRANT ALL PRIVILEGES ON gacha_auth.* TO 'myuser'@'%';
+GRANT ALL PRIVILEGES ON gacha_user.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;

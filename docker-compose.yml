@@ -1,0 +1,48 @@
+services:
+    auth_service:
+        build: ./GachaAuth
+        container_name: authservice
+        volumes:
+          - ./GachaAuth:/app
+        depends_on:
+            db_service:
+                condition: service_healthy  # Wait until db_service is healthy
+    user_service:
+        build: ./GachaUser
+        container_name: userservice
+        volumes:
+          - ./GachaUser:/app
+        depends_on:
+            db_service:
+                condition: service_healthy
+    gateway_one:
+        build: ./ApiGatewayOne
+        container_name: gatewayone
+        volumes:
+          - ./ApiGatewayOne:/app
+        depends_on:
+            auth_service:
+                condition: service_started
+            user_service:
+                condition: service_started
+            db_service:
+                condition: service_healthy
+        ports:
+            - 8003:8000
+    db_service:
+        image: mysql:latest
+        container_name: dbservice
+        env_file:
+        - .env  # Pointing to an external .env file for credentials
+        volumes:
+        - gacha_db:/var/lib/mysql
+        - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+        - "3306:3306"
+        healthcheck:
+            test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $DATABASE_USER --password=$DATABASE_PASSWORD || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+volumes:
+  gacha_db:
