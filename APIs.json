@@ -1,0 +1,1369 @@
+{
+	"info": {
+		"_postman_id": "57501def-84d4-4f93-9911-af945ca5f6bc",
+		"name": "Submission_NOV_22",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39569857"
+	},
+	"item": [
+		{
+			"name": "ApiGatewayOne",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_one}}/auth-service/user/login/",
+									"host": [
+										"{{api_gateway_one}}"
+									],
+									"path": [
+										"auth-service",
+										"user",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_one}}/user-service/user/1004/logout/",
+									"host": [
+										"{{api_gateway_one}}"
+									],
+									"path": [
+										"user-service",
+										"user",
+										"1004",
+										"logout",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "auth-service-test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/test/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"test",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user-details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/7/details/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"7",
+								"details",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put-user-details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"hdelamaine6\",\n    \"status\":\"inactive\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/7/details/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"7",
+								"details",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "chafi06_mod",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "inactive",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/6/delete/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"6",
+								"delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate request body and response based on status code\", function () {",
+									"    const responseCode = pm.response.code;",
+									"",
+									"    // Define required properties",
+									"    const requiredProperties = [\"username\", \"password\", \"status\"];",
+									"",
+									"    if (responseCode === 201) {",
+									"        // Successful response, validate raw JSON in the request",
+									"        const requestBody = JSON.parse(pm.request.body.raw);",
+									"",
+									"        // Check if all required properties are in the request",
+									"        requiredProperties.forEach(function (property) {",
+									"            pm.expect(requestBody).to.have.property(property, `Missing property: ${property}`);",
+									"        });",
+									"",
+									"        // Validate response for success",
+									"        const responseJson = pm.response.json();",
+									"        pm.test(\"Response contains success detail message\", function () {",
+									"            pm.expect(responseJson).to.have.property(\"detail\", \"User has been created successfully.\");",
+									"        });",
+									"    } else if (responseCode === 400) {",
+									"        // Handle error response, e.g., missing fields or validation errors",
+									"        const responseJson = pm.response.json();",
+									"",
+									"        requiredProperties.forEach(function (property) {",
+									"            pm.test(`Error response indicates issues with field: ${property}`, function () {",
+									"                if (responseJson[property]) {",
+									"                    pm.expect(responseJson[property]).to.be.an(\"array\");",
+									"                    pm.expect(responseJson[property][0]).to.match(/This field is required|must be unique|invalid/i);",
+									"                }",
+									"            });",
+									"        });",
+									"    } else {",
+									"        pm.test(\"Unexpected response code\", function () {",
+									"            pm.expect(responseCode).to.be.oneOf([201, 400], \"Response code is not as expected\");",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"Chafi002\",\n    \"password\":\"chafi001password\",\n    \"status\":\"inactive\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/create/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_gateway_one}}/auth-service/list/",
+							"host": [
+								"{{api_gateway_one}}"
+							],
+							"path": [
+								"auth-service",
+								"list",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ApiGateWayTwo",
+			"item": [
+				{
+					"name": "Players",
+					"item": [
+						{
+							"name": "create-player",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_id",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Player",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Three",
+											"type": "text"
+										},
+										{
+											"key": "email_address",
+											"value": "playerthree@outlook.com",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "3533299793",
+											"type": "text"
+										},
+										{
+											"key": "bank_details",
+											"value": "IT1234567893",
+											"type": "text"
+										},
+										{
+											"key": "current_balance",
+											"value": "50003",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/player/create/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"player",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-details",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_id",
+											"value": "8",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "ASM CHAFIULLAH",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "BHUIYAN",
+											"type": "text"
+										},
+										{
+											"key": "email_address",
+											"value": "chafiullah@outlook.com",
+											"type": "text"
+										},
+										{
+											"key": "bank_details",
+											"value": "IT12345678900",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "35332997900",
+											"type": "text"
+										},
+										{
+											"key": "current_balance",
+											"value": "2000005",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/player/3/details/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"player",
+										"3",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-player",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/player/90/delete/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"player",
+										"90",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/player/list/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"player",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "create-admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_id",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Admin",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "One",
+											"type": "text"
+										},
+										{
+											"key": "email_address",
+											"value": "admin@test.com",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "3533299790",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/admin/create/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"admin",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin-details",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "ASM CHAFIULLAH",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "BHUIYAN",
+											"type": "text"
+										},
+										{
+											"key": "email_address",
+											"value": "chafiullah@outlook.com",
+											"type": "text"
+										},
+										{
+											"key": "bank_details",
+											"value": "IT1234567890",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "3533299790",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/admin/1/details/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"admin",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-admin",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/admin/10/delete/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"admin",
+										"10",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin-list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/admin/list/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"admin",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GachaService",
+					"item": [
+						{
+							"name": "gacha-list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/gacha/list/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-gacha",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Ahri",
+											"type": "text"
+										},
+										{
+											"key": "rarity",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "inventory",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/gacha/create/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "gacha-details",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Ahri",
+											"type": "text"
+										},
+										{
+											"key": "rarity",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "inventory",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "20",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "inactive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/gacha/28/details/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"28",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-gacha",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/gacha/1/delete/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"1",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SystemVariableService",
+					"item": [
+						{
+							"name": "list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_two}}/system-variables/list/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"system-variables",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "platform_name",
+											"type": "text"
+										},
+										{
+											"key": "value",
+											"value": "Gacha Game",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_two}}/system-variables/create/",
+									"host": [
+										"{{api_gateway_two}}"
+									],
+									"path": [
+										"system-variables",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-details",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "supported_currency",
+											"type": "text"
+										},
+										{
+											"key": "value",
+											"value": "rune",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{system_variable_service}}/1/details/",
+									"host": [
+										"{{system_variable_service}}"
+									],
+									"path": [
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-details",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "supported_currency",
+											"type": "text"
+										},
+										{
+											"key": "value",
+											"value": "rune",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{system_variable_service}}/1/details/",
+									"host": [
+										"{{system_variable_service}}"
+									],
+									"path": [
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ApiGateWayThree",
+			"item": [
+				{
+					"name": "PlayService",
+					"item": [
+						{
+							"name": "player-gacha-collection",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/play-service/player/3/collection/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"3",
+										"collection",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "roll-to-win",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/play-service/roll-to-win/?player_id=5",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"play-service",
+										"roll-to-win",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "direct-purchase",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/play-service/direct-purchase/?player_id=3&gacha_id=5",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"play-service",
+										"direct-purchase",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "3"
+										},
+										{
+											"key": "gacha_id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-single-gacha-details Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/play-service/player/collection/2/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"collection",
+										"2",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AuctionService",
+					"item": [
+						{
+							"name": "Gachas",
+							"item": [
+								{
+									"name": "Bids",
+									"item": [
+										{
+											"name": "bid for a gacha",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "price",
+															"value": "110",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{api_gateway_three}}/auction-service/gachas/3/player/5/bid/",
+													"host": [
+														"{{api_gateway_three}}"
+													],
+													"path": [
+														"auction-service",
+														"gachas",
+														"3",
+														"player",
+														"5",
+														"bid",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "list of bids",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{api_gateway_three}}/auction-service/gachas/3/bids/",
+													"host": [
+														"{{api_gateway_three}}"
+													],
+													"path": [
+														"auction-service",
+														"gachas",
+														"3",
+														"bids",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "winner",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{api_gateway_three}}/auction-service/gachas/3/bids/winner/",
+													"host": [
+														"{{api_gateway_three}}"
+													],
+													"path": [
+														"auction-service",
+														"gachas",
+														"3",
+														"bids",
+														"winner",
+														""
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Place gacha for auction",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "auction_id",
+													"value": "2",
+													"type": "text"
+												},
+												{
+													"key": "collection_id",
+													"value": "20",
+													"type": "text"
+												},
+												{
+													"key": "price",
+													"value": "100",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "active",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{api_gateway_three}}/auction-service/gachas/place/",
+											"host": [
+												"{{api_gateway_three}}"
+											],
+											"path": [
+												"auction-service",
+												"gachas",
+												"place",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Auction Gachas",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api_gateway_three}}/auction-service/gachas/2/list/",
+											"host": [
+												"{{api_gateway_three}}"
+											],
+											"path": [
+												"auction-service",
+												"gachas",
+												"2",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auction gacha details",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{api_gateway_three}}/auction-service/gachas/3/details/",
+											"host": [
+												"{{api_gateway_three}}"
+											],
+											"path": [
+												"auction-service",
+												"gachas",
+												"3",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "create-auction",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Auction 3",
+											"type": "text"
+										},
+										{
+											"key": "start_date",
+											"value": "2024-11-11 00:00:00",
+											"type": "text"
+										},
+										{
+											"key": "end_date",
+											"value": "2024-11-11 00:00:00",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "inactive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_three}}/auction-service/auction/create/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list-auction",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/auction-service/auction/list/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-details",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Auction 0",
+											"type": "text"
+										},
+										{
+											"key": "start_date",
+											"value": "2024-11-11 00:00:00",
+											"type": "text"
+										},
+										{
+											"key": "end_date",
+											"value": "2024-11-11 00:00:00",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "inactive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_three}}/auction-service/auction/2/details/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TransactionService",
+					"item": [
+						{
+							"name": "player transactions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_three}}/transaction-service/player/3/all/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"3",
+										"all",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "purchase game currency",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "cash_amount",
+											"value": "20",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_three}}/transaction-service/player/4/purchase/game-currency/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"4",
+										"purchase",
+										"game-currency",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction winner",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "auction_gacha_id",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_three}}/transaction-service/auction/winner/declare/",
+									"host": [
+										"{{api_gateway_three}}"
+									],
+									"path": [
+										"transaction-service",
+										"auction",
+										"winner",
+										"declare",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
