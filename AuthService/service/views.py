@@ -86,3 +86,49 @@ def deleteUser(request, id):
             return Response(response.json(), status=response.status_code)
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Core service unavailable", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+# =================================== Authentication Functions ========================================
+
+
+@api_view(['POST'])
+def loginUser(request):
+    """
+    Proxy to login a user through the core service.
+    """
+    # Define the core service login endpoint
+    login_url = f"{settings.DATABASE_ONE}/user/login/"
+
+    try:
+        # Forward the login request to the core service
+        response = requests.post(login_url, json=request.data)
+
+        # Return the response from the core service
+        return Response(response.json(), status=response.status_code)
+    except requests.exceptions.RequestException as e:
+        # Handle connection errors to the core service
+        return Response({
+            "detail": "Failed to connect to the core service.",
+            "error": str(e)
+        }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+
+@api_view(['POST'])
+def logoutUser(request, id):
+    """
+    Proxy to logout a user through the core service.
+    """
+    # Define the core service logout endpoint
+    logout_url = f"{settings.DATABASE_ONE}/user/{id}/logout/"
+
+    try:
+        # Forward the logout request to the core service
+        response = requests.post(logout_url)
+
+        # Return the response from the core service
+        return Response(response.json(), status=response.status_code)
+    except requests.exceptions.RequestException as e:
+        # Handle connection errors to the core service
+        return Response({
+            "detail": "Failed to connect to the core service.",
+            "error": str(e)
+        }, status=status.HTTP_503_SERVICE_UNAVAILABLE)

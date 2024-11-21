@@ -1,6 +1,12 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9.20-slim
 
+# Install necessary system dependencies including curl
+RUN apt-get update && \
+    apt-get install -y curl iputils-ping && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /app
 

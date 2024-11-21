@@ -65,7 +65,7 @@ def deletePlayer(request, id):
     """
     Delete a specific player through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/")
+    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/") 
 
 
 # ======================== Admin Endpoints ========================

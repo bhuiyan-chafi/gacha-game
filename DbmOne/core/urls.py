@@ -6,6 +6,8 @@ user_urls = [
     path('list/', views.listOfUsers, name='user-list'),
     path('<int:id>/details/', views.userDetails, name='user-details'),
     path('<int:id>/delete/', views.deleteUser, name='user-delete'),
+    path('login/', views.loginUser, name='user-login'),
+    path('<int:id>/logout/', views.logoutUser, name='user-logout'),
 ]
 app_name = 'core'  # Add this line
 urlpatterns = [

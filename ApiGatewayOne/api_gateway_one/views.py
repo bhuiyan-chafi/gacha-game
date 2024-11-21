@@ -32,9 +32,9 @@ def forward_request(method, path, data=None):
 
 
 @api_view(['GET'])
-def authServiceTest(request):
+def gateWayOneTest(request):
     """Test endpoint for the AuthService."""
-    return forward_request("GET", "/test/")
+    return Response({'detail': 'Gateway one has been accessed'}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -61,3 +61,17 @@ def deleteUser(request, id):
     """Delete a user via AuthService."""
     path = f"/{id}/delete/"
     return forward_request("DELETE", path)
+# ======================== Authentication Functions =========================
+
+
+@api_view(['POST'])
+def loginUser(request):
+    """Login a user via AuthService."""
+    return forward_request("POST", "/user/login/", request.data)
+
+
+@api_view(['POST'])
+def logoutUser(request, id):
+    """Logout a user via AuthService."""
+    path = f"/user/{id}/logout/"
+    return forward_request("POST", path)

@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['*']
 # loading the environment variables
 load_dotenv()
 # service urls
-AUTH_SERVICE = os.getenv("AUTH_SERVICE")
+API_GATEWAY_ONE = os.getenv("API_GATEWAY_ONE")
 
 # Application definition
 
