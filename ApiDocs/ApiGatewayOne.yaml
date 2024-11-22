@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  title: Auth Service API
+  version: '1'
+  description: API for managing user authentication.
+paths:
+  /api/v1/auth-service/user/login/:
+    post:
+      summary: User login
+      operationId: userLogin
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "asmchafi"
+                password:
+                  type: string
+                  example: "password1234"
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  message:
+                    type: string
+                    example: "Login successful"
+  /api/v1/auth-service/user/{id}/logout/:
+    post:
+      summary: Log out a specific user
+      operationId: logoutUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logout successful."
+  /api/v1/auth-service/create/:
+    post:
+      summary: Create a new user
+      description: Creates a new user with the provided username, password, and status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - status
+              properties:
+                username:
+                  type: string
+                  example: Chafi002
+                password:
+                  type: string
+                  format: password
+                  example: chafi001password
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
+                  example: inactive
+      responses:
+        '201':
+          description: User successfully created.
+        '400':
+          description: Bad Request. Possible reasons
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input: username is duplicated, or status is invalid."
+  /api/v1/auth-service/list/:
+    get:
+      summary: Get a list of authentication data
+      operationId: getAuthServiceList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "chafi"
+                    email:
+                      type: string
+                      example: "chafi@example.com"
+  /api/v1/auth-service/{id}/details/:
+    get:
+      summary: Get details for a specific user
+      operationId: getAuthServiceDetailsGET
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 7
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 7
+                  username:
+                    type: string
+                    example: "chafi"
+                  email:
+                    type: string
+                    example: "johchafindoe@example.com"
+    put:
+      summary: Update details for a specific user
+      operationId: updateAuthServiceDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: Updated details for the user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The username of the user
+                  example: "chafi001"
+                status:
+                  type: string
+                  description: The status of the user
+                  enum: [active, inactive]
+                  example: "inactive"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The ID of the updated user
+                    example: 1
+                  username:
+                    type: string
+                    example: "chafi001"
+                  status:
+                    type: string
+                    example: "inactive"
+                  message:
+                    type: string
+                    example: "User details updated successfully."
+  /api/v1/auth-service/{id}/delete/:
+    delete:
+      summary: Delete a specific user and update their status
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to be deleted
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully deleted and status updated."               
+servers:
+    url: http://localhost:8001

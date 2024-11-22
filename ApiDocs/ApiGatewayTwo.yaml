@@ -1,0 +1,759 @@
+openapi: 3.0.0
+info:
+  title: Player Management API
+  version: '1'
+  description: API for creating players, admins, gachas
+paths:
+  /api/v2/player/create/:
+    post:
+      summary: Create a new player
+      operationId: createPlayer
+      requestBody:
+        description: Player details for creating a new profile
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: The unique user ID
+                  example: 2
+                first_name:
+                  type: string
+                  description: The first name of the player
+                  example: "Chafi"
+                last_name:
+                  type: string
+                  description: The last name of the player
+                  example: "001"
+                email_address:
+                  type: string
+                  format: email
+                  description: The player's email address
+                  example: "player2@outlook.com"
+                phone_number:
+                  type: string
+                  description: The player's phone number
+                  example: "3533299792"
+                bank_details:
+                  type: string
+                  description: The player's bank details
+                  example: "IT1234567893"
+                current_balance:
+                  type: number
+                  format: float
+                  description: The current balance of the player
+                  example: 1000
+      responses:
+        '201':
+          description: Player created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  player_id:
+                    type: string
+                    description: The ID of the newly created player
+                    example: "5"
+                  message:
+                    type: string
+                    example: "Player created successfully."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Details about the error
+                    example: "Invalid input. Missing required fields."
+  /api/v2/player/{id}/details/:
+    put:
+      summary: Update details of a specific player
+      operationId: updatePlayerDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the player to be updated
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        description: The updated player details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: User ID of the player
+                  example: 5
+                first_name:
+                  type: string
+                  description: First name of the player
+                  example: "Chafi"
+                last_name:
+                  type: string
+                  description: Last name of the player
+                  example: "001"
+                email_address:
+                  type: string
+                  format: email
+                  description: Email address of the player
+                  example: "player1@outlook.com"
+                phone_number:
+                  type: string
+                  description: Phone number of the player
+                  example: "3533299793"
+                bank_details:
+                  type: string
+                  description: Bank account details of the player
+                  example: "IT1234567893"
+                current_balance:
+                  type: number
+                  format: float
+                  description: Current balance of the player
+                  example: 1500.0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Player details updated successfully."
+    get:
+      summary: Get details of a specific player
+      operationId: getPlayerDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the player
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: "John Doe"
+                  level:
+                    type: integer
+                    example: 10
+                  score:
+                    type: integer
+                    example: 1500
+  /api/v2/player/list/:
+    get:
+      summary: Retrieve a list of players
+      operationId: getPlayerList
+      responses:
+        '200':
+          description: Successful retrieval of player list
+          content:
+            application/json:
+              schema:
+                type: array
+  /api/v2/player/{id}/delete/:
+    delete:
+      summary: Delete a specific player
+      operationId: deletePlayer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the player to be deleted
+          schema:
+            type: integer
+            example: 90
+      responses:
+        '204':
+          description: No Content - Player successfully deleted
+  /api/v2/admin/create/:
+    post:
+      summary: Create a new admin
+      operationId: createAdmin
+      requestBody:
+        description: Admin creation details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: Unique ID of the user
+                  example: 3
+                first_name:
+                  type: string
+                  description: First name of the admin
+                  example: "Admin"
+                last_name:
+                  type: string
+                  description: Last name of the admin
+                  example: "One"
+                email_address:
+                  type: string
+                  format: email
+                  description: Email address of the admin
+                  example: "admin@test.com"
+                phone_number:
+                  type: string
+                  description: Phone number of the admin
+                  example: "3533299790"
+      responses:
+        '201':
+          description: Admin created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  admin_id:
+                    type: integer
+                    description: ID of the newly created admin
+                    example: 42
+                  message:
+                    type: string
+                    example: "Admin created successfully."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating why the request failed
+                    example: "Invalid input data."
+  /api/v2/admin/{id}/details/:
+    get:
+      summary: Get details for a specific admin
+      operationId: getAdminDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the admin
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                 properties:
+                user_id:
+                  type: integer
+                  description: Unique ID of the user
+                  example: 3
+                first_name:
+                  type: string
+                  description: First name of the admin
+                  example: "Admin"
+                last_name:
+                  type: string
+                  description: Last name of the admin
+                  example: "One"
+                email_address:
+                  type: string
+                  format: email
+                  description: Email address of the admin
+                  example: "admin@test.com"
+                phone_number:
+                  type: string
+                  description: Phone number of the admin
+                  example: "3533299790"
+    put:
+      summary: Update admin details
+      operationId: updateAdminDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the admin to update
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: Admin details to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Admin ID
+                  example: 1
+                first_name:
+                  type: string
+                  description: First name of the admin
+                  example: "Admin"
+                last_name:
+                  type: string
+                  description: Last name of the admin
+                  example: "One"
+                email_address:
+                  type: string
+                  description: Email address of the admin
+                  example: "admin@test.com"
+                phone_number:
+                  type: string
+                  description: Phone number of the admin
+                  example: "3533299790"
+                user_id:
+                  type: integer
+                  description: Associated user ID for the admin
+                  example: 3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Admin details updated successfully."
+  /api/v2/admin/list/:
+    get:
+      summary: Retrieve a list of admin users
+      operationId: getAdminList
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                  user_id:
+                    type: integer
+                    description: Unique ID of the user
+                    example: 3
+                  first_name:
+                    type: string
+                    description: First name of the admin
+                    example: "Admin"
+                  last_name:
+                    type: string
+                    description: Last name of the admin
+                    example: "One"
+                  email_address:
+                    type: string
+                    format: email
+                    description: Email address of the admin
+                    example: "admin@test.com"
+                  phone_number:
+                    type: string
+                    description: Phone number of the admin
+                    example: "3533299790"
+  /api/v2/admin/{id}/delete/:
+    delete:
+      summary: Delete a specific admin user
+      operationId: deleteAdminUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the admin user to delete
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '204':
+          description: No Content
+  /api/v2/gacha/list/:
+    get:
+      summary: Retrieve the list of gacha items
+      operationId: getGachaList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gachas:
+                    type: array
+                    description: List of gachas
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique ID of the gacha
+                          example: 1
+                        name:
+                          type: string
+                          description: The name of the gacha
+                          example: "Ahri"
+                        rarity:
+                          type: integer
+                          description: The rarity of the gacha
+                          example: 10
+                        inventory:
+                          type: integer
+                          description: The unique ID of the gacha
+                          example: 10
+                        price:
+                          type: number
+                          format: float
+                          description: The price of the gacha
+                          example: 10.5
+  /api/v2/gacha/create/:
+    post:
+      summary: Create a new gacha
+      operationId: createGacha
+      requestBody:
+        description: Details of the gacha to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the gacha
+                  example: "Ahri"
+                rarity:
+                  type: integer
+                  description: The rarity level of the gacha
+                  example: 5
+                inventory:
+                  type: integer
+                  description: The number of gacha items available
+                  example: 100
+                price:
+                  type: number
+                  format: float
+                  description: The price of the gacha item
+                  example: 15.0
+                status:
+                  type: string
+                  description: The status of the gacha (e.g., active, inactive)
+                  example: "active"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gachaId:
+                    type: integer
+                    description: The ID of the newly created gacha
+                    example: 1
+                  message:
+                    type: string
+                    example: "Gacha created successfully."
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Invalid input data"
+  /api/v2/gacha/{id}/details/:
+    get:
+      summary: Get details for a specific gacha item
+      operationId: getGachaDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the gacha item
+          schema:
+            type: integer
+            example: 28
+      responses:
+        '200':
+          description: Successful response with gacha item details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The unique ID of the gacha
+                    example: 1
+                  name:
+                    type: string
+                    description: The name of the gacha
+                    example: "Ahri"
+                  rarity:
+                    type: integer
+                    description: The rarity of the gacha
+                    example: 10
+                  inventory:
+                    type: integer
+                    description: The unique ID of the gacha
+                    example: 10
+                  price:
+                    type: number
+                    format: float
+                    description: The price of the gacha
+                    example: 10.5
+    put:
+      summary: Update details of a specific gacha
+      operationId: updateGachaDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the gacha to update
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: The updated details of the gacha
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the gacha
+                  example: "Ahri"
+                rarity:
+                  type: integer
+                  description: The rarity level of the gacha
+                  example: 5
+                inventory:
+                  type: integer
+                  description: The inventory count of the gacha
+                  example: 100
+                price:
+                  type: number
+                  format: float
+                  description: The price of the gacha
+                  example: 15
+                status:
+                  type: string
+                  description: The status of the gacha (active or inactive)
+                  example: "inactive"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Gacha details updated successfully."
+  /api/v2/gacha/{id}/delete/:
+    delete:
+      summary: Delete a specific Gacha item
+      operationId: deleteGachaItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the Gacha item to delete
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: No Content
+  /api/v2/system-variables/list/:
+    get:
+      summary: Get a list of system variables
+      operationId: getSystemVariablesList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "game_currency"
+                    value:
+                      type: string
+                      example: "100"
+  /api/v2/system-variables/create/:
+    post:
+      summary: Create a new system variable
+      operationId: createSystemVariable
+      requestBody:
+        description: Payload for creating a system variable
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the system variable
+                  example: "currency_name"
+                value:
+                  type: string
+                  description: The value of the system variable
+                  example: "Runes"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The ID of the created system variable
+                    example: 1
+                  name:
+                    type: string
+                    description: The name of the created system variable
+                    example: "currency_name"
+                  value:
+                    type: string
+                    description: The value of the created system variable
+                    example: "Runes"
+                  message:
+                    type: string
+                    example: "System variable created successfully."
+  /api/v2/{id}/details/delete/:
+    delete:
+      summary: Delete details for a specific ID
+      operationId: deleteDetailsById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the details to delete
+          schema:
+            type: integer
+            example: 1
+      responses:
+         '204':
+          description: Deleted
+  /api/v2/{id}/details/:
+    get:
+      summary: Get details for a specific resource
+      operationId: getDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the resource
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: "game_currency"
+                  value:
+                    type: string
+                    example: "runes"
+    put:
+      summary: Update system variable details
+      operationId: updateSystemVariableDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the system variable
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: System variable details to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the system variable
+                  example: "currency_name"
+                value:
+                  type: string
+                  description: The value of the system variable
+                  example: "Runes"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "System variable updated successfully."
+                  updatedVariable:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "currency_name"
+                      value:
+                        type: string
+                        example: "Runes"
+
+servers:
+    url: http://localhost:8002
