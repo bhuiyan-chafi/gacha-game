@@ -1,0 +1,931 @@
+openapi: 3.0.0
+info:
+  title: Play Service API
+  description: API for managing player collections in the play service
+  version: "1"
+servers:
+- url: https://virtserver.swaggerhub.com/JXXX/api-gateway-3/1
+  description: SwaggerHub API Auto Mocking
+paths:
+  /api/v3/play-service/player/{playerId}/collection/:
+    get:
+      summary: Retrieve the collection for a specific player
+      operationId: getPlayerCollection
+      parameters:
+      - name: playerId
+        in: path
+        description: The ID of the player
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      responses:
+        "200":
+          description: Successfully retrieved the collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+  /api/v3/play-service/roll-to-win/:
+    post:
+      summary: Roll to win for a specific player
+      operationId: rollToWin
+      parameters:
+      - name: player_id
+        in: query
+        description: The ID of the player
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 5
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+  /api/v3/play-service/direct-purchase/:
+    post:
+      summary: Direct purchase for a gacha game
+      operationId: directPurchase
+      parameters:
+      - name: player_id
+        in: query
+        description: The ID of the player making the purchase
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 3
+      - name: gacha_id
+        in: query
+        description: The ID of the gacha being purchased
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 5
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+  /api/v3/play-service/player/collection/{id}/:
+    get:
+      summary: Get the collection details for a specific player
+      operationId: getsinglePlayerCollection
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the collection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+  /api/v3/auction-service/auction/create/:
+    post:
+      summary: Create a new auction
+      operationId: createAuction
+      requestBody:
+        description: Parameters required to create an auction
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the auction
+                start_date:
+                  type: string
+                  format: date-time
+                  description: Start date and time of the auction in ISO 8601 format
+                end_date:
+                  type: string
+                  format: date-time
+                  description: End date and time of the auction in ISO 8601 format
+                status:
+                  type: string
+                  description: Status of the auction
+                  enum: [active, inactive]
+              required:
+                - name
+                - start_date
+                - end_date
+                - status
+      responses:
+        '201':
+          description: Auction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Auction created successfully"
+                  auction_id:
+                    type: string
+                    example: "abc123"
+  /api/v3/auction-service/auction/list/:
+    get:
+      summary: Retrieve the list of auctions
+      operationId: getAuctionList
+      responses:
+        "200":
+          description: List of auctions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_3'
+  /api/v3/auction-service/auction/{id}/details/:
+    get:
+      summary: Get details for a specific auction
+      operationId: getAuctionDetails
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the auction
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            example: 2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+    put:
+      summary: Update auction details
+      operationId: updateAuctionDetails
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the auction to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        description: Updated details for the auction
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: The ID of the auction
+                  example: 2
+                name:
+                  type: string
+                  description: The name of the auction
+                  example: "Test Auction 4"
+                start_date:
+                  type: string
+                  format: date-time
+                  description: The start date and time of the auction in ISO 8601 format
+                  example: "2024-11-11T00:00:00Z"
+                end_date:
+                  type: string
+                  format: date-time
+                  description: The end date and time of the auction in ISO 8601 format
+                  example: "2024-11-11T00:00:00Z"
+                status:
+                  type: string
+                  description: The status of the auction
+                  enum: [active, inactive]
+                  example: "inactive"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+  /api/v3/auction-service/auction/{id}/details/delete/:
+    delete:
+      summary: Delete details for a specific auction
+      operationId: deleteAuctionDetails
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the auction to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 2
+      responses:
+        "204":
+          description: Successfully deleted auction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_204'
+  /api/v3/auction-service/gachas/place/:
+    post:
+      summary: Place a gacha in the auction service
+      operationId: placeGachaInAuction
+      requestBody:
+        description: Details of the gacha to be placed in the auction
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auction_id:
+                  type: integer
+                  description: The ID of the auction
+                  example: 2
+                collection_id:
+                  type: integer
+                  description: The ID of the gacha collection
+                  example: 20
+                price:
+                  type: number
+                  format: float
+                  description: The price of the gacha
+                  example: 100.0
+                status:
+                  type: string
+                  description: The status of the gacha in the auction
+                  enum: [active, inactive]
+                  example: "active"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Detail message confirming the action
+                    example: "Gacha successfully placed for auction."
+                  auction_gacha:
+                    type: object
+                    description: Details of the placed gacha in the auction
+                    properties:
+                      id:
+                        type: integer
+                        description: The ID of the auction gacha entry
+                        example: 1
+                      auction_id:
+                        type: integer
+                        description: The ID of the associated auction
+                        example: 2
+                      collection_id:
+                        type: integer
+                        description: The ID of the gacha collection
+                        example: 20
+                      price:
+                        type: number
+                        format: float
+                        description: The price of the gacha in the auction
+                        example: 100.0
+                      status:
+                        type: string
+                        description: The status of the gacha in the auction
+                        enum: [active, inactive]
+                        example: "active"
+  /api/v3/auction-service/gachas/{id}/list/:
+    get:
+      summary: List auction details for a specific gacha
+      operationId: listAuctionDetailsForGacha
+      parameters:
+      - name: id
+        in: path
+        description: The unique ID of the gacha
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+  /api/v3/auction-service/gachas/{gachaId}/details/:
+    get:
+      summary: Get details of a specific gacha
+      operationId: getGachaDetails
+      parameters:
+      - name: gachaId
+        in: path
+        description: The ID of the gacha
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+  /api/v3/auction-service/gachas/{gachaId}/player/{playerId}/bid/:
+    post:
+      summary: Place a bid on a gacha in the auction
+      operationId: placeBidOnGacha
+      parameters:
+      - name: gachaId
+        in: path
+        description: The ID of the gacha being bid on
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      - name: playerId
+        in: path
+        description: The ID of the player placing the bid
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 5
+      requestBody:
+        description: Bid details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/playerId_bid_body'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_3'
+  /api/v3/auction-service/gachas/{id}/bids/:
+    get:
+      summary: Retrieve bids for a specific gacha
+      operationId: getBidsForGacha
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the gacha to retrieve bids for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+  /api/v3/auction-service/gachas/{gachaId}/bids/winner/:
+    get:
+      summary: Get the winner of the bids for a specific gacha
+      operationId: getGachaBidWinner
+      parameters:
+      - name: gachaId
+        in: path
+        description: The ID of the gacha
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+  /api/v3/transaction-service/player/{playerId}/all/:
+    get:
+      summary: Retrieve all transactions for a specific player
+      operationId: getAllPlayerTransactions
+      parameters:
+      - name: playerId
+        in: path
+        description: The ID of the player whose transactions are to be retrieved
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 3
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_10'
+  /api/v3/transaction-service/player/{playerId}/purchase/game-currency/post:
+    post:
+      summary: Purchase game currency for a player
+      operationId: purchaseGameCurrency
+      parameters:
+      - name: playerId
+        in: path
+        description: The unique ID of the player
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 4
+      requestBody:
+        description: Details of the currency purchase
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/gamecurrency_post_body'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_4'
+  /api/v3/transaction-service/auction/winner/declare/:
+    post:
+      summary: Declare the winner of an auction
+      operationId: declareAuctionWinner
+      requestBody:
+        description: Details of the auction and the declared winner
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/winner_declare_body'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_5'
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        playerId:
+          type: integer
+          example: 3
+        collection:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: integer
+                example: 101
+              itemName:
+                type: string
+                example: Rare Sword
+              itemType:
+                type: string
+                example: Weapon
+              rarity:
+                type: string
+                example: Legendary
+    inline_response_200_1:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Roll successful!
+        player_id:
+          type: integer
+          example: 5
+        reward:
+          type: string
+          example: 100 coins
+    inline_response_201:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Purchase successfully completed
+        player_id:
+          type: integer
+          example: 3
+        gacha_id:
+          type: integer
+          example: 5
+        transaction_id:
+          type: string
+          example: txn_123456789
+    inline_response_200_2:
+      type: object
+      properties:
+        collectionId:
+          type: integer
+          example: 2
+        playerName:
+          type: string
+          example: JohnDoe
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: integer
+                example: 101
+              itemName:
+                type: string
+                example: Legendary Sword
+              itemRarity:
+                type: string
+                example: Epic
+    auction_create_body:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the auction
+          example: Vintage Car Auction
+        description:
+          type: string
+          description: Details about the auction
+          example: Auction for vintage cars from the 1960s.
+        startingBid:
+          type: number
+          description: The starting bid for the auction
+          format: float
+          example: 1000
+        startDate:
+          type: string
+          description: The start date and time of the auction
+          format: date-time
+          example: 2024-11-25T10:00:00Z
+        endDate:
+          type: string
+          description: The end date and time of the auction
+          format: date-time
+          example: 2024-12-01T18:00:00Z
+    inline_response_201_1:
+      type: object
+      properties:
+        auctionId:
+          type: integer
+          description: The ID of the created auction
+          example: 123
+        message:
+          type: string
+          example: Auction created successfully
+    inline_response_200_3:
+      type: object
+      properties:
+        auctionId:
+          type: integer
+          example: 101
+        title:
+          type: string
+          example: Vintage Car Auction
+        startDate:
+          type: string
+          format: date
+          example: 2024-11-21
+        endDate:
+          type: string
+          format: date
+          example: 2024-11-28
+        status:
+          type: string
+          example: open
+    inline_response_200_4:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        title:
+          type: string
+          example: Antique Vase Auction
+        description:
+          type: string
+          example: An auction for a rare antique vase.
+        startingPrice:
+          type: number
+          format: float
+          example: 100
+        currentBid:
+          type: number
+          format: float
+          example: 150
+        status:
+          type: string
+          example: Open
+    id_details_body:
+      type: object
+      properties:
+        startingBid:
+          type: number
+          description: The new starting bid amount
+          format: float
+          example: 150.75
+        auctionDuration:
+          type: integer
+          description: The new duration of the auction in hours
+          example: 48
+        status:
+          type: string
+          description: The new status of the auction
+          example: active
+          enum:
+          - active
+          - closed
+          - canceled
+    inline_response_200_5:
+      type: object
+      properties:
+        auctionId:
+          type: integer
+          description: The ID of the updated auction
+          example: 2
+        message:
+          type: string
+          example: Auction details updated successfully.
+    inline_response_204:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Auction details successfully deleted
+    gachas_place_body:
+      type: object
+      properties:
+        gachaId:
+          type: integer
+          description: The unique ID of the gacha
+          example: 123
+        userId:
+          type: integer
+          description: The unique ID of the user placing the gacha
+          example: 45
+        startingBid:
+          type: number
+          description: The starting bid amount for the gacha
+          format: float
+          example: 100.5
+        auctionDuration:
+          type: integer
+          description: The duration of the auction in hours
+          example: 24
+    inline_response_201_2:
+      type: object
+      properties:
+        auctionId:
+          type: integer
+          description: The ID of the created auction
+          example: 789
+        message:
+          type: string
+          example: Gacha placed in auction successfully.
+    inline_response_200_6:
+      type: object
+      properties:
+        gachaId:
+          type: integer
+          description: The ID of the gacha
+          example: 1
+        auctions:
+          type: array
+          description: A list of auctions for the gacha
+          items:
+            type: object
+            properties:
+              auctionId:
+                type: integer
+                description: The ID of the auction
+                example: 1001
+              startingBid:
+                type: number
+                description: The starting bid for the auction
+                format: float
+                example: 50
+              currentBid:
+                type: number
+                description: The current highest bid
+                format: float
+                example: 75.5
+              status:
+                type: string
+                description: The status of the auction
+                example: active
+    inline_response_200_7:
+      type: object
+      properties:
+        gachaId:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: Rare Sword
+        description:
+          type: string
+          example: A rare and powerful sword.
+        startingBid:
+          type: number
+          format: float
+          example: 100.5
+        auctionStatus:
+          type: string
+          example: active
+        currentBid:
+          type: number
+          format: float
+          example: 150
+        bidCount:
+          type: integer
+          example: 10
+    playerId_bid_body:
+      type: object
+      properties:
+        bidAmount:
+          type: number
+          description: The amount of the bid
+          format: float
+          example: 150.75
+    inline_response_201_3:
+      type: object
+      properties:
+        bidId:
+          type: integer
+          description: The ID of the created bid
+          example: 456
+        message:
+          type: string
+          example: Bid placed successfully.
+    inline_response_200_8:
+      type: object
+      properties:
+        gachaId:
+          type: integer
+          description: The ID of the gacha
+          example: 3
+        bids:
+          type: array
+          description: List of bids for the gacha
+          items:
+            type: object
+            properties:
+              bidId:
+                type: integer
+                description: The unique ID of the bid
+                example: 101
+              userId:
+                type: integer
+                description: The ID of the user who placed the bid
+                example: 45
+              amount:
+                type: number
+                description: The amount of the bid
+                format: float
+                example: 150.75
+              timestamp:
+                type: string
+                description: The time when the bid was placed
+                format: date-time
+                example: 2024-11-21T12:34:56Z
+    inline_response_200_9:
+      type: object
+      properties:
+        winnerId:
+          type: integer
+          description: The ID of the winning bidder
+          example: 45
+        winningBid:
+          type: number
+          description: The amount of the winning bid
+          format: float
+          example: 500.75
+        gachaId:
+          type: integer
+          description: The ID of the gacha
+          example: 3
+        message:
+          type: string
+          example: Winner fetched successfully.
+    inline_response_200_10:
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          example: 101
+        amount:
+          type: number
+          format: float
+          example: 250.75
+        transactionType:
+          type: string
+          example: purchase
+        date:
+          type: string
+          format: date-time
+          example: 2024-11-21T15:30:00Z
+    gamecurrency_post_body:
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: The amount of game currency to purchase
+          example: 1000
+        paymentMethod:
+          type: string
+          description: The payment method used for the purchase
+          example: credit_card
+    inline_response_201_4:
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          description: The unique ID of the transaction
+          example: 98765
+        playerId:
+          type: integer
+          description: The ID of the player who made the purchase
+          example: 4
+        amount:
+          type: integer
+          description: The amount of game currency purchased
+          example: 1000
+        message:
+          type: string
+          example: Game currency purchase completed successfully.
+    winner_declare_body:
+      type: object
+      properties:
+        auctionId:
+          type: integer
+          description: The ID of the auction
+          example: 101
+        winnerId:
+          type: integer
+          description: The ID of the user declared as the winner
+          example: 202
+        finalBid:
+          type: number
+          description: The final bid amount made by the winner
+          format: float
+          example: 500.75
+    inline_response_201_5:
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          description: The ID of the created transaction
+          example: 303
+        message:
+          type: string
+          example: Winner declared and transaction created successfully.
+servers:
+    url: http://localhost:8003
