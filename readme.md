@@ -12,8 +12,8 @@
 
 ## Documentation
 
-- [API Documentation](#)
-- [Architecture PDF](#)
+- [API Documentation](https://github.com/bhuiyan-chafi/gacha-game/tree/v1/Docs/ApiDocs)
+- [Architecture PDF](https://github.com/bhuiyan-chafi/gacha-game/tree/v1/Docs)
 
 ---
 
