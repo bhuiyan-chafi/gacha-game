@@ -9,6 +9,10 @@ class Gacha(models.Model):
     rarity = models.IntegerField()
     inventory = models.IntegerField()
     price = models.IntegerField()
+    description = models.CharField(
+        max_length=500, blank=False, null=False)  # New description field
+    image = models.CharField(max_length=255, blank=False,
+                             null=False)  # New image field
     status = models.CharField(
         max_length=8, choices=Status.choices, default=Status.ACTIVE)
     created_at = models.DateTimeField(default=timezone.now)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PlayerGachaCollection, InGameCurrencyTransaction
+from .models import PlayerGachaCollection
 
 
 class PlayerGachaCollectionSerializer(serializers.ModelSerializer):
@@ -13,9 +13,3 @@ class PlayerGachaCollectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "This player and gacha combination already exists.")
         return attrs
-
-
-class InGameCurrencyTransactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InGameCurrencyTransaction
-        fields = ['id', 'player_id', 'amount', 'created_at']

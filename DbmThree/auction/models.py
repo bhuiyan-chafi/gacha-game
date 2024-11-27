@@ -2,10 +2,30 @@ from django.db import models
 from django.utils import timezone
 from dbm_three.constants import Status
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
+import re
+
+
+def validate_name(value):
+    """
+    Custom validator for the name field to ensure:
+    - Name contains only alphanumeric characters and spaces.
+    - Name does not exceed 20 characters.
+    """
+    if len(value) > 20:
+        raise ValidationError("Name must not exceed 20 characters.")
+    if not re.match(r'^[a-zA-Z0-9\s]+$', value):
+        raise ValidationError(
+            "Name must contain only letters, numbers, and spaces.")
 
 
 class Auction(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(
+        # Django enforces max_length in forms, but we enforce it via the validator as well
+        max_length=255,
+        unique=True,
+        validators=[validate_name]  # Custom validator using re
+    )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     status = models.CharField(

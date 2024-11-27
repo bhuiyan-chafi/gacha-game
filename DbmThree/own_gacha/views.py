@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import PlayerGachaCollection
-from .serializers import PlayerGachaCollectionSerializer, InGameCurrencyTransactionSerializer
+from .serializers import PlayerGachaCollectionSerializer
+from transaction.serializers import InGameCurrencyTransactionSerializer
 from django.conf import settings  # To access .env variables
 
 # Create a new player-gacha entry

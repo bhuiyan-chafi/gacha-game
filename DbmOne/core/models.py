@@ -14,6 +14,11 @@ class User(models.Model):
         choices=Status.choices,
         default=Status.ACTIVE,
     )
+    role = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PLAYER,  # Default role
+    )
     created_at = models.DateTimeField(
         default=timezone.now)  # Default to current timestamp
     updated_at = models.DateTimeField(

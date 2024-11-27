@@ -4,10 +4,12 @@
 from django.conf import settings
 from django.urls import reverse
 import requests
-from own_gacha.models import InGameCurrencyTransaction, PlayerGachaCollection
+from own_gacha.models import PlayerGachaCollection
+from transaction.models import InGameCurrencyTransaction
 from rest_framework.response import Response
 from rest_framework import status
-from own_gacha.serializers import InGameCurrencyTransactionSerializer, PlayerGachaCollectionSerializer
+from own_gacha.serializers import PlayerGachaCollectionSerializer
+from transaction.serializers import InGameCurrencyTransactionSerializer
 from rest_framework.decorators import api_view
 from django.db import transaction
 
