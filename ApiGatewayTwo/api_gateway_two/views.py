@@ -44,9 +44,51 @@ def listPlayers(request):
 @api_view(['POST'])
 def createPlayer(request):
     """
-    Create a new player through ApiGatewayTwo.
+    Create a new player after validating user_id through the AUTH_SERVICE
+    and ensuring it is not taken by an admin.
     """
-    return forward_request(settings.USER_SERVICE, "POST", "/user-service/player/create/", data=request.data)
+    user_id = request.data.get("user_id")
+
+    # Validate user_id
+    if not user_id:
+        return Response({"error": "user_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Step 1: Check if the user_id exists in the AUTH_SERVICE
+        auth_service_url = f"{settings.AUTH_SERVICE}/{user_id}/details/"
+        auth_response = requests.get(auth_service_url)
+
+        if auth_response.status_code != 200:
+            if auth_response.status_code == 404:
+                return Response({"error": "user_id not found in AUTH_SERVICE."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Error validating user_id with AUTH_SERVICE because the response from AuthService is neither 200 or 404."}, status=auth_response.status_code)
+
+        user_data = auth_response.json()
+
+        # Ensure the returned user_id matches the input user_id
+        if str(user_data.get("id")) != str(user_id):
+            return Response({"error": "Invalid user_id, the user_id fetched from AUTH_SERVICE does not match the given one."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Step 2: Check if the user_id is associated with an admin
+        admin_service_url = f"{settings.USER_SERVICE}/user-service/admin/{user_id}/details/"
+        admin_response = requests.get(admin_service_url)
+
+        if admin_response.status_code == 200:
+            # user_id is already taken by an admin
+            return Response(
+                {"error": "user_id is associated with an admin and cannot be used for a player."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        elif admin_response.status_code != 404:
+            # Handle unexpected responses from the admin endpoint
+            return Response({"error": "Error validating user_id with admin check."}, status=admin_response.status_code)
+
+        # Step 3: Proceed to create the Player
+        return forward_request(settings.USER_SERVICE, "POST", "/user-service/player/create/", data=request.data)
+
+    except requests.RequestException as e:
+        # Handle request errors
+        return Response({"error": f"Unable to validate user_id: {str(e)}"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 
 @api_view(['GET', 'PUT'])
@@ -57,6 +99,11 @@ def playerDetails(request, id):
     if request.method == 'GET':
         return forward_request(settings.USER_SERVICE, "GET", f"/user-service/player/{id}/details/")
     elif request.method == 'PUT':
+        if 'user_id' in request.data:
+            return Response(
+                {"error": "Updating user_id is not allowed."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return forward_request(settings.USER_SERVICE, "PUT", f"/user-service/player/{id}/details/", data=request.data)
 
 
@@ -65,7 +112,7 @@ def deletePlayer(request, id):
     """
     Delete a specific player through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/") 
+    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/")
 
 
 # ======================== Admin Endpoints ========================

@@ -9,15 +9,17 @@ class Player(models.Model):
     bank_details_validator = RegexValidator(
         r'^[\w\s]+$', 'Bank details should not contain special characters.')
 
-    user_id = models.BigIntegerField()
+    user_id = models.BigIntegerField(unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email_address = models.EmailField(unique=True, validators=[
                                       EmailValidator(message="Enter a valid email address.")])
-    phone_number = models.CharField(
-        max_length=15, validators=[phone_validator])
+    phone_number = models.CharField(unique=True,
+                                    max_length=15, validators=[phone_validator])
     bank_details = models.CharField(
-        max_length=255, validators=[bank_details_validator])
+        # Ensure uniqueness
+        max_length=255, validators=[bank_details_validator], unique=True
+    )
     current_balance = models.FloatField(
         default=0.0,
         validators=[MinValueValidator(
@@ -32,13 +34,13 @@ class Admin(models.Model):
     phone_validator = RegexValidator(
         r'^\d+$', 'Phone number must contain only numbers.')
 
-    user_id = models.BigIntegerField()
+    user_id = models.BigIntegerField(unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email_address = models.EmailField(unique=True, validators=[
                                       EmailValidator(message="Enter a valid email address.")])
-    phone_number = models.CharField(
-        max_length=15, validators=[phone_validator])
+    phone_number = models.CharField(unique=True,
+                                    max_length=15, validators=[phone_validator])
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

@@ -75,6 +75,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        max_length=255,
+        validators=[
+            validate_username  # Reuse the custom validator for username
+        ]
+    )
+
     class Meta:
         model = User
         fields = ['username', 'status', 'role', 'updated_at']  # Include 'role'

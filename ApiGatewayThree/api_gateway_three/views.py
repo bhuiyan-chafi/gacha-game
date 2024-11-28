@@ -11,7 +11,7 @@ def forward_request(service_url, method, path, data=None, query_params=None):
     """
     try:
         url = f"{service_url}{path}"
-        print('ServiceUrl: '+ url)
+        print('ServiceUrl: ' + url)
         if query_params:
             url = f"{url}?{query_params}"
 
@@ -39,10 +39,28 @@ def forward_request(service_url, method, path, data=None, query_params=None):
 @api_view(['POST'])
 def rollToWinGacha(request):
     player_id = request.query_params.get('player_id')
+    # Extract roll_price from the request body
+    roll_price = request.data.get('roll_price')
+
+    # Validate player_id
     if not player_id:
         return Response({"detail": "player_id is required as a query parameter."}, status=status.HTTP_400_BAD_REQUEST)
 
-    return forward_request(settings.PLAY_SERVICE, "POST", "/play-service/roll-to-win/", query_params=f"player_id={player_id}")
+    # Validate roll_price
+    if roll_price is None or roll_price == "":
+        return Response({"detail": "roll_price is required in the request body or not null"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not (20 <= int(roll_price) <= 100):
+        return Response({"detail": "roll_price must be between 20 and 100."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Forward the request to the play-service
+    return forward_request(
+        settings.PLAY_SERVICE,
+        "POST",
+        "/play-service/roll-to-win/",
+        query_params=f"player_id={player_id}",
+        data=request.data
+    )
 
 
 @api_view(['POST'])

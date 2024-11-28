@@ -6,16 +6,6 @@ import re
 # Custom Validators
 
 
-def validate_user_id(value):
-    """
-    Ensure user_id contains only numeric characters.
-    """
-    if not isinstance(value, int) or value < 0:
-        raise serializers.ValidationError(
-            "User ID must be a positive integer.")
-    return value
-
-
 def validate_name(value):
     """
     Ensure the name contains at most 10 characters.
@@ -38,15 +28,23 @@ def validate_phone_number(value):
     return value
 
 
-# Serializer for Player
 class PlayerSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(validators=[validate_user_id])
+    user_id = serializers.IntegerField()  # Make it writable by default
+
     first_name = serializers.CharField(
         max_length=10, validators=[validate_name])
     last_name = serializers.CharField(
         max_length=10, validators=[validate_name])
     phone_number = serializers.CharField(
-        max_length=15, validators=[validate_phone_number])
+        max_length=10,
+        validators=[
+            validate_phone_number,
+            UniqueValidator(
+                queryset=Player.objects.all(),
+                message="Phone number must be unique."
+            )
+        ]
+    )
     email_address = serializers.EmailField(
         validators=[UniqueValidator(
             queryset=Player.objects.all(),
@@ -58,11 +56,29 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ['id', 'user_id', 'first_name', 'last_name', 'email_address',
                   'phone_number', 'bank_details', 'current_balance']
+        read_only_fields = ['id']  # Only `id` is always read-only
+
+    def validate_user_id(self, value):
+        """
+        Ensure user_id is unique across both Player and Admin models.
+        """
+        if Player.objects.filter(user_id=value).exists():
+            raise serializers.ValidationError(
+                "This user_id is already assigned to a player.")
+        if Admin.objects.filter(user_id=value).exists():
+            raise serializers.ValidationError(
+                "This user_id is already assigned to an admin.")
+        return value
+
+    def update(self, instance, validated_data):
+        # Prevent user_id from being updated
+        validated_data.pop('user_id', None)
+        return super().update(instance, validated_data)
 
 
-# Serializer for Admin
 class AdminSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(validators=[validate_user_id])
+    user_id = serializers.IntegerField()  # Make it writable by default
+
     first_name = serializers.CharField(
         max_length=10, validators=[validate_name])
     last_name = serializers.CharField(
@@ -80,3 +96,21 @@ class AdminSerializer(serializers.ModelSerializer):
         model = Admin
         fields = ['id', 'user_id', 'first_name', 'last_name',
                   'email_address', 'phone_number']
+        read_only_fields = ['id']  # Only `id` is always read-only
+
+    def validate_user_id(self, value):
+        """
+        Ensure user_id is unique across both Player and Admin models.
+        """
+        if Player.objects.filter(user_id=value).exists():
+            raise serializers.ValidationError(
+                "This user_id is already assigned to a player.")
+        if Admin.objects.filter(user_id=value).exists():
+            raise serializers.ValidationError(
+                "This user_id is already assigned to an admin.")
+        return value
+
+    def update(self, instance, validated_data):
+        # Prevent user_id from being updated
+        validated_data.pop('user_id', None)
+        return super().update(instance, validated_data)

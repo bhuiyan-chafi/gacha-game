@@ -156,7 +156,7 @@ def deletePlayer(request, id):
                 'detail': 'Player and associated auth record deleted successfully.'
             }, status=status.HTTP_204_NO_CONTENT)
 
-        # If auth app does not allow deletion, return its error response
+        # If auth app does not allow the user deletion, return its error response
         return Response(auth_response.json(), status=status.HTTP_400_BAD_REQUEST)
 
     except requests.exceptions.RequestException as e:

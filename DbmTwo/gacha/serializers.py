@@ -19,9 +19,21 @@ class GachaSerializer(serializers.ModelSerializer):
         return value
 
     def validate_image(self, value):
-        """Ensure image name contains only alphanumeric characters."""
-        if not re.match(r'^[a-zA-Z0-9]+$', value):
+        """
+        Ensure image name contains only alphanumeric characters, underscores (_), and dots (.).
+        """
+        if not re.match(r'^[a-zA-Z0-9_.]+$', value):
             raise serializers.ValidationError(
-                "Image name must contain only letters and numbers."
+                "Image name must contain only letters, numbers, underscores (_), and dots (.)."
+            )
+        return value
+
+    def validate_rarity(self, value):
+        """
+        Ensure rarity is at least 10.
+        """
+        if value < 10:
+            raise serializers.ValidationError(
+                "Rarity must be at least 10."
             )
         return value

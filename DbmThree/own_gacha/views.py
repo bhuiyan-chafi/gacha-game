@@ -10,25 +10,77 @@ from .serializers import PlayerGachaCollectionSerializer
 from transaction.serializers import InGameCurrencyTransactionSerializer
 from django.conf import settings  # To access .env variables
 
-# Create a new player-gacha entry
+#
 
 
 @api_view(['POST'])
 def rollToWinGacha(request):
+    """
+    Roll to win a Gacha, validating the player's balance, filtering Gacha by rarity, updating balance,
+    inventory, and creating a transaction record, ensuring atomic operations.
+    """
     player_id = request.query_params.get('player_id')
+    roll_price = request.data.get('roll_price')
+
+    # Validate player_id
+    if not player_id:
+        return Response({"detail": "player_id is required as a query parameter."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validate roll_price
+    if roll_price is None or roll_price == "":
+        return Response({"detail": "roll_price is required in the request body and cannot be empty."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        roll_price = float(roll_price)
+    except ValueError:
+        return Response({"detail": "roll_price must be a numeric value."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not (20 <= roll_price <= 100):
+        return Response({"detail": "roll_price must be between 20 and 100."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Fetch player details from the user-service
+    user_service_url = f"{settings.USER_SERVICE}/player/{player_id}/details/"
+    try:
+        player_response = requests.get(user_service_url)
+        if player_response.status_code != 200:
+            return Response({"detail": "Failed to fetch player details."}, status=player_response.status_code)
+
+        player_data = player_response.json()
+        current_balance = player_data.get("current_balance")
+        if current_balance is None:
+            return Response({"detail": "current_balance is missing in player details."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if current_balance < roll_price:
+            return Response({"detail": "Insufficient balance for the roll."}, status=status.HTTP_400_BAD_REQUEST)
+
+    except requests.exceptions.RequestException as e:
+        return Response({"detail": "User service unavailable.", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
     # Fetch available Gacha records from the external service
     gacha_service_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/list/"
-    # return Response(gacha_service_url)
     try:
         response = requests.get(gacha_service_url)
         if response.status_code != 200:
             return Response({"detail": "Failed to fetch Gacha records."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
         available_gachas = response.json()
+
+        # Filter Gachas based on roll_price and rarity
+        if roll_price <= 50:
+            filtered_gachas = [
+                gacha for gacha in available_gachas if 10 <= gacha['rarity'] <= 50]
+        elif roll_price <= 90:
+            filtered_gachas = [
+                gacha for gacha in available_gachas if 51 <= gacha['rarity'] <= 95]
+        elif roll_price <= 100:
+            filtered_gachas = [
+                gacha for gacha in available_gachas if 96 <= gacha['rarity'] <= 100]
+
+        # Extract active Gacha IDs from filtered list
         available_gacha_ids = [gacha['id']
-                               for gacha in available_gachas if gacha['status'] == 'active']
+                               for gacha in filtered_gachas if gacha['status'] == 'active']
         if not available_gacha_ids:
-            return Response({"detail": "No active Gacha items available."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "No active Gacha items available for the selected roll_price."}, status=status.HTTP_404_NOT_FOUND)
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Gacha service unavailable.", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
@@ -43,22 +95,61 @@ def rollToWinGacha(request):
 
     # Randomly select a Gacha from the not-owned list
     selected_gacha_id = random.choice(not_owned_gacha_ids)
+    gacha_update_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/{selected_gacha_id}/details/"
+    gacha_response = requests.get(gacha_update_url)
+    if gacha_response.status_code != 200:
+        return Response({"detail": "Failed to fetch gacha details."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    gacha_data = gacha_response.json()
+    current_inventory = int(gacha_data['inventory'])
+    # Begin an atomic transaction
+    try:
+        with transaction.atomic():
+            # Deduct roll_price from player's current_balance
+            new_balance = current_balance - roll_price
+            balance_response = requests.put(user_service_url, json={
+                                            "current_balance": new_balance})
+            if balance_response.status_code != 200:
+                raise ValueError("Failed to update player balance.")
 
-    # Create a new PlayerGachaCollection entry
-    data = {
-        'player_id': player_id,
-        'gacha_id': selected_gacha_id
-    }
-    serializer = PlayerGachaCollectionSerializer(data=data)
-    if serializer.is_valid():
-        player_gacha = serializer.save()
+            # Reduce inventory for the selected Gacha
+            inventory_response = requests.put(
+                gacha_update_url, json={"inventory": current_inventory-1})
+            if inventory_response.status_code != 200:
+                raise ValueError("Failed to update Gacha inventory.")
+
+            # Create a transaction record for the roll_price
+            transaction_data = {'player_id': player_id, 'amount': -roll_price}
+            transaction_serializer = InGameCurrencyTransactionSerializer(
+                data=transaction_data)
+            if transaction_serializer.is_valid():
+                transaction_serializer.save()
+            else:
+                raise ValueError(transaction_serializer.errors)
+
+            # Create a new PlayerGachaCollection entry
+            data = {
+                'player_id': player_id,
+                'gacha_id': selected_gacha_id
+            }
+            serializer = PlayerGachaCollectionSerializer(data=data)
+            if serializer.is_valid():
+                player_gacha = serializer.save()
+            else:
+                raise ValueError(serializer.errors)
+
+        # Return success response
         return Response({
             'detail': 'Congratulations! You rolled and won a Gacha!',
             'player_gacha': serializer.data
         }, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# List all player-gacha entries
+    except ValueError as e:
+        # Rollback transaction on any failure
+        return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({"detail": "An unexpected error occurred.", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#
 
 
 @api_view(['POST'])

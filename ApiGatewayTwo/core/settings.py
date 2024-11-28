@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
+AUTH_SERVICE = os.getenv("AUTH_SERVICE")
 USER_SERVICE = os.getenv("USER_SERVICE")
 GACHA_SERVICE = os.getenv("GACHA_SERVICE")
 
