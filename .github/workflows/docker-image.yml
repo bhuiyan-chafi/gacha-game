@@ -39,14 +39,13 @@ jobs:
 
     # Step 7: Validate Container Status
     - name: Validate Container Status
-      run: docker compose ps
+      run: docker compose ps -a
 
     # Step 8: Run Tests
     - name: Run Tests
       run: |
-        docker compose exec dbmone python manage.py test core --noinput
-        docker compose exec dbmtwo python manage.py test core --noinput
-        docker compose exec dbmthree python manage.py test core --noinput
+        docker compose exec dbm_one python manage.py test core --noinput
+        docker compose exec dbm_two python manage.py test core --noinput
 
     # Step 9: Clean Up
     - name: Clean Up Docker Compose
