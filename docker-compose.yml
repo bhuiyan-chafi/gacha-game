@@ -1,37 +1,193 @@
-name: Test Services with Docker Compose
+services:
+  db_service:
+    image: mysql:latest
+    container_name: dbservice
+    env_file:
+      - .env
+    volumes:
+      - gacha_db:/var/lib/mysql
+      - ./MySql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $DATABASE_USER --password=$DATABASE_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
 
-on:
-  push:
-    branches:
-      - "v1"
-  pull_request:
-    branches:
-      - "v1"
+  dbm_one:
+    build: ./DbmOne
+    container_name: dbmone
+    volumes:
+      - ./DbmOne:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+    networks:
+      - app_network
 
-jobs:
-  test-services:
-    runs-on: ubuntu-latest
+  dbm_two:
+    build: ./DbmTwo
+    container_name: dbmtwo
+    volumes:
+      - ./DbmTwo:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+    networks:
+      - app_network
 
-    steps:
-    # Step 1: Check out the code
-    - name: Checkout Code
-      uses: actions/checkout@v4
+  dbm_three:
+    build: ./DbmThree
+    container_name: dbmthree
+    volumes:
+      - ./DbmThree:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+    networks:
+      - app_network
 
-    # Step 2: Set up Docker
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
+  auth_service:
+    build: ./AuthService
+    container_name: authservice
+    volumes:
+      - ./AuthService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      dbm_one:
+        condition: service_started
+    networks:
+      - app_network
 
-    # Step 4: Build the Docker Compose Services
-    - name: Build Docker Compose Services
-      run: |
-        docker compose -f docker-compose.test.yml build --no-cache
+  user_service:
+    build: ./UserService
+    container_name: userservice
+    volumes:
+      - ./UserService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      dbm_two:
+        condition: service_started
+    networks:
+      - app_network
 
-    # Step 5: Run Docker Compose Services and Execute Tests
-    - name: Run Tests in Docker Compose
-      run: |
-        docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from dbm_one
+  gacha_service:
+    build: ./GachaService
+    container_name: gachaservice
+    volumes:
+      - ./GachaService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      dbm_two:
+        condition: service_started
+      user_service:
+        condition: service_started
+    networks:
+      - app_network
 
-    # Step 6: Clean Up Resources
-    - name: Clean Up Docker Compose
-      if: always()
-      run: docker compose -f docker-compose.test.yml down -v
+  play_service:
+    build: ./PlayService
+    container_name: playservice
+    volumes:
+      - ./PlayService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      gacha_service:
+        condition: service_started
+      dbm_three:
+        condition: service_started
+    networks:
+      - app_network
+
+  auction_service:
+    build: ./AuctionService
+    container_name: auctionservice
+    volumes:
+      - ./AuctionService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      dbm_three:
+        condition: service_started
+      play_service:
+        condition: service_started
+      gacha_service:
+        condition: service_started
+    networks:
+      - app_network
+
+  transaction_service:
+    build: ./TransactionService
+    container_name: transactionservice
+    volumes:
+      - ./TransactionService:/app
+    depends_on:
+      db_service:
+        condition: service_healthy
+      dbm_three:
+        condition: service_started
+      play_service:
+        condition: service_started
+      auction_service:
+        condition: service_started
+    networks:
+      - app_network
+
+  gateway_one:
+    build: ./ApiGatewayOne
+    container_name: gatewayone
+    volumes:
+      - ./ApiGatewayOne:/app
+    depends_on:
+      auth_service:
+        condition: service_started
+    ports:
+      - 8001:8000
+    networks:
+      - app_network
+
+  gateway_two:
+    build: ./ApiGatewayTwo
+    container_name: gatewaytwo
+    volumes:
+      - ./ApiGatewayTwo:/app
+    depends_on:
+      user_service:
+        condition: service_started
+      gacha_service:
+        condition: service_started
+    ports:
+      - 8002:8000
+    networks:
+      - app_network
+
+  gateway_three:
+    build: ./ApiGatewayThree
+    container_name: gatewaythree
+    volumes:
+      - ./ApiGatewayThree:/app
+    depends_on:
+      play_service:
+        condition: service_started
+      auction_service:
+        condition: service_started
+      transaction_service:
+        condition: service_started
+    ports:
+      - 8003:8000
+    networks:
+      - app_network
+
+volumes:
+  gacha_db:
+
+networks:
+  app_network:
+    name: gachafinaldockered_app_network
