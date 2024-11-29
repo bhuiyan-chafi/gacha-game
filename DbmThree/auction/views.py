@@ -1,9 +1,13 @@
+import requests
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import transaction
+from own_gacha.models import PlayerGachaCollection
 from .models import Auction, AuctionGachaBid, AuctionGachas
 from .serializers import AuctionGachaBidSerializer, AuctionSerializer, AuctionGachasSerializer
+from django.conf import settings
 
 # List all auctions
 
@@ -200,7 +204,8 @@ def listAllBids(request, auction_gacha_id):
     Fetch all bids for a specific auction_gacha_id.
     """
     # Check if there are any bids associated with the given auction_gacha_id
-    bids = AuctionGachaBid.objects.filter(auction_gacha_id=auction_gacha_id)
+    bids = AuctionGachaBid.objects.filter(
+        auction_gacha_id=auction_gacha_id).order_by('-price')
 
     if not bids.exists():
         return Response(
@@ -212,31 +217,93 @@ def listAllBids(request, auction_gacha_id):
     serializer = AuctionGachaBidSerializer(bids, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-# get the winner
+
+"""
+- we update the owner of the gacha by the bidder
+- we update the balance of each player [player, bidder]
+"""
 
 
-@api_view(['GET'])
-def gachaWinner(request, auction_gacha_id):
-    """
-    Retrieve the highest bidder for a specific auction gacha.
-    """
-    # Ensure the auction_gacha exists
-    auction_gacha = get_object_or_404(AuctionGachas, pk=auction_gacha_id)
+@api_view(['POST'])
+def gachaWinner(request):
+    # Extract data from the request body
+    auction_gacha_id = request.data.get("auction_gacha_id")
+    bidder_id = request.data.get("bidder_id")
+    print('Bidder ID: ', bidder_id)
+    price = request.data.get("price")
+    try:
+        with transaction.atomic():
+            # Step 1: Get the AuctionGacha record
+            auction_gacha = get_object_or_404(
+                AuctionGachas, id=auction_gacha_id)
+            auction_gacha_serializer = AuctionGachasSerializer(auction_gacha)
 
-    # Get the highest bid for the given auction_gacha_id
-    highest_bid = AuctionGachaBid.objects.filter(
-        auction_gacha_id=auction_gacha_id
-    ).order_by('-price').first()
+            # Extract the collection_id
+            collection_id = auction_gacha_serializer.data.get("collection_id")
+            auction_id = auction_gacha_serializer.data.get("auction_id")
+            if not collection_id:
+                return Response(
+                    {"detail": "Collection ID not found for the given auction gacha."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
 
-    if not highest_bid:
+            # Step 2: Get the PlayerGachaCollection record
+            player_gacha_collection = get_object_or_404(
+                PlayerGachaCollection, id=collection_id)
+            seller_id = player_gacha_collection.player_id
+            print('Seller ID: ', seller_id)
+            # Step 3: Fetch seller and bidder details
+            seller_detail_url = f"{settings.USER_SERVICE}/player/{seller_id}/details/"
+            bidder_detail_url = f"{settings.USER_SERVICE}/player/{bidder_id}/details/"
+
+            seller_response = requests.get(seller_detail_url)
+            bidder_response = requests.get(bidder_detail_url)
+
+            if seller_response.status_code != 200:
+                raise Exception("Failed to fetch seller details.")
+            if bidder_response.status_code != 200:
+                raise Exception("Failed to fetch bidder details.")
+
+            seller_data = seller_response.json()
+            bidder_data = bidder_response.json()
+
+            # Step 4: Update balances
+            seller_balance_url = f"{settings.USER_SERVICE}/player/{seller_id}/details/"
+            bidder_balance_url = f"{settings.USER_SERVICE}/player/{bidder_id}/details/"
+
+            # Adjust balances: subtract from bidder, add to seller
+            seller_new_balance = seller_data['current_balance'] + price
+            bidder_new_balance = bidder_data['current_balance'] - price
+
+            # Update seller's balance
+            seller_update_response = requests.put(
+                seller_balance_url,
+                json={"current_balance": seller_new_balance}
+            )
+            if seller_update_response.status_code != 200:
+                raise Exception("Failed to update seller's balance.")
+
+            # Update bidder's balance
+            bidder_update_response = requests.put(
+                bidder_balance_url,
+                json={"current_balance": bidder_new_balance}
+            )
+            if bidder_update_response.status_code != 200:
+                raise Exception("Failed to update bidder's balance.")
+
+            # Step 5: Transfer ownership
+            player_gacha_collection.player_id = bidder_id
+            player_gacha_collection.save()
+
+            return Response(
+                {"detail": "Gacha ownership transferred and balances updated successfully.",
+                 "winner": request.data},
+                status=status.HTTP_200_OK
+            )
+
+    except Exception as e:
         return Response(
-            {"detail": f"No bids found for auction gacha ID {auction_gacha_id}."},
-            status=status.HTTP_404_NOT_FOUND
+            {"detail": "An error occurred while processing the gacha winner.",
+             "error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-
-    # Serialize the highest bid
-    serializer = AuctionGachaBidSerializer(highest_bid)
-    return Response({
-        "auction_gacha_id": auction_gacha_id,
-        "winner": serializer.data
-    }, status=status.HTTP_200_OK)

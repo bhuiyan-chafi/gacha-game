@@ -8,7 +8,7 @@ auction_gachas = [
          views.auctionGachaDetails, name='auction-gacha-details'),
     path('<int:auction_gacha_id>/player/<int:player_id>/bid/', views.bidForGacha),
     path('<int:auction_gacha_id>/bids/', views.listAllBids),
-    path('<int:auction_gacha_id>/bids/winner/',
+    path('bids/winner/',
          views.gachaWinner, name='gacha-winner'),
 ]
 

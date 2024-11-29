@@ -19,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # load all env variables
 load_dotenv()
 DATABASE_THREE = os.getenv("DATABASE_THREE")
+GACHA_SERVICE = os.getenv("GACHA_SERVICE")
+PLAY_SERVICE = os.getenv("PLAY_SERVICE")
+USER_SERVICE = os.getenv("USER_SERVICE")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 

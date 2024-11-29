@@ -10,7 +10,17 @@ from .serializers import PlayerGachaCollectionSerializer
 from transaction.serializers import InGameCurrencyTransactionSerializer
 from django.conf import settings  # To access .env variables
 
-#
+"""
+There are a few things we should know about this logic: 
+- the request brings the player_id and the amount of the roll.
+- the next step is to check the player's balance though we checked it in the PlayService (because communication among services should be through the services)
+- each gacha is categorized: 1-50/normal, 51-95/rare and 96-100/super rare gacha
+- if the roll price <= 50 we select a normal gacha based on random distribution
+- if the roll price <= 90 we select a rare gacha
+- if the roll price <= 100 then we select a super rare gacha
+- after selecting a gacha we check the inventory and status(must be active) for ensuring the availability
+- then we check if the gacha is already acquired by the player, if not then we declare the gacha for the player
+"""
 
 
 @api_view(['POST'])
@@ -149,7 +159,11 @@ def rollToWinGacha(request):
 
     except Exception as e:
         return Response({"detail": "An unexpected error occurred.", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-#
+
+
+"""
+In this phase we just make the purchase: assign the gacha to the player gacha collection, adjust his balance, adjust gacha inventory and add transaction history
+"""
 
 
 @api_view(['POST'])
@@ -176,25 +190,15 @@ def createPlayerGachaByPurchase(request):
         with transaction.atomic():
             # Fetch player details
             player_response = requests.get(player_url)
-            if player_response.status_code != 200:
-                return Response({"detail": "Failed to fetch player details."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
             player_data = player_response.json()
             current_balance = float(player_data['current_balance'])
             print('current_balance:' + str(current_balance))
             # Fetch gacha details
             gacha_response = requests.get(gacha_url)
-            if gacha_response.status_code != 200:
-                return Response({"detail": "Failed to fetch gacha details."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
             gacha_data = gacha_response.json()
             price = float(gacha_data['price'])
             inventory = int(gacha_data['inventory'])
             print('gacha_inventory:' + str(inventory))
-            # Validate purchase
-            if inventory <= 0:
-                return Response({"detail": "The selected gacha is out of stock."}, status=status.HTTP_400_BAD_REQUEST)
-            if current_balance < price:
-                return Response({"detail": "Insufficient balance to purchase the gacha."}, status=status.HTTP_400_BAD_REQUEST)
-
             # Create a currency transaction record
             transaction_data = {'player_id': player_id, 'amount': -price}
             transaction_serializer = InGameCurrencyTransactionSerializer(

@@ -61,6 +61,7 @@ def rollToWinGacha(request):
         query_params=f"player_id={player_id}",
         data=request.data
     )
+# takes the player_id and gacha_id to purchase, next logic is applied inside the PlayService
 
 
 @api_view(['POST'])
@@ -108,8 +109,15 @@ def auctionDetails(request, id):
         return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/{id}/details/")
 
 
+"""
+Before placing a gacha for the bid we have to make sure the auction is now 'active' so it's important to have auction_id in the request.
+"""
+
+
 @api_view(['POST'])
 def placeGachaForAuction(request):
+    if not request.data.get("auction_id"):
+        return Response({"detail": "auction_id is required in the request body."}, status=status.HTTP_400_BAD_REQUEST)
     return forward_request(settings.AUCTION_SERVICE, "POST", "/auction/gachas/place/", data=request.data)
 
 
@@ -126,8 +134,15 @@ def auctionGachaDetails(request, auction_gacha_id):
         return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/gachas/{auction_gacha_id}/details/")
 
 
+"""
+- check if the gacha present in the request body and its more than 0, following checks will be completed in the service level
+"""
+
+
 @api_view(['POST', 'PUT'])
 def bidForGacha(request, auction_gacha_id, player_id):
+    if not request.data.get('price') or request.data.get('price') <= 0:
+        return Response({"detail": "price is required and more than 0 in the request body."}, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'POST':
         data = request.data.copy()
         data['auction_gacha_id'] = auction_gacha_id
