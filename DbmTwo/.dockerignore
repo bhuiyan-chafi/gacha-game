@@ -1,8 +1,4 @@
 core/__pycache__
-core/migrations
 gacha/__pycache__
-gacha/migrations
 system_variable/__pycache__
-system_variable/migrations
 users/__pycache__
-users/migrations

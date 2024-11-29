@@ -14,4 +14,4 @@ RUN pip install --upgrade pip && pip install pipenv && pipenv install --system -
 EXPOSE 8000
 
 # Use the entrypoint script to manage startup
-ENTRYPOINT ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+ENTRYPOINT ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
