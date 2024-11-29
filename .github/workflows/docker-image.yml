@@ -23,7 +23,7 @@ jobs:
 
     # Step 3: Validate Docker Compose File
     - name: Validate Docker Compose Configuration
-      run: docker-compose -f docker-compose.test.yml config
+      run: docker compose -f docker-compose.test.yml config
 
     # Step 4: Build Docker Compose Services
     - name: Build Docker Compose Services
