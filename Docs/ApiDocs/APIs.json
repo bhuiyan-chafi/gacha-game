@@ -112,6 +112,195 @@
 					]
 				},
 				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "create-user-duplicate-username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Test to ensure the response status is 400",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Parse the JSON response body",
+											"let responseBody = pm.response.json();",
+											"",
+											"// Test to check the error message for \"username\" field",
+											"pm.test(\"Username field error is correct\", function () {",
+											"    pm.expect(responseBody).to.have.property(\"username\");",
+											"    pm.expect(responseBody.username).to.be.an(\"array\").that.includes(\"This field must be unique.\");",
+											"});",
+											"",
+											"// If both tests pass, mark the test as passed"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"player001\",\n    \"password\":\"Player001@password\",\n    \"status\":\"inactive\",\n    \"role\":\"player\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_one}}/auth-service/create/",
+									"host": [
+										"{{api_gateway_one}}"
+									],
+									"path": [
+										"auth-service",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-user-missing-field",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Test to ensure the response status is 400",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Parse the JSON response body",
+											"let responseBody = pm.response.json();",
+											"",
+											"// Define the fields we expect errors for",
+											"let expectedFields = [\"username\", \"password\", \"status\", \"role\"];",
+											"",
+											"// Test to check if at least one expected field has an error message",
+											"pm.test(\"At least one expected field has an error message\", function () {",
+											"    // Initialize a flag to track if any field has an error",
+											"    let hasError = false;",
+											"",
+											"    // Iterate over the expected fields",
+											"    expectedFields.forEach(function (field) {",
+											"        // Check if the field exists and is an array with at least one error message",
+											"        if (responseBody[field] && Array.isArray(responseBody[field]) && responseBody[field].length > 0) {",
+											"            hasError = true; // Set the flag to true if the condition is met",
+											"        }",
+											"    });",
+											"",
+											"    // Assert that at least one field has an error",
+											"    pm.expect(hasError).to.be.true;",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"\",\n    \"password\":\"\",\n    \"status\":\"\",\n    \"role\":\"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_one}}/auth-service/create/",
+									"host": [
+										"{{api_gateway_one}}"
+									],
+									"path": [
+										"auth-service",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-not-found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Test to ensure the response status is 404",
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"// Parse the JSON response body",
+											"let responseBody = pm.response.json();",
+											"",
+											"// Test to check if the response body contains the correct detail message",
+											"pm.test(\"Response body contains correct error detail\", function () {",
+											"    pm.expect(responseBody).to.have.property(\"detail\");",
+											"    pm.expect(responseBody.detail).to.eql(\"No User matches the given query.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway_one}}/auth-service/4/details/",
+									"host": [
+										"{{api_gateway_one}}"
+									],
+									"path": [
+										"auth-service",
+										"4",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "gateway-test",
 					"request": {
 						"method": "GET",
@@ -146,6 +335,7 @@
 									"    pm.expect(jsonResponse).to.have.property('id');",
 									"    pm.expect(jsonResponse).to.have.property('username');",
 									"    pm.expect(jsonResponse).to.have.property('status');",
+									"    pm.expect(jsonResponse).to.have.property('role');",
 									"    pm.expect(jsonResponse).to.have.property('created_at');",
 									"    pm.expect(jsonResponse).to.have.property('updated_at');",
 									"});"
@@ -159,13 +349,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_gateway_one}}/auth-service/3/details/",
+							"raw": "{{api_gateway_one}}/auth-service/1/details/",
 							"host": [
 								"{{api_gateway_one}}"
 							],
 							"path": [
 								"auth-service",
-								"3",
+								"1",
 								"details",
 								""
 							]
@@ -195,7 +385,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\":\"chafi001\",\n    \"status\":\"inactive\"\n}",
+							"raw": "{\n    \"username\":\"player001\",\n    \"status\":\"active\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -305,7 +495,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\":\"Chafi001\",\n    \"password\":\"chafi001password\",\n    \"status\":\"inactive\"\n}",
+							"raw": "{\n    \"username\":\"player003\",\n    \"password\":\"Player003@password\",\n    \"status\":\"active\",\n    \"role\":\"player\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -372,6 +562,131 @@
 					"name": "Players",
 					"item": [
 						{
+							"name": "Tests",
+							"item": [
+								{
+									"name": "create-player-check-uniqueness",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Test to ensure the response status is 400",
+													"pm.test(\"Status code is 400\", function () {",
+													"    pm.response.to.have.status(400);",
+													"});",
+													"",
+													"// Parse the JSON response body",
+													"let responseBody = pm.response.json();",
+													"",
+													"// Define the expected fields and their respective error messages",
+													"let expectedErrors = {",
+													"    \"email_address\": \"Email address must be unique.\",",
+													"    \"phone_number\": \"Phone number must be unique.\",",
+													"    \"bank_details\": \"player with this bank details already exists.\",",
+													"    \"current_balance\": \"Ensure this value is greater than or equal to 0.0.\"",
+													"};",
+													"",
+													"// Test to ensure at least one expected error is present",
+													"pm.test(\"At least one expected error is present where username, email, phone or balance is in the wrong format. Plesae check the response body.\", function () {",
+													"    let hasError = false;",
+													"",
+													"    // Check if at least one expected field exists in the response with the correct message",
+													"    Object.keys(expectedErrors).forEach(function (field) {",
+													"        if (responseBody[field] && Array.isArray(responseBody[field]) && responseBody[field].includes(expectedErrors[field])) {",
+													"            hasError = true;",
+													"        }",
+													"    });",
+													"",
+													"    // Assert that at least one error is present",
+													"    pm.expect(hasError).to.be.true;",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"user_id\": \"1\",\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": -1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api_gateway_two}}/player/create/",
+											"host": [
+												"{{api_gateway_two}}"
+											],
+											"path": [
+												"player",
+												"create",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get-player-details-not-found",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Test to ensure the response status is 404",
+													"pm.test(\"Status code is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});",
+													"",
+													"// Parse the JSON response body",
+													"let responseBody = pm.response.json();",
+													"",
+													"// Test to check if the response body contains the correct detail message",
+													"pm.test(\"Response body contains correct error detail\", function () {",
+													"    pm.expect(responseBody).to.have.property(\"detail\");",
+													"    pm.expect(responseBody.detail).to.eql(\"No Player matches the given query.\");",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{api_gateway_two}}/player/200/details/",
+											"host": [
+												"{{api_gateway_two}}"
+											],
+											"path": [
+												"player",
+												"200",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "create-player",
 							"event": [
 								{
@@ -392,7 +707,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"user_id\": \"2\",\n    \"first_name\": \"Chafi\",\n    \"last_name\": \"001\",\n    \"email_address\": \"player2@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 1000\n}",
+									"raw": "{\n    \"user_id\": 3,\n    \"first_name\": \"Player\",\n    \"last_name\": \"Three\",\n    \"email_address\": \"player3@outlook.com\",\n    \"phone_number\": \"3533299794\",\n    \"bank_details\": \"IT1234567895\",\n    \"current_balance\": 1000\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -443,7 +758,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"user_id\": 5,\n    \"first_name\": \"Chafi\",\n    \"last_name\": \"001\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299793\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 1500.0\n}",
+									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 1000\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -451,13 +766,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{api_gateway_two}}/player/2/details/",
+									"raw": "{{api_gateway_two}}/player/1/details/",
 									"host": [
 										"{{api_gateway_two}}"
 									],
 									"path": [
 										"player",
-										"2",
+										"1",
 										"details",
 										""
 									]
@@ -479,7 +794,7 @@
 											"let responseData = pm.response.json();",
 											" ",
 											"// Test that the response contains player details",
-											"pm.test(\"Response contains player details\", function () {",
+											"pm.test(\"Response contains expected player details\", function () {",
 											"    pm.expect(responseData).to.be.an(\"object\"); // Ensure the response is a JSON object",
 											" ",
 											"    // Validate the presence of specific fields in the response",
@@ -880,7 +1195,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Ahri\",\n    \"rarity\": 5,\n    \"inventory\": 100,\n    \"price\": 15,\n    \"status\": \"active\"\n}",
+									"raw": "{\n    \"name\": \"Azir\",\n    \"rarity\": 5,\n    \"inventory\": 100,\n    \"price\": 15,\n    \"status\": \"active\",\n    \"description\": \"Azir is .....\",\n    \"image\": \"azir.png\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1306,14 +1621,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_gateway_three}}/play-service/player/3/collection/",
+									"raw": "{{api_gateway_three}}/play-service/player/2/collection/",
 									"host": [
 										"{{api_gateway_three}}"
 									],
 									"path": [
 										"play-service",
 										"player",
-										"3",
+										"2",
 										"collection",
 										""
 									]
@@ -1372,8 +1687,17 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"roll_price\":\"45\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{api_gateway_three}}/play-service/roll-to-win/?player_id=3",
+									"raw": "{{api_gateway_three}}/play-service/roll-to-win/?player_id=2",
 									"host": [
 										"{{api_gateway_three}}"
 									],
@@ -1385,7 +1709,7 @@
 									"query": [
 										{
 											"key": "player_id",
-											"value": "3"
+											"value": "2"
 										}
 									]
 								}
@@ -1412,7 +1736,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{api_gateway_three}}/play-service/direct-purchase/?player_id=3&gacha_id=2",
+									"raw": "{{api_gateway_three}}/play-service/direct-purchase/?player_id=1&gacha_id=1",
 									"host": [
 										"{{api_gateway_three}}"
 									],
@@ -1424,11 +1748,11 @@
 									"query": [
 										{
 											"key": "player_id",
-											"value": "3"
+											"value": "1"
 										},
 										{
 											"key": "gacha_id",
-											"value": "2"
+											"value": "1"
 										}
 									]
 								}
@@ -1457,7 +1781,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_gateway_three}}/play-service/player/collection/2/",
+									"raw": "{{api_gateway_three}}/play-service/player/collection/4/",
 									"host": [
 										"{{api_gateway_three}}"
 									],
@@ -1465,7 +1789,7 @@
 										"play-service",
 										"player",
 										"collection",
-										"2",
+										"4",
 										""
 									]
 								}
@@ -1504,26 +1828,25 @@
 												"method": "POST",
 												"header": [],
 												"body": {
-													"mode": "formdata",
-													"formdata": [
-														{
-															"key": "price",
-															"value": "110",
-															"type": "text"
+													"mode": "raw",
+													"raw": "{\n    \"price\":110\n}",
+													"options": {
+														"raw": {
+															"language": "json"
 														}
-													]
+													}
 												},
 												"url": {
-													"raw": "{{api_gateway_three}}/auction-service/gachas/3/player/5/bid/",
+													"raw": "{{api_gateway_three}}/auction-service/gachas/1/player/1/bid/",
 													"host": [
 														"{{api_gateway_three}}"
 													],
 													"path": [
 														"auction-service",
 														"gachas",
-														"3",
+														"1",
 														"player",
-														"5",
+														"1",
 														"bid",
 														""
 													]
@@ -1552,14 +1875,14 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{api_gateway_three}}/auction-service/gachas/3/bids/",
+													"raw": "{{api_gateway_three}}/auction-service/gachas/1/bids/",
 													"host": [
 														"{{api_gateway_three}}"
 													],
 													"path": [
 														"auction-service",
 														"gachas",
-														"3",
+														"1",
 														"bids",
 														""
 													]
@@ -1588,14 +1911,14 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{api_gateway_three}}/auction-service/gachas/3/bids/winner/",
+													"raw": "{{api_gateway_three}}/auction-service/gachas/1/bids/winner/",
 													"host": [
 														"{{api_gateway_three}}"
 													],
 													"path": [
 														"auction-service",
 														"gachas",
-														"3",
+														"1",
 														"bids",
 														"winner",
 														""
@@ -1660,29 +1983,13 @@
 										"method": "POST",
 										"header": [],
 										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "auction_id",
-													"value": "2",
-													"type": "text"
-												},
-												{
-													"key": "collection_id",
-													"value": "20",
-													"type": "text"
-												},
-												{
-													"key": "price",
-													"value": "100",
-													"type": "text"
-												},
-												{
-													"key": "status",
-													"value": "active",
-													"type": "text"
+											"mode": "raw",
+											"raw": "{\n    \"auction_id\":1,\n    \"collection_id\":4,\n    \"price\":100,\n    \"status\":\"active\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
 												}
-											]
+											}
 										},
 										"url": {
 											"raw": "{{api_gateway_three}}/auction-service/gachas/place/",
@@ -1756,14 +2063,14 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{api_gateway_three}}/auction-service/gachas/3/details/",
+											"raw": "{{api_gateway_three}}/auction-service/gachas/1/details/",
 											"host": [
 												"{{api_gateway_three}}"
 											],
 											"path": [
 												"auction-service",
 												"gachas",
-												"3",
+												"1",
 												"details",
 												""
 											]
@@ -1796,7 +2103,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Test Auction 4\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"raw": "{\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1891,14 +2198,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{api_gateway_three}}/auction-service/auction/2/details/",
+									"raw": "{{api_gateway_three}}/auction-service/auction/1/details/",
 									"host": [
 										"{{api_gateway_three}}"
 									],
 									"path": [
 										"auction-service",
 										"auction",
-										"2",
+										"1",
 										"details",
 										""
 									]
@@ -1974,7 +2281,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": 2,\n    \"name\": \"Test Auction 4\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1982,14 +2289,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{api_gateway_three}}/auction-service/auction/2/details/",
+									"raw": "{{api_gateway_three}}/auction-service/auction/1/details/",
 									"host": [
 										"{{api_gateway_three}}"
 									],
 									"path": [
 										"auction-service",
 										"auction",
-										"2",
+										"1",
 										"details",
 										""
 									]
