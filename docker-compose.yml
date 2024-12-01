@@ -167,24 +167,6 @@ services:
       - 8002:8000
     networks:
       - app_network
-
-  gateway_three:
-    build: ./ApiGatewayThree
-    container_name: gatewaythree
-    volumes:
-      - ./ApiGatewayThree:/app
-    depends_on:
-      play_service:
-        condition: service_started
-      auction_service:
-        condition: service_started
-      transaction_service:
-        condition: service_started
-    ports:
-      - 8003:8000
-    networks:
-      - app_network
-
 volumes:
   gacha_db:
 
