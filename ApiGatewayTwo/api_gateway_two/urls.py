@@ -2,34 +2,46 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Player Endpoints
-    path('player/list/', views.listPlayers, name='gateway-list-players'),
-    path('player/create/', views.createPlayer, name='gateway-create-player'),
-    path('player/<int:id>/details/', views.playerDetails,
+    # ================= CREATE | UPDATE | DELETE PLAYER/s ========================
+    path('create/', views.createPlayer, name='gateway-create-player'),
+    path('<int:id>/details/', views.playerDetails,
          name='gateway-player-details'),
-    path('player/<int:id>/delete/', views.deletePlayer,
+    path('<int:id>/delete/', views.deletePlayer,
          name='gateway-delete-player'),
 
-    # Admin Endpoints
-    path('admin/list/', views.listAdmins, name='gateway-list-admins'),
-    path('admin/create/', views.createAdmin, name='gateway-create-admin'),
-    path('admin/<int:id>/details/', views.adminDetails,
-         name='gateway-admin-details'),
-    path('admin/<int:id>/delete/', views.deleteAdmin,
-         name='gateway-delete-admin'),
-    # Gacha Endpoints
+    # ================= SEE LIST/SINGLE GACHA ITEM ========================
     path('gacha/list/', views.listGachas, name='gateway-list-gachas'),
-    path('gacha/create/', views.createGacha, name='gateway-create-gacha'),
     path('gacha/<int:id>/details/', views.gachaDetails,
          name='gateway-gacha-details'),
-    path('gacha/<int:id>/delete/', views.deleteGacha,
-         name='gateway-delete-gacha'),
 
-    # System Variable Endpoints
-    path('system-variables/create/', views.createSystemVariable,
-         name='gateway-create-system-variable'),
-    path('system-variables/list/', views.listSystemVariables,
-         name='gateway-list-system-variables'),
-    path('system-variables/<int:id>/details/', views.systemVariableDetails,
-         name='gateway-system-variable-details'),
+    # ================= PLAY SERVICES ========================
+    path('play-service/roll-to-win/', views.rollToWinGacha, name='roll-to-win'),
+    path('play-service/direct-purchase/',
+         views.createPlayerGachaByPurchase, name='direct-purchase'),
+    path('play-service/player/<int:player_id>/collection/',
+         views.playerGachaCollections, name='player-collection'),
+    path('play-service/player/collection/<int:collection_id>/',
+         views.playerGachaCollectionDetails, name='player-collection-details'),
+
+    # ================= AUCTION | PLACE GACHA on AUCTION | BID FOR A GACHA ========================
+    path('auction-service/auction/list/',
+         views.listAuctions, name='list-auctions'),
+    path('auction-service/auction/<int:id>/details/',
+         views.auctionDetails, name='auction-details'),
+    path('auction-service/gachas/place/',
+         views.placeGachaForAuction, name='place-gacha-for-auction'),
+    path('auction-service/gachas/<int:auction_id>/list/',
+         views.listAllGachasOnAuction, name='list-gachas-on-auction'),
+    path('auction-service/gachas/<int:auction_gacha_id>/details/',
+         views.auctionGachaDetails, name='auction-gacha-details'),
+    path('auction-service/gachas/<int:auction_gacha_id>/player/<int:player_id>/bid/',
+         views.bidForGacha, name='bid-for-gacha'),
+    path('auction-service/gachas/<int:auction_gacha_id>/bids/',
+         views.listAllBids, name='list-all-bids'),
+
+    # ================= PURCHASE RUNES AND SEE TRANSACTION DETAILS ========================
+    path('transaction-service/player/<int:player_id>/all/',
+         views.playerGameCurrencyTransactions, name='player-transaction'),
+    path('transaction-service/player/<int:player_id>/purchase/game-currency/',
+         views.playerGameCurrencyPurchase, name='player-game-currency-purchase'),
 ]

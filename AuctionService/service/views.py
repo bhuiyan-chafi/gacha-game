@@ -70,11 +70,19 @@ def auctionDetails(request, id):
 @api_view(['POST'])
 def placeGachaForAuction(request):
     """
-    Place a gacha for auction after validating the auction status.
+    Place a gacha for auction after validating the auction status and collection ID.
     """
     auction_id = request.data.get("auction_id")
+    collection_id = request.data.get("collection_id")
+
+    if not auction_id or not collection_id:
+        return Response(
+            {"detail": "Both auction_id and collection_id are required."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     # Step 1: Validate the auction status
-    auction_detail_url = f"{settings.DATABASE_THREE}/auction/{auction_id}/details/"
+    auction_detail_url = f"{settings.AUCTION_SERVICE}/auction/{auction_id}/details/"
     try:
         auction_response = requests.get(auction_detail_url)
         if auction_response.status_code != 200:
@@ -88,7 +96,16 @@ def placeGachaForAuction(request):
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Auction service unavailable.", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
-    # Step 2: Forward the request to the auction service
+    # Step 2: Validate the collection ID
+    collection_detail_url = f"{settings.PLAY_SERVICE}/play-service/player/collection/{collection_id}/"
+    try:
+        collection_response = requests.get(collection_detail_url)
+        if collection_response.status_code != 200:
+            return Response({"detail": f"Invalid collection ID: {collection_id}"}, status=collection_response.status_code)
+    except requests.exceptions.RequestException as e:
+        return Response({"detail": "Play service unavailable.", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    # Step 3: Forward the request to the auction service
     return forward_request("POST", "/auction/gachas/place/", data=request.data)
 
 

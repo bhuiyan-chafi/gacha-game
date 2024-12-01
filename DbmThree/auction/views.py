@@ -145,7 +145,20 @@ def bidForGacha(request, auction_gacha_id, player_id):
         data = request.data.copy()  # Make a mutable copy of request.data
         data['auction_gacha_id'] = auction_gacha_id
         data['bidder_id'] = player_id
+        # Fetch the auction_gacha details
+        auction_gacha = get_object_or_404(AuctionGachas, pk=auction_gacha_id)
 
+        # Extract asking price from auction_gacha
+        asking_price = auction_gacha.price
+
+        # Validate the bid price
+        new_price = float(data.get('price', 0))
+
+        # Check if the bid price is less than the asking price
+        if new_price < asking_price:
+            return Response({
+                'detail': f"Bid price must be greater than or equal to the asking price ({asking_price})."
+            }, status=status.HTTP_400_BAD_REQUEST)
         # Fetch the highest bid for this auction_gacha_id
         highest_bid = AuctionGachaBid.objects.filter(
             auction_gacha_id=auction_gacha_id

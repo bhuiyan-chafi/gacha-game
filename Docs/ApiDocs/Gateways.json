@@ -1,0 +1,2373 @@
+{
+	"info": {
+		"_postman_id": "c84c0dc0-09a3-47f2-b47a-0c4e14b67cdd",
+		"name": "Final Submission",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39569857"
+	},
+	"item": [
+		{
+			"name": "GatewayOne[Admin]",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains login success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"Login successful.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"Chafi001\",\n    \"password\":\"chafi001password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/login/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains login success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"Logout successful.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"Chafi001\",\n    \"password\":\"chafi001password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/1/logout/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"logout",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "UserManagement",
+					"item": [
+						{
+							"name": "user-list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200); // Check that the status code is 200",
+											"});",
+											" ",
+											"pm.test(\"Response time is acceptable\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(1000); // Response time should be < 1000ms",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/user/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 201",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											" ",
+											"// Check if the response contains the expected detail message",
+											"pm.test(\"Response contains success message\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"detail\", \"User has been created successfully.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"player002\",\n    \"password\":\"Player002@password\",\n    \"status\":\"active\",\n    \"role\":\"player\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-user-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response should have status 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											" ",
+											"pm.test(\"Response contains user details\", function () {",
+											"    const jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse).to.have.property('id');",
+											"    pm.expect(jsonResponse).to.have.property('username');",
+											"    pm.expect(jsonResponse).to.have.property('status');",
+											"    pm.expect(jsonResponse).to.have.property('role');",
+											"    pm.expect(jsonResponse).to.have.property('created_at');",
+											"    pm.expect(jsonResponse).to.have.property('updated_at');",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/user/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "put-user-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response should have status 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											" "
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"admin001\",\n    \"status\": \"inactive\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response should have status 204 OK\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											" "
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "chafi06_mod",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "inactive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/3/delete/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"3",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AdminManagement",
+					"item": [
+						{
+							"name": "admin-list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/admin/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 201",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_id\": 1,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/admin/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "admin-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body contains expected structure\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    // Check that all required keys are present",
+											"    const requiredKeys = [\"id\", \"first_name\", \"last_name\", \"email_address\", \"phone_number\", \"user_id\"];",
+											"    requiredKeys.forEach(function (key) {",
+											"        pm.expect(responseJson).to.have.property(key);",
+											"    });",
+											"",
+											"    // Optional: Check data types of each field",
+											"    pm.test(\"Field types are correct\", function () {",
+											"        pm.expect(responseJson.id).to.be.a(\"number\");",
+											"        pm.expect(responseJson.first_name).to.be.a(\"string\");",
+											"        pm.expect(responseJson.last_name).to.be.a(\"string\");",
+											"        pm.expect(responseJson.email_address).to.be.a(\"string\");",
+											"        pm.expect(responseJson.phone_number).to.be.a(\"string\");",
+											"        pm.expect(responseJson.user_id).to.be.a(\"number\");",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/admin/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-admin-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    // Check that 'detail' key exists",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"Admin updated successfully.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"first_name\": \"CHAFIULLAH\",\n    \"last_name\": \"BHUIYAN\",\n    \"email_address\": \"chafiullah@test.com\",\n    \"phone_number\": \"3533299790\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/admin/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/admin/1/delete/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"1",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PlayerManagement",
+					"item": [
+						{
+							"name": "player-list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/player/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"player",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-player-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											" ",
+											"pm.test(\"Response message is correct\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"player updated successfully\");",
+											"});",
+											" ",
+											"pm.test(\"Response time is acceptable\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(500); // Adjust based on your performance expectations",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 10005\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/player/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"player",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/player/1/delete/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"player",
+										"1",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-player-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"// Parse the response JSON",
+											"let responseData = pm.response.json();",
+											" ",
+											"// Test that the response contains player details",
+											"pm.test(\"Response contains expected player details\", function () {",
+											"    pm.expect(responseData).to.be.an(\"object\"); // Ensure the response is a JSON object",
+											" ",
+											"    // Validate the presence of specific fields in the response",
+											"    pm.expect(responseData).to.have.property(\"id\").that.is.a(\"number\");",
+											"    pm.expect(responseData).to.have.property(\"first_name\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"last_name\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"email_address\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"phone_number\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"bank_details\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"user_id\").that.is.a(\"number\");",
+											"    pm.expect(responseData).to.have.property(\"current_balance\").that.is.a(\"number\");",
+											"});",
+											" ",
+											"// Log the response for debugging purposes",
+											"console.log(\"Response:\", responseData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/player/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"player",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-gacha-collection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/play-service/player/1/collection/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"1",
+										"collection",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-single-gacha-details Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/play-service/player/collection/1/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"collection",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/transaction-service/player/1/all/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"1",
+										"all",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GachaManagement",
+					"item": [
+						{
+							"name": "gacha-list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/gacha/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-gacha",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201 Created\", function () {",
+											"    pm.response.to.have.status(201); // Checking if the response status is 201 Created",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Mel\",\n    \"rarity\": 100,\n    \"inventory\": 4,\n    \"price\": 150,\n    \"status\": \"active\",\n    \"description\": \"Jayce is .....\",\n    \"image\": \"jayce.png\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/gacha/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "gacha-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body contains expected structure and data types\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    // Check that all required keys are present",
+											"    const requiredKeys = [\"id\", \"name\", \"rarity\", \"inventory\", \"price\", \"status\", \"created_at\", \"updated_at\"];",
+											"    requiredKeys.forEach(function (key) {",
+											"        pm.expect(responseJson).to.have.property(key);",
+											"    });",
+											"",
+											"    // Validate data types",
+											"    pm.test(\"Field types are correct\", function () {",
+											"        pm.expect(responseJson.id).to.be.a(\"number\");",
+											"        pm.expect(responseJson.name).to.be.a(\"string\");",
+											"        pm.expect(responseJson.rarity).to.be.a(\"number\");",
+											"        pm.expect(responseJson.inventory).to.be.a(\"number\");",
+											"        pm.expect(responseJson.price).to.be.a(\"number\");",
+											"        pm.expect(responseJson.status).to.be.a(\"string\");",
+											"        pm.expect(responseJson.created_at).to.be.a(\"string\");",
+											"        pm.expect(responseJson.updated_at).to.be.a(\"string\");",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/gacha/2/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-gacha-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    // Check that 'detail' key exists",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"User updated successfully.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Azir\",\n    \"rarity\": 10,\n    \"inventory\": 50,\n    \"price\": 80,\n    \"status\": \"inactive\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/gacha/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-gacha",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204 (OK)\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/gacha/10/delete/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"10",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AuctionManagement",
+					"item": [
+						{
+							"name": "create-auction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list-auction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response has required attributes\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    // Validate attributes",
+											"    pm.expect(jsonData).to.have.property(\"id\");",
+											"    pm.expect(jsonData).to.have.property(\"name\");",
+											"    pm.expect(jsonData).to.have.property(\"start_date\");",
+											"    pm.expect(jsonData).to.have.property(\"end_date\");",
+											"    pm.expect(jsonData).to.have.property(\"status\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-auction-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/2/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-auction-details Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response has the correct detail message\", function () {",
+											"    const jsonData = pm.response.json();",
+											"",
+											"    // Validate the detail attribute and its value",
+											"    pm.expect(jsonData).to.have.property(\"detail\");",
+											"    pm.expect(jsonData.detail).to.equal(\"Auction updated successfully.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/1/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-gachas",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/1/list/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"1",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction gacha details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/2/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list of bids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/2/bids/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"bids",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "winner",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/gachas/2/bids/winner/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"bids",
+										"winner",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "gateway-test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_one}}/test/",
+							"host": [
+								"{{gateway_one}}"
+							],
+							"path": [
+								"test",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Gateway one holds all the api endpoints for admins."
+		},
+		{
+			"name": "GatewayTwo[Player]",
+			"item": [
+				{
+					"name": "PlayerManagement",
+					"item": [
+						{
+							"name": "create-player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": 3,\n    \"first_name\": \"Player\",\n    \"last_name\": \"Two\",\n    \"email_address\": \"player3@outlook.com\",\n    \"phone_number\": \"3533299793\",\n    \"bank_details\": \"IT1234567895\",\n    \"current_balance\": 1000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/create/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-player-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											" ",
+											"pm.test(\"Response message is correct\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"player updated successfully\");",
+											"});",
+											" ",
+											"pm.test(\"Response time is acceptable\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(500); // Adjust based on your performance expectations",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 10005\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/1/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-player-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"// Parse the response JSON",
+											"let responseData = pm.response.json();",
+											" ",
+											"// Test that the response contains player details",
+											"pm.test(\"Response contains expected player details\", function () {",
+											"    pm.expect(responseData).to.be.an(\"object\"); // Ensure the response is a JSON object",
+											" ",
+											"    // Validate the presence of specific fields in the response",
+											"    pm.expect(responseData).to.have.property(\"id\").that.is.a(\"number\");",
+											"    pm.expect(responseData).to.have.property(\"first_name\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"last_name\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"email_address\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"phone_number\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"bank_details\").that.is.a(\"string\");",
+											"    pm.expect(responseData).to.have.property(\"user_id\").that.is.a(\"number\");",
+											"    pm.expect(responseData).to.have.property(\"current_balance\").that.is.a(\"number\");",
+											"});",
+											" ",
+											"// Log the response for debugging purposes",
+											"console.log(\"Response:\", responseData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_two}}/1/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GachaManagement",
+					"item": [
+						{
+							"name": "gacha-list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/gacha/list/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "gacha-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response body contains expected structure and data types\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    // Check that all required keys are present",
+											"    const requiredKeys = [\"id\", \"name\", \"rarity\", \"inventory\", \"price\", \"status\", \"created_at\", \"updated_at\"];",
+											"    requiredKeys.forEach(function (key) {",
+											"        pm.expect(responseJson).to.have.property(key);",
+											"    });",
+											"",
+											"    // Validate data types",
+											"    pm.test(\"Field types are correct\", function () {",
+											"        pm.expect(responseJson.id).to.be.a(\"number\");",
+											"        pm.expect(responseJson.name).to.be.a(\"string\");",
+											"        pm.expect(responseJson.rarity).to.be.a(\"number\");",
+											"        pm.expect(responseJson.inventory).to.be.a(\"number\");",
+											"        pm.expect(responseJson.price).to.be.a(\"number\");",
+											"        pm.expect(responseJson.status).to.be.a(\"string\");",
+											"        pm.expect(responseJson.created_at).to.be.a(\"string\");",
+											"        pm.expect(responseJson.updated_at).to.be.a(\"string\");",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_two}}/gacha/2/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"gacha",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PlayManagement",
+					"item": [
+						{
+							"name": "player-gacha-collection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/play-service/player/1/collection/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"1",
+										"collection",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player-single-gacha-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/play-service/player/collection/1/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"player",
+										"collection",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "roll-to-win",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"// Validate response body structure",
+											"pm.test(\"Response contains 'detail' and 'player_gacha' keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"detail\");",
+											"    pm.expect(jsonData).to.have.property(\"player_gacha\");",
+											"});",
+											"",
+											"// Validate 'detail' message",
+											"pm.test(\"Detail message is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.detail).to.eql(\"Congratulations! You rolled and won a Gacha!\");",
+											"});",
+											"",
+											"// Validate 'player_gacha' object structure",
+											"pm.test(\"Player gacha contains correct keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.player_gacha).to.have.property(\"id\");",
+											"    pm.expect(jsonData.player_gacha).to.have.property(\"player_id\");",
+											"    pm.expect(jsonData.player_gacha).to.have.property(\"gacha_id\");",
+											"    pm.expect(jsonData.player_gacha).to.have.property(\"created_at\");",
+											"});",
+											"",
+											"// Validate 'player_gacha' object values",
+											"pm.test(\"Player gacha values are correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.player_gacha.id).to.be.a(\"number\");",
+											"    pm.expect(jsonData.player_gacha.player_id).to.eql(5); // Replace with expected player_id",
+											"    pm.expect(jsonData.player_gacha.gacha_id).to.eql(2); // Replace with expected gacha_id",
+											"    pm.expect(new Date(jsonData.player_gacha.created_at)).to.be.a(\"date\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"roll_price\":\"50\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/play-service/roll-to-win/?player_id=1",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"roll-to-win",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "direct-purchase",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/play-service/direct-purchase/?player_id=1&gacha_id=1",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"direct-purchase",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "1"
+										},
+										{
+											"key": "gacha_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AuctionManagement",
+					"item": [
+						{
+							"name": "auction-details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response has required attributes\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    // Validate attributes",
+											"    pm.expect(jsonData).to.have.property(\"id\");",
+											"    pm.expect(jsonData).to.have.property(\"name\");",
+											"    pm.expect(jsonData).to.have.property(\"start_date\");",
+											"    pm.expect(jsonData).to.have.property(\"end_date\");",
+											"    pm.expect(jsonData).to.have.property(\"status\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/auction/1/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Place gacha for auction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"// Validate response body structure",
+											"pm.test(\"Response contains 'detail' and 'auction_gacha' keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"detail\");",
+											"    pm.expect(jsonData).to.have.property(\"auction_gacha\");",
+											"});",
+											"",
+											"// Validate 'detail' message",
+											"pm.test(\"Detail message is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.detail).to.eql(\"Gacha successfully placed for auction.\");",
+											"});",
+											"",
+											"// Validate 'auction_gacha' object structure",
+											"pm.test(\"Auction gacha contains correct keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.auction_gacha).to.have.property(\"id\");",
+											"    pm.expect(jsonData.auction_gacha).to.have.property(\"auction_id\");",
+											"    pm.expect(jsonData.auction_gacha).to.have.property(\"collection_id\");",
+											"    pm.expect(jsonData.auction_gacha).to.have.property(\"price\");",
+											"    pm.expect(jsonData.auction_gacha).to.have.property(\"status\");",
+											"});",
+											"",
+											"// Validate 'auction_gacha' object values",
+											"pm.test(\"Auction gacha values are correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.auction_gacha.id).to.be.a(\"number\");",
+											"    pm.expect(jsonData.auction_gacha.auction_id).to.eql(2); // Replace with expected auction_id",
+											"    pm.expect(jsonData.auction_gacha.collection_id).to.eql(20); // Replace with expected collection_id",
+											"    pm.expect(jsonData.auction_gacha.price).to.eql(100.0); // Replace with expected price",
+											"    pm.expect(jsonData.auction_gacha.status).to.eql(\"active\"); // Replace with expected status",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"auction_id\":1,\n    \"collection_id\":1,\n    \"price\":100,\n    \"status\":\"active\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/place/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"place",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-gachas",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/1/list/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"1",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction gacha details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/2/details/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bid for a gacha",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"price\":101\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/2/player/2/bid/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"player",
+										"2",
+										"bid",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list of bids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/2/bids/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"2",
+										"bids",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TransactionService",
+					"item": [
+						{
+							"name": "purchase game currency",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "cash_amount",
+											"value": "20",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{gateway_two}}/transaction-service/player/1/purchase/game-currency/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"1",
+										"purchase",
+										"game-currency",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/transaction-service/player/1/all/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"1",
+										"all",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "gateway_one",
+			"value": "http://localhost:8001/api/admin",
+			"type": "string"
+		},
+		{
+			"key": "gateway_two",
+			"value": "http://localhost:8002/api/player",
+			"type": "string"
+		}
+	]
+}

@@ -1,6 +1,0 @@
-django
-djangorestframework
-django-extensions
-python-dotenv
-requests
-cryptography

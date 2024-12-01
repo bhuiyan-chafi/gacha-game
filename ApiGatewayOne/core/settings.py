@@ -18,7 +18,11 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 AUTH_SERVICE = os.getenv("AUTH_SERVICE")
-
+USER_SERVICE = os.getenv("USER_SERVICE")
+GACHA_SERVICE = os.getenv("GACHA_SERVICE")
+PLAY_SERVICE = os.getenv("PLAY_SERVICE")
+AUCTION_SERVICE = os.getenv("AUCTION_SERVICE")
+TRANSACTION_SERVICE = os.getenv("TRANSACTION_SERVICE")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
