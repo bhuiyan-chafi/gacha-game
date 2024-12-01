@@ -25,6 +25,8 @@ services:
     depends_on:
       db_service:
         condition: service_healthy
+    ports:
+      - 6001:8000
     networks:
       - app_network
 
@@ -36,6 +38,8 @@ services:
     depends_on:
       db_service:
         condition: service_healthy
+    ports:
+      - 6002:8000
     networks:
       - app_network
 
@@ -47,6 +51,8 @@ services:
     depends_on:
       db_service:
         condition: service_healthy
+    ports:
+      - 6003:8000
     networks:
       - app_network
 
@@ -177,23 +183,6 @@ services:
         condition: service_started
     ports:
       - 8002:8000
-    networks:
-      - app_network
-
-  gateway_three:
-    build: ./ApiGatewayThree
-    container_name: gatewaythree
-    volumes:
-      - ./ApiGatewayThree:/app
-    depends_on:
-      play_service:
-        condition: service_started
-      auction_service:
-        condition: service_started
-      transaction_service:
-        condition: service_started
-    ports:
-      - 8003:8000
     networks:
       - app_network
 
