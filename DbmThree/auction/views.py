@@ -244,7 +244,7 @@ def gachaWinner(request):
     auction_gacha_id = request.data.get("auction_gacha_id")
     bidder_id = request.data.get("bidder_id")
     print('Bidder ID: ', bidder_id)
-    price = request.data.get("price")
+    price = float(request.data.get("price"))
     try:
         with transaction.atomic():
             # Step 1: Get the AuctionGacha record
@@ -288,11 +288,11 @@ def gachaWinner(request):
             # Step 4: Update balances
             seller_balance_url = f"{settings.USER_SERVICE}/player/{seller_id}/details/"
             bidder_balance_url = f"{settings.USER_SERVICE}/player/{bidder_id}/details/"
-
+            print(type(price))
             # Adjust balances: subtract from bidder, add to seller
             seller_new_balance = seller_data['current_balance'] + price
             bidder_new_balance = bidder_data['current_balance'] - price
-
+            print('Balance Calculation Performed')
             # Update seller's balance
             seller_update_response = requests.put(
                 seller_balance_url,

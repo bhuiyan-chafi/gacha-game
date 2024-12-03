@@ -23,15 +23,15 @@ jobs:
 
     # Step 3: Validate Docker Compose File
     - name: Validate Docker Compose Configuration
-      run: docker compose -f docker-compose.test.yml config
+      run: docker compose -f docker-compose.github.yml config
 
     # Step 4: Build Docker Compose Services
     - name: Build Docker Compose Services
-      run: docker compose -f docker-compose.test.yml build --no-cache
+      run: docker compose -f docker-compose.github.yml build --no-cache
 
     # Step 5: Start Services
     - name: Start Docker Compose Services
-      run: docker compose -f docker-compose.test.yml up -d
+      run: docker compose -f docker-compose.github.yml up -d
 
     # Step 6: Wait for Services
     - name: Wait for Services to Start
@@ -45,6 +45,11 @@ jobs:
     - name: Run Tests
       run: |
         docker compose exec dbm_one python manage.py test core --noinput
+        docker compose exec dbm_two python manage.py test core --noinput
+        docker compose exec dbm_two python manage.py test gacha --noinput
+        docker compose exec dbm_three python manage.py test auction --noinput
+        docker compose exec dbm_three python manage.py test own_gacha --noinput
+        docker compose exec dbm_three python manage.py test transaction --noinput
 
     # Step 9: Clean Up
     - name: Clean Up Docker Compose

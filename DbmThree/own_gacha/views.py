@@ -201,7 +201,7 @@ def createPlayerGachaByPurchase(request):
             # return Response({"location": "dbmthree", "gacha": gacha_data}, status=status.HTTP_200_OK)
             price = float(gacha_data['price'])
             inventory = int(gacha_data['inventory'])
-            print('gacha_inventory:' + str(inventory))
+            # print('gacha_inventory:' + str(inventory))
             # Create a currency transaction record
             transaction_data = {'player_id': player_id, 'amount': -price}
             transaction_serializer = InGameCurrencyTransactionSerializer(
@@ -230,7 +230,7 @@ def createPlayerGachaByPurchase(request):
 
             # Assign the gacha to the player
             player_gacha_data = {'player_id': player_id, 'gacha_id': gacha_id}
-            print(player_gacha_data)
+            # print(player_gacha_data)
             player_gacha_serializer = PlayerGachaCollectionSerializer(
                 data=player_gacha_data)
             if player_gacha_serializer.is_valid():
@@ -253,11 +253,12 @@ def createPlayerGachaByPurchase(request):
 
 @api_view(['GET'])
 def playerGachaCollections(request, player_id):
+    # print('Gacha collection checked for player: '+str(player_id))
     try:
         # Filter the PlayerGachaCollection records for the specified player_id
         gacha_collections = PlayerGachaCollection.objects.filter(
             player_id=player_id)
-
+        # print('Gacha collection checked for player: '+str(player_id))
         # Check if the player has any gacha records
         if not gacha_collections.exists():
             return Response({

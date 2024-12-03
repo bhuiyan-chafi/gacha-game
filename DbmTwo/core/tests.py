@@ -2,6 +2,9 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from .models import Player, Admin
+from unittest.mock import patch
+from django.conf import settings
+from django.test import override_settings
 
 
 class PlayerTests(APITestCase):
@@ -56,12 +59,21 @@ class PlayerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["first_name"], "John")
 
-    def test_delete_player(self):
-        """Test deleting a player"""
+    @patch('core.views.requests.delete')  # Mock the external API call
+    def test_delete_player(self, mock_delete):
+        """Test deleting a player with mocked external API call"""
+        # Configure the mock to return a 204 status code
+        mock_delete.return_value.status_code = status.HTTP_204_NO_CONTENT
+
+        # Make the DELETE request
         response = self.client.delete(
             reverse("delete_player", args=[self.player.id]))
+
+        # Assert the response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Player.objects.count(), 0)
+        expected_url = f"{settings.API_GATEWAY_ONE}/{self.player.user_id}/delete/"
+        mock_delete.assert_called_once_with(expected_url)
 
 
 class AdminTests(APITestCase):
@@ -102,9 +114,18 @@ class AdminTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["first_name"], "Admin")
 
-    def test_delete_admin(self):
-        """Test deleting an admin"""
+    @patch('core.views.requests.delete')  # Mock the external API call
+    def test_delete_admin(self, mock_delete):
+        """Test deleting an admin with mocked external API call"""
+        # Configure the mock to return a 204 status code
+        mock_delete.return_value.status_code = status.HTTP_204_NO_CONTENT
+
+        # Make the DELETE request
         response = self.client.delete(
             reverse("delete_admin", args=[self.admin.id]))
+
+        # Assert the response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Admin.objects.count(), 0)
+        expected_url = f"{settings.API_GATEWAY_ONE}/{self.admin.user_id}/delete/"
+        mock_delete.assert_called_once_with(expected_url)

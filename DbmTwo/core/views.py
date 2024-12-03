@@ -66,7 +66,7 @@ def deleteAdmin(request, id):
     admin = get_object_or_404(Admin, pk=id)
 
     # External API endpoint for auth information
-    auth_api_url = f"{settings.API_GATEWAY_ONE}/{admin.user_id}/delete"
+    auth_api_url = f"{settings.API_GATEWAY_ONE}/{admin.user_id}/delete/"
     print(auth_api_url)
 
     # Check if the user can be deleted from the auth app

@@ -7,7 +7,7 @@ urlpatterns = [
     path('direct-purchase/',
          views.createPlayerGachaByPurchase, name='create-player-gacha-purchase'),
     path('player/<int:player_id>/collection/',
-         views.playerGachaCollections, name='player-gacha-collection'),
+         views.playerGachaCollections, name='player-gacha-collections'),
     path('player/collection/<int:collection_id>/',
-         views.playerGachaCollectionDetails, name='player-gacha-collection'),
+         views.playerGachaCollectionDetails, name='player-gacha-collection-details'),
 ]

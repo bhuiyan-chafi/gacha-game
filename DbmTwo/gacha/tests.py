@@ -10,7 +10,7 @@ class GachaTests(APITestCase):
         # Create a sample Gacha for testing
         self.gacha = Gacha.objects.create(
             name="Ahri",
-            rarity=5,
+            rarity=20,
             inventory=10,
             price=100,
             description="A rare Gacha item.",
@@ -31,7 +31,7 @@ class GachaTests(APITestCase):
         """Test creating a new Gacha"""
         data = {
             "name": "Jinx",
-            "rarity": 7,
+            "rarity": 20,
             "inventory": 20,
             "price": 200,
             "description": "An ultra-rare Gacha item.",
