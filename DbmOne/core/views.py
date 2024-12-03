@@ -97,7 +97,6 @@ def loginUser(request):
             # Return user details
             serializer = UserSerializer(user)
             return Response({
-                "detail": "Login successful.",
                 "user": serializer.data
             }, status=status.HTTP_200_OK)
         else:

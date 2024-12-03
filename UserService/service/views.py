@@ -3,6 +3,7 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from . import helper
 
 
 def forward_request(method, path, data=None):
@@ -38,6 +39,17 @@ def listPlayersFromUserService(request):
     """
     Fetch all players from the UserService service.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    """
+    Fetch all admins from the UserService service.
+    """
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     return forward_request("GET", "/player/list/")
 
 
@@ -54,6 +66,16 @@ def playerDetailsFromUserService(request, id):
     """
     Fetch or update details of a specific player in the UserService service.
     """
+    """
+    Fetch all admins from the UserService service.
+    """
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     if request.method == 'GET':
         return forward_request("GET", f"/player/{id}/details/")
     elif request.method == 'PUT':
@@ -65,6 +87,17 @@ def deletePlayerFromUserService(request, id):
     """
     Delete a specific player in the UserService service.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    """
+    Fetch all admins from the UserService service.
+    """
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     return forward_request("DELETE", f"/player/{id}/delete/")
 
 # ======================== Admin Endpoints ========================
@@ -75,6 +108,15 @@ def listAdminsFromUserService(request):
     """
     Fetch all admins from the UserService service.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
+    # If the token is valid, proceed to forward the request
     return forward_request("GET", "/admin/list/")
 
 
@@ -88,9 +130,16 @@ def createAdminInUserService(request):
 
 @api_view(['GET', 'PUT'])
 def adminDetailsFromUserService(request, id):
-    """
-    Fetch or update details of a specific admin in the UserService service.
-    """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # """
+    # Fetch or update details of a specific admin in the UserService service.
+    # """
+    # # Verify the token using the helper function
+    # verify_token = helper.verifyToken(request)
+
+    # # Check if the token verification failed
+    # if not isinstance(verify_token, bool) or not verify_token:
+    #     return verify_token  # Return the failure response from verifyToken
     if request.method == 'GET':
         return forward_request("GET", f"/admin/{id}/details/")
     elif request.method == 'PUT':
@@ -102,4 +151,10 @@ def deleteAdminFromUserService(request, id):
     """
     Delete a specific admin in the UserService service.
     """
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("DELETE", f"/admin/{id}/delete/")

@@ -3,25 +3,27 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from . import helper
 
 
-def forward_request(method, path, data=None, query_params=None):
+def forward_request(method, path, data=None, query_params=None, headers=None):
     """
     Helper function to forward requests to DbmThree.
     """
+    # return Response(query_params, status=status.HTTP_200_OK)
     try:
         url = f"{settings.DATABASE_THREE}{path}"
         if query_params:
             url = f"{url}?{query_params}"
 
         if method == "GET":
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
         elif method == "POST":
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, headers=headers)
         elif method == "PUT":
-            response = requests.put(url, json=data)
+            response = requests.put(url, json=data, headers=headers)
         elif method == "DELETE":
-            response = requests.delete(url)
+            response = requests.delete(url, headers=headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -46,7 +48,16 @@ def rollToWinGacha(request):
     """
     Proxy for rolling to win a gacha, validating the player_id with the user-service first.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     player_id = request.query_params.get('player_id')
+    # return Response({"player_id": player_id}, status=status.HTTP_200_OK)
     roll_price = request.data.get('roll_price')
 
     # Validate player_id
@@ -63,15 +74,16 @@ def rollToWinGacha(request):
         return Response({"error": "roll_price must be a numeric value."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Validate player_id by calling the user-service
-        user_service_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
-        response = requests.get(user_service_url)
 
+        user_service_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
+        response = requests.get(user_service_url, headers=request.headers)
         if response.status_code == 200:
+            # return Response(request.headers, status=status.HTTP_200_OK)
             # Parse the response JSON
             user_data = response.json()
-
+            # return Response(user_data, status=status.HTTP_200_OK)
             # Validate player_id
+            # return Response({"player_id": player_id, "player_id_db": str(user_data.get("id"))}, status=status.HTTP_200_OK)
             if str(user_data.get("id")) != str(player_id):
                 return Response({"error": "player_id mismatch in user-service."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -84,11 +96,12 @@ def rollToWinGacha(request):
                 return Response({"error": "Insufficient balance for the roll."}, status=status.HTTP_400_BAD_REQUEST)
 
             # Proceed to forward the request to the gacha collection service
+            # return Response({"detail": "calling dbm_three now because every condition satisfied"}, status=status.HTTP_200_OK)
             return forward_request(
                 "POST",
                 "/gacha-collection/roll-to-win/",
                 query_params=f"player_id={player_id}",
-                data=request.data
+                data=request.data, headers=request.headers
             )
 
         elif response.status_code == 404:
@@ -112,6 +125,13 @@ def rollToWinGacha(request):
 
 @api_view(['POST'])
 def createPlayerGachaByPurchase(request):
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     player_id = request.query_params.get('player_id')
     gacha_id = request.query_params.get('gacha_id')
 
@@ -120,7 +140,8 @@ def createPlayerGachaByPurchase(request):
     # Step 1: Check if the player already owns the gacha
     player_collection_url = f"{settings.DATABASE_THREE}/gacha-collection/player/{player_id}/collection/"
     try:
-        collection_response = requests.get(player_collection_url)
+        collection_response = requests.get(
+            player_collection_url, headers=request.headers)
         if collection_response.status_code != 200:
             return Response({"detail": "Failed to fetch player's gacha collection."}, status=collection_response.status_code)
 
@@ -138,7 +159,8 @@ def createPlayerGachaByPurchase(request):
     # Step 2: Validate the player
     user_detail_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
     try:
-        player_response = requests.get(user_detail_url)
+        player_response = requests.get(
+            user_detail_url, headers=request.headers)
         if player_response.status_code != 200:
             return Response({"detail": "Failed to fetch player details."}, status=player_response.status_code)
 
@@ -152,7 +174,8 @@ def createPlayerGachaByPurchase(request):
     # Step 3: Validate the gacha
     gacha_detail_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/{gacha_id}/details/"
     try:
-        gacha_response = requests.get(gacha_detail_url)
+        gacha_response = requests.get(
+            gacha_detail_url, headers=request.headers)
         if gacha_response.status_code != 200:
             return Response({"detail": "Failed to fetch gacha details."}, status=gacha_response.status_code)
 
@@ -177,7 +200,7 @@ def createPlayerGachaByPurchase(request):
     return forward_request(
         "POST",
         "/gacha-collection/direct-purchase/",
-        query_params=f"player_id={player_id}&gacha_id={gacha_id}"
+        query_params=f"player_id={player_id}&gacha_id={gacha_id}", headers=request.headers
     )
 
 
@@ -186,6 +209,13 @@ def playerGachaCollections(request, player_id):
     """
     Proxy for fetching a player's gacha collection.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("GET", f"/gacha-collection/player/{player_id}/collection/")
 
 
@@ -194,7 +224,14 @@ def playerGachaCollectionDetails(request, collection_id):
     """
     Proxy for fetching or deleting a specific player's gacha collection record.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     if request.method == 'GET':
-        return forward_request("GET", f"/gacha-collection/player/collection/{collection_id}/")
+        return forward_request("GET", f"/gacha-collection/player/collection/{collection_id}/", headers=request.headers)
     elif request.method == 'DELETE':
-        return forward_request("DELETE", f"/gacha-collection/player/collection/{collection_id}/")
+        return forward_request("DELETE", f"/gacha-collection/player/collection/{collection_id}/", headers=request.headers)

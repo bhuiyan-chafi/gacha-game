@@ -1,11 +1,1179 @@
 {
 	"info": {
-		"_postman_id": "11af7cd8-4e22-4314-a622-4ea4c91700ef",
-		"name": "ServiceEndpoints",
+		"_postman_id": "67005c30-9ce7-408d-8035-2689c8e70aae",
+		"name": "GachaDockered",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39569857"
+		"_exporter_id": "39573101"
 	},
 	"item": [
+		{
+			"name": "DBMs",
+			"item": [
+				{
+					"name": "DbmOne",
+					"item": [
+						{
+							"name": "Authentication",
+							"item": [
+								{
+									"name": "login",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_one}}/user/login/",
+											"host": [
+												"{{dbm_one}}"
+											],
+											"path": [
+												"user",
+												"login",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "logout",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_one}}/user/1004/logout/",
+											"host": [
+												"{{dbm_one}}"
+											],
+											"path": [
+												"user",
+												"1004",
+												"logout",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbm_one}}/test/",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"test",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "put-user-details",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin001\",\r\n    \"status\": \"inactive\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbm_one}}/user/1/details/",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-user-details",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{dbm_one}}/user/2/details/",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"user",
+										"2",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbm_one}}/user/list",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"user",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"chfshuvo\",\r\n    \"password\":\"chfshuvo\",\r\n    \"status\":\"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dbm_one}}/user/create/",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"user",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-user",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "chafi06_mod",
+											"type": "text"
+										},
+										{
+											"key": "status ",
+											"value": "inactive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{dbm_one}}/user/1/delete/",
+									"host": [
+										"{{dbm_one}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DbmTwo",
+					"item": [
+						{
+							"name": "Players",
+							"item": [
+								{
+									"name": "create-player",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"user_id\": 3,\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"Two\",\r\n    \"email_address\": \"player3@outlook.com\",\r\n    \"phone_number\": \"3533299793\",\r\n    \"bank_details\": \"IT1234567895\",\r\n    \"current_balance\": 1000\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_two}}/core/player/create/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"player",
+												"create",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update-player-details",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"One\",\r\n    \"email_address\": \"player1@outlook.com\",\r\n    \"phone_number\": \"3533299792\",\r\n    \"bank_details\": \"IT1234567893\",\r\n    \"current_balance\": 10005\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_two}}/core/player/3/details/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"player",
+												"3",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete-player",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/player/2/delete/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"player",
+												"2",
+												"delete",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "player-list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/player/list/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"player",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Admins",
+							"item": [
+								{
+									"name": "create-admin",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"user_id\": 1,\r\n  \"first_name\": \"CHAFIULLAH\",\r\n  \"last_name\": \"BHUIYAN\",\r\n  \"email_address\": \"chafiullah@test.com\",\r\n  \"phone_number\": \"3533299790\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_two}}/core/admin/create/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"admin",
+												"create",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "admin-details",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/admin/4/details/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"admin",
+												"4",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete-admin",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/admin/1/delete/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"admin",
+												"1",
+												"delete",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "admin-list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/admin/list/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"admin",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Gachas",
+							"item": [
+								{
+									"name": "update-gacha-details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200 (OK)\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Response contains success message\", function () {",
+													"    const responseJson = pm.response.json();",
+													"",
+													"    // Check that 'detail' key exists",
+													"    pm.expect(responseJson).to.have.property(\"detail\", \"User updated successfully.\");",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Azir\",\n    \"rarity\": 100,\n    \"inventory\": 50,\n    \"price\": 80,\n    \"status\": \"inactive\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_two}}/gacha/1/details/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"gacha",
+												"1",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "gacha-list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/gacha/list/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"gacha",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create-gacha",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Menl\",\r\n    \"rarity\": 100,\r\n    \"inventory\": 4,\r\n    \"price\": 150,\r\n    \"status\": \"active\",\r\n    \"description\": \"Jayce is .....\",\r\n    \"image\": \"jayce.png\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_two}}/gacha/create/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"gacha",
+												"create",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "gacha-details",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "name",
+													"value": "Ahri",
+													"type": "text"
+												},
+												{
+													"key": "rarity",
+													"value": "5",
+													"type": "text"
+												},
+												{
+													"key": "inventory",
+													"value": "100",
+													"type": "text"
+												},
+												{
+													"key": "price",
+													"value": "20",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "inactive",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{dbm_two}}/gacha/28/details/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"gacha",
+												"28",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete-gacha",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/gacha/1/delete/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"gacha",
+												"1",
+												"delete",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "DbmThree",
+					"item": [
+						{
+							"name": "PlayService",
+							"item": [
+								{
+									"name": "player-gacha-collection",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/gacha-collection/player/3/collection/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"gacha-collection",
+												"player",
+												"3",
+												"collection",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "roll-to-win",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"roll_price\":\"50\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_three}}/gacha-collection/roll-to-win/?player_id=5",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"gacha-collection",
+												"roll-to-win",
+												""
+											],
+											"query": [
+												{
+													"key": "player_id",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "direct-purchase",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/gacha-collection/direct-purchase/?player_id=3&gacha_id=10",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"gacha-collection",
+												"direct-purchase",
+												""
+											],
+											"query": [
+												{
+													"key": "player_id",
+													"value": "3"
+												},
+												{
+													"key": "gacha_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "player-single-gacha-details",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/gacha-collection/player/collection/2/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"gacha-collection",
+												"player",
+												"collection",
+												"2",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "AuctionService",
+							"item": [
+								{
+									"name": "Gachas",
+									"item": [
+										{
+											"name": "Bids",
+											"item": [
+												{
+													"name": "bid for a gacha",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "formdata",
+															"formdata": [
+																{
+																	"key": "price",
+																	"value": "110",
+																	"type": "text"
+																}
+															]
+														},
+														"url": {
+															"raw": "{{dbm_three}}/auction/gachas/4/player/5/bid/",
+															"host": [
+																"{{dbm_three}}"
+															],
+															"path": [
+																"auction",
+																"gachas",
+																"4",
+																"player",
+																"5",
+																"bid",
+																""
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "list of bids",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "{{dbm_three}}/auction/gachas/4/bids/",
+															"host": [
+																"{{dbm_three}}"
+															],
+															"path": [
+																"auction",
+																"gachas",
+																"4",
+																"bids",
+																""
+															]
+														}
+													},
+													"response": []
+												},
+												{
+													"name": "winner",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "{{dbm_three}}/auction/gachas/3/bids/winner/",
+															"host": [
+																"{{dbm_three}}"
+															],
+															"path": [
+																"auction",
+																"gachas",
+																"3",
+																"bids",
+																"winner",
+																""
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "Place gacha for auction",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "auction_id",
+															"value": "2",
+															"type": "text"
+														},
+														{
+															"key": "collection_id",
+															"value": "20",
+															"type": "text"
+														},
+														{
+															"key": "price",
+															"value": "100",
+															"type": "text"
+														},
+														{
+															"key": "status",
+															"value": "active",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/place/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"place",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "auction-gachas",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/2/list/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"2",
+														"list",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "auction gacha details",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/4/details/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"4",
+														"details",
+														""
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "create-auction",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Black Friday Sell\",\r\n    \"start_date\": \"2024-11-11T00:00:00Z\",\r\n    \"end_date\": \"2024-11-11T00:00:00Z\",\r\n    \"status\": \"inactive\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_three}}/auction/create/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"auction",
+												"create",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "list-auction",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/auction/list/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"auction",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auction-details",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/auction/2/details/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"auction",
+												"2",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete-auction-details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.response.to.have.status(204);",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{dbm_three}}/auction/1/details/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"auction",
+												"1",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update-auction-details Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Response has the correct detail message\", function () {",
+													"    const jsonData = pm.response.json();",
+													"",
+													"    // Validate the detail attribute and its value",
+													"    pm.expect(jsonData).to.have.property(\"detail\");",
+													"    pm.expect(jsonData.detail).to.equal(\"Auction updated successfully.\");",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{dbm_three}}/auction/1/details/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"auction",
+												"1",
+												"details",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Transactions",
+							"item": [
+								{
+									"name": "player transactions",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_three}}/transaction/player/3/all/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"transaction",
+												"player",
+												"3",
+												"all",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "purchase game currency",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "cash_amount",
+													"value": "20",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{dbm_three}}/transaction/player/4/purchase/game-currency/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"transaction",
+												"player",
+												"4",
+												"purchase",
+												"game-currency",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auction winner",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "auction_gacha_id",
+													"value": "2",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{dbm_three}}/transaction/auction/winner/declare/",
+											"host": [
+												"{{dbm_three}}"
+											],
+											"path": [
+												"transaction",
+												"auction",
+												"winner",
+												"declare",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
 		{
 			"name": "Services",
 			"item": [
@@ -229,48 +1397,29 @@
 							"item": [
 								{
 									"name": "create-player",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
 										"header": [],
 										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "user_id",
-													"value": "10",
-													"type": "text"
-												},
-												{
-													"key": "first_name",
-													"value": "Player",
-													"type": "text"
-												},
-												{
-													"key": "last_name",
-													"value": "Three",
-													"type": "text"
-												},
-												{
-													"key": "email_address",
-													"value": "playerthree@outlook.com",
-													"type": "text"
-												},
-												{
-													"key": "phone_number",
-													"value": "3533299793",
-													"type": "text"
-												},
-												{
-													"key": "bank_details",
-													"value": "IT1234567893",
-													"type": "text"
-												},
-												{
-													"key": "current_balance",
-													"value": "50003",
-													"type": "text"
+											"mode": "raw",
+											"raw": "{\r\n    \"user_id\": 4,\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"Two\",\r\n    \"email_address\": \"player3s@outlook.com\",\r\n    \"phone_number\": \"353329793\",\r\n    \"bank_details\": \"IT1234567495\",\r\n    \"current_balance\": 1000\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
 												}
-											]
+											}
 										},
 										"url": {
 											"raw": "{{user_service_gateway}}/player/create/",
@@ -292,44 +1441,13 @@
 										"method": "PUT",
 										"header": [],
 										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "user_id",
-													"value": "8",
-													"type": "text"
-												},
-												{
-													"key": "first_name",
-													"value": "ASM CHAFIULLAH",
-													"type": "text"
-												},
-												{
-													"key": "last_name",
-													"value": "BHUIYAN",
-													"type": "text"
-												},
-												{
-													"key": "email_address",
-													"value": "chafiullah@outlook.com",
-													"type": "text"
-												},
-												{
-													"key": "bank_details",
-													"value": "IT12345678900",
-													"type": "text"
-												},
-												{
-													"key": "phone_number",
-													"value": "35332997900",
-													"type": "text"
-												},
-												{
-													"key": "current_balance",
-													"value": "2000005",
-													"type": "text"
+											"mode": "raw",
+											"raw": "{\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"One\",\r\n    \"email_address\": \"player1@outlook.com\",\r\n    \"phone_number\": \"3533299792\",\r\n    \"bank_details\": \"IT1234567893\",\r\n    \"current_balance\": 10005\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
 												}
-											]
+											}
 										},
 										"url": {
 											"raw": "{{user_service_gateway}}/player/3/details/",
@@ -379,6 +1497,60 @@
 											"path": [
 												"player",
 												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get-player-details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"// Parse the response JSON",
+													"let responseData = pm.response.json();",
+													" ",
+													"// Test that the response contains player details",
+													"pm.test(\"Response contains expected player details\", function () {",
+													"    pm.expect(responseData).to.be.an(\"object\"); // Ensure the response is a JSON object",
+													" ",
+													"    // Validate the presence of specific fields in the response",
+													"    pm.expect(responseData).to.have.property(\"id\").that.is.a(\"number\");",
+													"    pm.expect(responseData).to.have.property(\"first_name\").that.is.a(\"string\");",
+													"    pm.expect(responseData).to.have.property(\"last_name\").that.is.a(\"string\");",
+													"    pm.expect(responseData).to.have.property(\"email_address\").that.is.a(\"string\");",
+													"    pm.expect(responseData).to.have.property(\"phone_number\").that.is.a(\"string\");",
+													"    pm.expect(responseData).to.have.property(\"bank_details\").that.is.a(\"string\");",
+													"    pm.expect(responseData).to.have.property(\"user_id\").that.is.a(\"number\");",
+													"    pm.expect(responseData).to.have.property(\"current_balance\").that.is.a(\"number\");",
+													"});",
+													" ",
+													"// Log the response for debugging purposes",
+													"console.log(\"Response:\", responseData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{user_service_gateway}}/player/1/details/",
+											"host": [
+												"{{user_service_gateway}}"
+											],
+											"path": [
+												"player",
+												"1",
+												"details",
 												""
 											]
 										}
@@ -568,34 +1740,13 @@
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "Ahri",
-											"type": "text"
-										},
-										{
-											"key": "rarity",
-											"value": "5",
-											"type": "text"
-										},
-										{
-											"key": "inventory",
-											"value": "100",
-											"type": "text"
-										},
-										{
-											"key": "price",
-											"value": "15",
-											"type": "text"
-										},
-										{
-											"key": "status",
-											"value": "active",
-											"type": "text"
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Mel4\",\r\n    \"rarity\": 80,\r\n    \"inventory\": 4,\r\n    \"price\": 150,\r\n    \"status\": \"active\",\r\n    \"description\": \"Jayce is .tt....\",\r\n    \"image\": \"jayc7.png\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									]
+									}
 								},
 								"url": {
 									"raw": "{{gacha_service_gateway}}/gacha/create/",
@@ -613,50 +1764,17 @@
 						},
 						{
 							"name": "gacha-details",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "Ahri",
-											"type": "text"
-										},
-										{
-											"key": "rarity",
-											"value": "5",
-											"type": "text"
-										},
-										{
-											"key": "inventory",
-											"value": "100",
-											"type": "text"
-										},
-										{
-											"key": "price",
-											"value": "20",
-											"type": "text"
-										},
-										{
-											"key": "status",
-											"value": "inactive",
-											"type": "text"
-										}
-									]
-								},
 								"url": {
-									"raw": "{{gacha_service_gateway}}/gacha/28/details/",
+									"raw": "{{gacha_service_gateway}}/gacha/2/details/",
 									"host": [
 										"{{gacha_service_gateway}}"
 									],
 									"path": [
 										"gacha",
-										"28",
+										"2",
 										"details",
 										""
 									]
@@ -687,96 +1805,6 @@
 					]
 				},
 				{
-					"name": "SystemVariableService",
-					"item": [
-						{
-							"name": "list",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{system_variable_service}}/list/",
-									"host": [
-										"{{system_variable_service}}"
-									],
-									"path": [
-										"list",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "create",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "platform_name",
-											"type": "text"
-										},
-										{
-											"key": "value",
-											"value": "Gacha Game",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{system_variable_service}}/create/",
-									"host": [
-										"{{system_variable_service}}"
-									],
-									"path": [
-										"create",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "details",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "supported_currency",
-											"type": "text"
-										},
-										{
-											"key": "value",
-											"value": "rune",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{system_variable_service}}/1/details/",
-									"host": [
-										"{{system_variable_service}}"
-									],
-									"path": [
-										"1",
-										"details",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "PlayService",
 					"item": [
 						{
@@ -785,13 +1813,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{play_service_gateway}}/player/3/collection/",
+									"raw": "{{play_service_gateway}}/player/1/collection/",
 									"host": [
 										"{{play_service_gateway}}"
 									],
 									"path": [
 										"player",
-										"3",
+										"1",
 										"collection",
 										""
 									]
@@ -804,8 +1832,17 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"roll_price\":\"50\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{play_service_gateway}}/roll-to-win/?player_id=5",
+									"raw": "{{play_service_gateway}}/roll-to-win/?player_id=1",
 									"host": [
 										"{{play_service_gateway}}"
 									],
@@ -816,7 +1853,7 @@
 									"query": [
 										{
 											"key": "player_id",
-											"value": "5"
+											"value": "1"
 										}
 									]
 								}
@@ -852,7 +1889,7 @@
 							"response": []
 						},
 						{
-							"name": "player-single-gacha-details Copy",
+							"name": "player-single-gacha-details",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -877,7 +1914,7 @@
 					"name": "AuctionService",
 					"item": [
 						{
-							"name": "Gachas",
+							"name": "Gachas Copy",
 							"item": [
 								{
 									"name": "Bids",
@@ -888,14 +1925,13 @@
 												"method": "POST",
 												"header": [],
 												"body": {
-													"mode": "formdata",
-													"formdata": [
-														{
-															"key": "price",
-															"value": "110",
-															"type": "text"
+													"mode": "raw",
+													"raw": "{\r\n    \"price\":101\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
 														}
-													]
+													}
 												},
 												"url": {
 													"raw": "{{auction_service_gateway}}/auction/gachas/3/player/5/bid/",
@@ -966,29 +2002,13 @@
 										"method": "POST",
 										"header": [],
 										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "auction_id",
-													"value": "2",
-													"type": "text"
-												},
-												{
-													"key": "collection_id",
-													"value": "20",
-													"type": "text"
-												},
-												{
-													"key": "price",
-													"value": "100",
-													"type": "text"
-												},
-												{
-													"key": "status",
-													"value": "active",
-													"type": "text"
+											"mode": "raw",
+											"raw": "{\r\n    \"auction_id\":1,\r\n    \"collection_id\":1,\r\n    \"price\":100,\r\n    \"status\":\"active\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
 												}
-											]
+											}
 										},
 										"url": {
 											"raw": "{{auction_service_gateway}}/auction/gachas/place/",
@@ -1006,7 +2026,7 @@
 									"response": []
 								},
 								{
-									"name": "Auction Gachas",
+									"name": "auction-gachas",
 									"request": {
 										"method": "GET",
 										"header": [],
@@ -1114,45 +2134,17 @@
 						},
 						{
 							"name": "auction-details",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "Test Auction 0",
-											"type": "text"
-										},
-										{
-											"key": "start_date",
-											"value": "2024-11-11 00:00:00",
-											"type": "text"
-										},
-										{
-											"key": "end_date",
-											"value": "2024-11-11 00:00:00",
-											"type": "text"
-										},
-										{
-											"key": "status",
-											"value": "inactive",
-											"type": "text"
-										}
-									]
-								},
 								"url": {
-									"raw": "{{auction_service_gateway}}/auction/2/details/",
+									"raw": "{{auction_service_gateway}}/auction/1/details/",
 									"host": [
 										"{{auction_service_gateway}}"
 									],
 									"path": [
 										"auction",
-										"2",
+										"1",
 										"details",
 										""
 									]
@@ -1161,19 +2153,69 @@
 							"response": []
 						},
 						{
-							"name": "auction winner",
+							"name": "list of bids",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{auction_service_gateway}}/auction-service/gachas/2/bids/winner/",
+									"raw": "{{dbm_three}}/auction/gachas/2/bids/",
 									"host": [
-										"{{auction_service_gateway}}"
+										"{{dbm_three}}"
 									],
 									"path": [
-										"auction-service",
+										"auction",
 										"gachas",
 										"2",
+										"bids",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "winner",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{dbm_three}}/auction/gachas/bids/winner/",
+									"host": [
+										"{{dbm_three}}"
+									],
+									"path": [
+										"auction",
+										"gachas",
 										"bids",
 										"winner",
 										""
@@ -1193,14 +2235,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{transaction_service_gateway}}/transactions/player/3/all/",
+									"raw": "{{transaction_service_gateway}}/transactions/player/1/all/",
 									"host": [
 										"{{transaction_service_gateway}}"
 									],
 									"path": [
 										"transactions",
 										"player",
-										"3",
+										"1",
 										"all",
 										""
 									]
@@ -1285,32 +2327,52 @@
 		},
 		{
 			"key": "auth_service_gateway",
-			"value": "http://localhost:4001/authentication-service",
+			"value": "http://localhost:4000/authentication-service",
 			"type": "string"
 		},
 		{
 			"key": "user_service_gateway",
-			"value": "http://localhost:4002/user-service",
+			"value": "http://localhost:4004/user-service",
 			"type": "string"
 		},
 		{
 			"key": "gacha_service_gateway",
-			"value": "http://localhost:4003/gacha-service",
+			"value": "http://localhost:4005/gacha-service",
 			"type": "string"
 		},
 		{
 			"key": "play_service_gateway",
-			"value": "http://localhost:4004/play-service",
+			"value": "http://localhost:4003/play-service",
 			"type": "string"
 		},
 		{
 			"key": "auction_service_gateway",
-			"value": "http://localhost:4005",
+			"value": "http://localhost:4001",
 			"type": "string"
 		},
 		{
 			"key": "transaction_service_gateway",
-			"value": "http://localhost:4006",
+			"value": "http://localhost:4002",
+			"type": "string"
+		},
+		{
+			"key": "system_variable_service",
+			"value": "http://localhost:4005/system-variables",
+			"type": "string"
+		},
+		{
+			"key": "api_gateway_one",
+			"value": "http://localhost:8001/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "api_gateway_two",
+			"value": "http://localhost:8002/api/v2",
+			"type": "string"
+		},
+		{
+			"key": "api_gateway_three",
+			"value": "http://localhost:8003/api/v3",
 			"type": "string"
 		}
 	]

@@ -3,22 +3,23 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from . import helper
 
 
-def forward_request(method, path, data=None):
+def forward_request(method, path, data=None, headers=None):
     """
     Helper function to forward requests to DbmThree Auction endpoints.
     """
     try:
         url = f"{settings.DATABASE_THREE}{path}"
         if method == "GET":
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
         elif method == "POST":
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, headers=headers)
         elif method == "PUT":
-            response = requests.put(url, json=data)
+            response = requests.put(url, json=data, headers=headers)
         elif method == "DELETE":
-            response = requests.delete(url)
+            response = requests.delete(url, headers=headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -36,6 +37,13 @@ def listAuctions(request):
     """
     Proxy for listing all auctions.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("GET", "/auction/list/")
 
 
@@ -44,6 +52,13 @@ def createAuction(request):
     """
     Proxy for creating a new auction.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("POST", "/auction/create/", data=request.data)
 
 
@@ -52,6 +67,13 @@ def auctionDetails(request, id):
     """
     Proxy for getting, updating, or deleting auction details.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     if request.method == 'GET':
         return forward_request("GET", f"/auction/{id}/details/")
     elif request.method == 'PUT':
@@ -69,9 +91,17 @@ def auctionDetails(request, id):
 
 @api_view(['POST'])
 def placeGachaForAuction(request):
+    # return Response({"location": "auction_service", "headers": request.headers}, status=status.HTTP_200_OK)
     """
     Place a gacha for auction after validating the auction status and collection ID.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     auction_id = request.data.get("auction_id")
     collection_id = request.data.get("collection_id")
 
@@ -84,11 +114,13 @@ def placeGachaForAuction(request):
     # Step 1: Validate the auction status
     auction_detail_url = f"{settings.AUCTION_SERVICE}/auction/{auction_id}/details/"
     try:
-        auction_response = requests.get(auction_detail_url)
+        auction_response = requests.get(
+            auction_detail_url, headers=request.headers)
         if auction_response.status_code != 200:
             return Response({"detail": "Failed to fetch auction details."}, status=auction_response.status_code)
 
         auction_data = auction_response.json()
+        # return Response({"location": "auction_service", "auction_details": auction_data}, status=status.HTTP_200_OK)
         auction_status = auction_data.get("status")
 
         if auction_status != "active":
@@ -99,14 +131,16 @@ def placeGachaForAuction(request):
     # Step 2: Validate the collection ID
     collection_detail_url = f"{settings.PLAY_SERVICE}/play-service/player/collection/{collection_id}/"
     try:
-        collection_response = requests.get(collection_detail_url)
+        collection_response = requests.get(
+            collection_detail_url, headers=request.headers)
         if collection_response.status_code != 200:
             return Response({"detail": f"Invalid collection ID: {collection_id}"}, status=collection_response.status_code)
+        # return Response({"location": "auction_service", "collection_response": collection_response.json()}, status=status.HTTP_200_OK)
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Play service unavailable.", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
     # Step 3: Forward the request to the auction service
-    return forward_request("POST", "/auction/gachas/place/", data=request.data)
+    return forward_request("POST", "/auction/gachas/place/", data=request.data, headers=request.headers)
 
 
 @api_view(['GET'])
@@ -114,6 +148,13 @@ def listAllGachasOnAuction(request, auction_id):
     """
     Proxy for listing all gachas on auction for a specific auction ID.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("GET", f"/auction/gachas/{auction_id}/list/")
 
 
@@ -122,6 +163,13 @@ def auctionGachaDetails(request, auction_gacha_id):
     """
     Proxy for getting details of or deleting a specific gacha on auction.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     if request.method == 'GET':
         return forward_request("GET", f"/auction/gachas/{auction_gacha_id}/details/")
     elif request.method == 'DELETE':
@@ -142,11 +190,21 @@ def auctionGachaDetails(request, auction_gacha_id):
 
 @api_view(['POST', 'PUT'])
 def bidForGacha(request, auction_gacha_id, player_id):
+    # return Response({"location": "auction_service", "headers": request.headers}, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     bidding_price = request.data.get("price")
     try:
         # Step 1: Validate the auction gacha status
         gacha_detail_url = f"{settings.DATABASE_THREE}/auction/gachas/{auction_gacha_id}/details/"
-        gacha_response = requests.get(gacha_detail_url)
+        gacha_response = requests.get(
+            gacha_detail_url, headers=request.headers)
+        # return Response({"location": "auction_service", "gacha_response": gacha_response.json()}, status=status.HTTP_200_OK)
+
         if gacha_response.status_code != 200:
             return Response({"detail": "Failed to fetch auction gacha details."}, status=gacha_response.status_code)
 
@@ -159,7 +217,9 @@ def bidForGacha(request, auction_gacha_id, player_id):
 
         # Step 2: Validate the auction status
         auction_detail_url = f"{settings.DATABASE_THREE}/auction/{auction_id}/details/"
-        auction_response = requests.get(auction_detail_url)
+        auction_response = requests.get(
+            auction_detail_url, headers=request.headers)
+        # return Response({"location": "auction_service", "auction_response": auction_response.json()}, status=status.HTTP_200_OK)
         if auction_response.status_code != 200:
             return Response({"detail": "Failed to fetch auction details."}, status=auction_response.status_code)
 
@@ -169,7 +229,10 @@ def bidForGacha(request, auction_gacha_id, player_id):
 
         # Step 3: Validate the gacha owner
         collection_detail_url = f"{settings.PLAY_SERVICE}/play-service/player/collection/{collection_id}/"
-        collection_response = requests.get(collection_detail_url)
+        collection_response = requests.get(
+            collection_detail_url, headers=request.headers)
+        # return Response({"location": "auction_service", "collection_response": collection_response.json()}, status=status.HTTP_200_OK)
+
         if collection_response.status_code != 200:
             return Response({"detail": "Failed to fetch gacha collection details."}, status=collection_response.status_code)
 
@@ -184,7 +247,10 @@ def bidForGacha(request, auction_gacha_id, player_id):
 
         # Step 4: Check if the bidder already owns the gacha
         bidder_collection_url = f"{settings.PLAY_SERVICE}/play-service/player/{player_id}/collection/"
-        bidder_collection_response = requests.get(bidder_collection_url)
+        bidder_collection_response = requests.get(
+            bidder_collection_url, headers=request.headers)
+        # return Response({"location": "auction_service", "bidder_collection_response": bidder_collection_response.json()}, status=status.HTTP_200_OK)
+
         if bidder_collection_response.status_code != 200:
             return Response({"detail": "Failed to fetch bidder's gacha collection."},
                             status=bidder_collection_response.status_code)
@@ -198,7 +264,9 @@ def bidForGacha(request, auction_gacha_id, player_id):
 
         # Step 5: Check if the bidder has sufficient balance
         player_detail_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
-        player_response = requests.get(player_detail_url)
+        player_response = requests.get(
+            player_detail_url, headers=request.headers)
+        # return Response({"location": "auction_service", "player_response": player_response.json()}, status=status.HTTP_200_OK)
         if player_response.status_code != 200:
             return Response({"detail": "Failed to fetch bidder's player details."}, status=player_response.status_code)
 
@@ -226,6 +294,13 @@ def listAllBids(request, auction_gacha_id):
     """
     Proxy for listing all bids for a specific auction gacha.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     return forward_request("GET", f"/auction/gachas/{auction_gacha_id}/bids/")
 
 
@@ -245,10 +320,19 @@ def gachaWinner(request, auction_gacha_id):
     """
     Determine the winner of an auction gacha by checking each highest bidder's eligibility.
     """
+    # return Response({"location": "auction_service", "headers": request.headers}, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
     # Step 1: Load all bids for the auction gacha
     bids_url = f"{settings.DATABASE_THREE}/auction/gachas/{auction_gacha_id}/bids/"
     try:
         bids_response = requests.get(bids_url)
+        # return Response({"location": "auction_service", "bids_response": bids_response.json()}, status=status.HTTP_200_OK)
+
         if bids_response.status_code != 200:
             return Response(
                 {"detail": "Failed to fetch bids for the auction gacha."},
@@ -273,7 +357,10 @@ def gachaWinner(request, auction_gacha_id):
             # Step 3: Check bidder's current balance
             bidder_detail_url = f"{settings.USER_SERVICE}/user-service/player/{bidder_id}/details/"
             try:
-                bidder_response = requests.get(bidder_detail_url)
+                bidder_response = requests.get(
+                    bidder_detail_url, headers=request.headers)
+                # return Response({"location": "auction_service", "bidder_response": bidder_response.json()}, status=status.HTTP_200_OK)
+
                 if bidder_response.status_code != 200:
                     continue  # Skip this bidder and move to the next
 
@@ -291,8 +378,8 @@ def gachaWinner(request, auction_gacha_id):
                 }
                 declare_winner_url = f"{settings.DATABASE_THREE}/auction/gachas/bids/winner/"
                 declare_winner_response = requests.post(
-                    declare_winner_url, json=winner_data)
-
+                    declare_winner_url, json=winner_data, headers=request.headers)
+                # return Response({"location": "auction_service", "declare_winner_response": declare_winner_response.json()}, status=status.HTTP_200_OK)
                 if declare_winner_response.status_code == 200:
                     return Response(
                         {"detail": "Winner declared successfully.",

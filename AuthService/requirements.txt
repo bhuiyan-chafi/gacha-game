@@ -4,3 +4,4 @@ django-extensions
 python-dotenv
 requests
 cryptography
+pyjwt

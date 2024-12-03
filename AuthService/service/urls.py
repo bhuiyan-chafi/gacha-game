@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('test/', views.authAppTest),
+    path('token/verify/', views.verifyToken),
     path('create/', views.createUser),
     path('list/', views.listOfUsers),
     path('<int:id>/details/', views.userDetails),

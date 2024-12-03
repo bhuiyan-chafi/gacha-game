@@ -24,6 +24,8 @@ DATABASE_ONE = os.getenv("DATABASE_ONE")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)6xa-6&*9^7#-q@s4dk*-+_g9%5vf$8ee@%!1mk^kh0xt8z$@0'
+# for now we are making it 5 hours
+TOKEN_LIFE_TIME = 300
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

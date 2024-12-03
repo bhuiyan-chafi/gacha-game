@@ -240,6 +240,7 @@ def listAllBids(request, auction_gacha_id):
 @api_view(['POST'])
 def gachaWinner(request):
     # Extract data from the request body
+    # return Response({"location": "dbmthree", "headers": request.headers}, status=status.HTTP_200_OK)
     auction_gacha_id = request.data.get("auction_gacha_id")
     bidder_id = request.data.get("bidder_id")
     print('Bidder ID: ', bidder_id)
@@ -269,8 +270,12 @@ def gachaWinner(request):
             seller_detail_url = f"{settings.USER_SERVICE}/player/{seller_id}/details/"
             bidder_detail_url = f"{settings.USER_SERVICE}/player/{bidder_id}/details/"
 
-            seller_response = requests.get(seller_detail_url)
-            bidder_response = requests.get(bidder_detail_url)
+            seller_response = requests.get(
+                seller_detail_url, headers=request.headers)
+            # return Response({"location": "dbmthree", "seller_response": seller_response.json()}, status=status.HTTP_200_OK)
+            bidder_response = requests.get(
+                bidder_detail_url, headers=request.headers)
+            # return Response({"location": "dbmthree", "bidder_response": bidder_response.json()}, status=status.HTTP_200_OK)
 
             if seller_response.status_code != 200:
                 raise Exception("Failed to fetch seller details.")
@@ -291,16 +296,18 @@ def gachaWinner(request):
             # Update seller's balance
             seller_update_response = requests.put(
                 seller_balance_url,
-                json={"current_balance": seller_new_balance}
+                json={"current_balance": seller_new_balance}, headers=request.headers
             )
+            # return Response({"location": "dbmthree", "seller_update_response": seller_update_response.json()}, status=status.HTTP_200_OK)
             if seller_update_response.status_code != 200:
                 raise Exception("Failed to update seller's balance.")
 
             # Update bidder's balance
             bidder_update_response = requests.put(
                 bidder_balance_url,
-                json={"current_balance": bidder_new_balance}
+                json={"current_balance": bidder_new_balance}, headers=request.headers
             )
+            # return Response({"location": "dbmthree", "bidder_update_response": bidder_update_response.json()}, status=status.HTTP_200_OK)
             if bidder_update_response.status_code != 200:
                 raise Exception("Failed to update bidder's balance.")
 

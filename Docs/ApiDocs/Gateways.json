@@ -38,7 +38,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\":\"Chafi001\",\n    \"password\":\"chafi001password\"\n}",
+									"raw": "{\n    \"username\": \"admin001\",\n    \"password\": \"Admin001@password\"\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -53,6 +53,25 @@
 									"path": [
 										"user",
 										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify-token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/token/verify/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"token",
+										"verify",
 										""
 									]
 								}
@@ -80,12 +99,21 @@
 									}
 								}
 							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\":\"Chafi001\",\n    \"password\":\"chafi001password\"\n}",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -187,7 +215,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\":\"player002\",\n    \"password\":\"Player002@password\",\n    \"status\":\"active\",\n    \"role\":\"player\"\n}",
+									"raw": "{\n    \"username\": \"admin001\",\n    \"password\": \"Admin001@password\",\n    \"status\": \"active\",\n    \"role\": \"admin\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -346,6 +374,28 @@
 							},
 							"response": []
 						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				},
 				{
@@ -406,7 +456,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"user_id\": 1,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
+									"raw": "{\n  \"user_id\": 2,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -559,19 +609,41 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_one}}/admin/1/delete/",
+									"raw": "{{gateway_one}}/admin/2/delete/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"admin",
-										"1",
+										"2",
 										"delete",
 										""
 									]
 								}
 							},
 							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -928,7 +1000,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Mel\",\n    \"rarity\": 100,\n    \"inventory\": 4,\n    \"price\": 150,\n    \"status\": \"active\",\n    \"description\": \"Jayce is .....\",\n    \"image\": \"jayce.png\"\n}",
+									"raw": "{\n    \"name\": \"Teemu\",\n    \"rarity\": 95,\n    \"inventory\": 12,\n    \"price\": 150,\n    \"status\": \"active\",\n    \"description\": \"teemu is .....\",\n    \"image\": \"teemu.png\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1124,7 +1196,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"raw": "{\n    \"name\": \"Easter Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1346,9 +1418,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_two}}/auction-service/gachas/1/list/",
+									"raw": "{{gateway_one}}/auction-service/gachas/1/list/",
 									"host": [
-										"{{gateway_two}}"
+										"{{gateway_one}}"
 									],
 									"path": [
 										"auction-service",
@@ -1418,14 +1490,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_two}}/auction-service/gachas/2/bids/",
+									"raw": "{{gateway_one}}/auction-service/gachas/1/bids/",
 									"host": [
-										"{{gateway_two}}"
+										"{{gateway_one}}"
 									],
 									"path": [
 										"auction-service",
 										"gachas",
-										"2",
+										"1",
 										"bids",
 										""
 									]
@@ -1454,14 +1526,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_one}}/auction-service/gachas/2/bids/winner/",
+									"raw": "{{gateway_one}}/auction-service/gachas/1/bids/winner/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"auction-service",
 										"gachas",
-										"2",
+										"1",
 										"bids",
 										"winner",
 										""
@@ -1491,11 +1563,171 @@
 					"response": []
 				}
 			],
-			"description": "Gateway one holds all the api endpoints for admins."
+			"description": "Gateway one holds all the api endpoints for admins.",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzMjE2MjM3LCJpYXQiOjE3MzMxOTgyMzd9.vg--UOLKrDv0D7M1i-a5Ija3a0gWdD3iOFH8jGwgTzU",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		},
 		{
 			"name": "GatewayTwo[Player]",
 			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains login success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"Login successful.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"player001\",\n    \"password\": \"Player001@password\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/user/login/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"user",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify-token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/token/verify/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"token",
+										"verify",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 (OK)\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains login success message\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.have.property(\"detail\", \"Logout successful.\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/user/1/logout/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"user",
+										"1",
+										"logout",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "PlayerManagement",
 					"item": [
@@ -1516,6 +1748,9 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1929,7 +2164,13 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{gateway_two}}/play-service/direct-purchase/?player_id=1&gacha_id=1",
 									"host": [
@@ -1959,6 +2200,42 @@
 				{
 					"name": "AuctionManagement",
 					"item": [
+						{
+							"name": "list-auction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/auction/list/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "auction-details",
 							"event": [
@@ -2145,14 +2422,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_two}}/auction-service/gachas/2/details/",
+									"raw": "{{gateway_two}}/auction-service/gachas/1/details/",
 									"host": [
 										"{{gateway_two}}"
 									],
 									"path": [
 										"auction-service",
 										"gachas",
-										"2",
+										"1",
 										"details",
 										""
 									]
@@ -2190,14 +2467,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway_two}}/auction-service/gachas/2/player/2/bid/",
+									"raw": "{{gateway_two}}/auction-service/gachas/1/player/2/bid/",
 									"host": [
 										"{{gateway_two}}"
 									],
 									"path": [
 										"auction-service",
 										"gachas",
-										"2",
+										"1",
 										"player",
 										"2",
 										"bid",
@@ -2228,14 +2505,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_two}}/auction-service/gachas/2/bids/",
+									"raw": "{{gateway_two}}/auction-service/gachas/1/bids/",
 									"host": [
 										"{{gateway_two}}"
 									],
 									"path": [
 										"auction-service",
 										"gachas",
-										"2",
+										"1",
 										"bids",
 										""
 									]
@@ -2332,6 +2609,38 @@
 							"response": []
 						}
 					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzMyMTQ0MDAsImlhdCI6MTczMzE5NjQwMH0.XFHKvxh_tnnxIORIhTULws292YYGVqBQuuQkSKnOgTo",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}

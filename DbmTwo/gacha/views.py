@@ -48,8 +48,8 @@ def gachaDetails(request, id):
         if serializer.is_valid():
             updated_gacha = serializer.save()
             return Response({
-                'detail': 'User updated successfully.',
-                'user': GachaSerializer(updated_gacha).data
+                'detail': 'Gacha updated successfully.',
+                'gacha': GachaSerializer(updated_gacha).data
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

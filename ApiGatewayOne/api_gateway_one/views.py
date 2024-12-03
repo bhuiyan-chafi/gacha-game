@@ -15,20 +15,21 @@ def gateWayOneTest(request):
 # === Forward function to forward all the request that needs to access AuthService ===
 
 
-def forward_request(source, method, path, data=None):
+def forward_request(source, method, path, data=None, headers=None):
     """
     Helper function to forward requests to AuthService.
     """
     try:
         url = f"{source}{path}"
+        headers = headers or {}
         if method == "GET":
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
         elif method == "POST":
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, headers=headers)
         elif method == "PUT":
-            response = requests.put(url, json=data)
+            response = requests.put(url, json=data, headers=headers)
         elif method == "DELETE":
-            response = requests.delete(url)
+            response = requests.delete(url, headers=headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -54,7 +55,19 @@ def loginUser(request):
 def logoutUser(request, id):
     """Logout a user via AuthService."""
     path = f"/user/{id}/logout/"
-    return forward_request(settings.AUTH_SERVICE, "POST", path)
+    headers = {"Authorization": request.headers.get("Authorization")}
+    return forward_request(settings.AUTH_SERVICE, "POST", path, request.data, headers)
+
+
+@api_view(['POST'])
+def verifyToken(request):
+    """Logout a user via AuthService."""
+    path = f"/token/verify/"
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.AUTH_SERVICE, "POST", path, request.data, headers)
 
 # ================= CREATE | UPDATE | DELETE USERS ========================
 
@@ -68,31 +81,47 @@ def createUser(request):
 @api_view(['GET'])
 def listOfUsers(request):
     """List all users via AuthService."""
-    return forward_request(settings.AUTH_SERVICE, "GET", "/list/")
+    # we are not sending the roles here because the userlist is inside AuthService which already has the role implemented: see views.py in AuthService
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+    }
+    return forward_request(settings.AUTH_SERVICE, "GET", "/list/", None, headers)
 
 
 @api_view(['GET', 'PUT'])
 def userDetails(request, id):
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+    }
     """Retrieve or update user details via AuthService."""
     path = f"/{id}/details/"
-    return forward_request(settings.AUTH_SERVICE, request.method, path, request.data if request.method == "PUT" else None)
+    return forward_request(settings.AUTH_SERVICE, request.method, path, request.data if request.method == "PUT" else None, headers)
 
 
 @api_view(['DELETE'])
 def deleteUser(request, id):
     """Delete a user via AuthService."""
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+    }
     path = f"/{id}/delete/"
-    return forward_request(settings.AUTH_SERVICE, "DELETE", path)
+    return forward_request(settings.AUTH_SERVICE, "DELETE", path, None, headers)
 
 
 # ================= CREATE | UPDATE | DELETE ADMINS ========================
 
 @api_view(['GET'])
 def listAdmins(request):
+    # return Response(request.headers, 200)
     """
     Fetch all admins through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "GET", "/user-service/admin/list/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        # Convert list to a comma-separated string
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.USER_SERVICE, "GET", "/user-service/admin/list/", None, headers)
 
 
 @api_view(['POST'])
@@ -100,7 +129,7 @@ def createAdmin(request):
     """
     Create a new admin through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "POST", "/user-service/admin/create/", data=request.data)
+    return forward_request(settings.USER_SERVICE, "POST", "/user-service/admin/create/", request.data)
 
 
 @api_view(['GET', 'PUT'])
@@ -108,10 +137,15 @@ def adminDetails(request, id):
     """
     Fetch or update details of a specific admin through ApiGatewayTwo.
     """
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        # Convert list to a comma-separated string
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.USER_SERVICE, "GET", f"/user-service/admin/{id}/details/")
+        return forward_request(settings.USER_SERVICE, "GET", f"/user-service/admin/{id}/details/", None, headers)
     elif request.method == 'PUT':
-        return forward_request(settings.USER_SERVICE, "PUT", f"/user-service/admin/{id}/details/", data=request.data)
+        return forward_request(settings.USER_SERVICE, "PUT", f"/user-service/admin/{id}/details/", request.data, headers)
 
 
 @api_view(['DELETE'])
@@ -119,7 +153,12 @@ def deleteAdmin(request, id):
     """
     Delete a specific admin through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/admin/{id}/delete/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        # Convert list to a comma-separated string
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/admin/{id}/delete/", None, headers)
 
 # ================= CREATE | UPDATE | DELETE PLAYERS ========================
 
@@ -129,7 +168,12 @@ def listPlayers(request):
     """
     Fetch all players through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "GET", "/user-service/player/list/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        # Convert list to a comma-separated string
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.USER_SERVICE, "GET", "/user-service/player/list/", None, headers)
 
 # both admins and players can see their profiles and update
 
@@ -139,15 +183,20 @@ def playerDetails(request, id):
     """
     Fetch or update details of a specific player through ApiGatewayTwo.
     """
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        # Convert list to a comma-separated string
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.USER_SERVICE, "GET", f"/user-service/player/{id}/details/")
+        return forward_request(settings.USER_SERVICE, "GET", f"/user-service/player/{id}/details/", None, headers)
     elif request.method == 'PUT':
         if 'user_id' in request.data:
             return Response(
                 {"error": "Updating user_id is not allowed."},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return forward_request(settings.USER_SERVICE, "PUT", f"/user-service/player/{id}/details/", data=request.data)
+        return forward_request(settings.USER_SERVICE, "PUT", f"/user-service/player/{id}/details/", request.data, headers)
 # both admin and player can delete player profile
 
 
@@ -156,7 +205,11 @@ def deletePlayer(request, id):
     """
     Delete a specific player through ApiGatewayTwo.
     """
-    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.USER_SERVICE, "DELETE", f"/user-service/player/{id}/delete/", None, headers)
 
 # ================= CREATE | UPDATE | DELETE GACHAS ========================
 
@@ -166,7 +219,11 @@ def listGachas(request):
     """
     Fetch a list of all Gachas through ApiGatewayTwo.
     """
-    return forward_request(settings.GACHA_SERVICE, "GET", "/gacha-service/gacha/list/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.GACHA_SERVICE, "GET", "/gacha-service/gacha/list/", None, headers)
 
 
 @api_view(['POST'])
@@ -174,7 +231,11 @@ def createGacha(request):
     """
     Create a new Gacha through ApiGatewayTwo.
     """
-    return forward_request(settings.GACHA_SERVICE, "POST", "/gacha-service/gacha/create/", data=request.data)
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.GACHA_SERVICE, "POST", "/gacha-service/gacha/create/", request.data, headers)
 
 
 @api_view(['GET', 'PUT'])
@@ -182,10 +243,14 @@ def gachaDetails(request, id):
     """
     Fetch or update Gacha details through ApiGatewayTwo.
     """
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.GACHA_SERVICE, "GET", f"/gacha-service/gacha/{id}/details/")
+        return forward_request(settings.GACHA_SERVICE, "GET", f"/gacha-service/gacha/{id}/details/", None, headers)
     elif request.method == 'PUT':
-        return forward_request(settings.GACHA_SERVICE, "PUT", f"/gacha-service/gacha/{id}/details/", data=request.data)
+        return forward_request(settings.GACHA_SERVICE, "PUT", f"/gacha-service/gacha/{id}/details/", request.data, headers)
 
 
 @api_view(['DELETE'])
@@ -193,29 +258,45 @@ def deleteGacha(request, id):
     """
     Delete a Gacha through ApiGatewayTwo.
     """
-    return forward_request(settings.GACHA_SERVICE, "DELETE", f"/gacha-service/gacha/{id}/delete/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.GACHA_SERVICE, "DELETE", f"/gacha-service/gacha/{id}/delete/", None, headers)
 
 # ================= PLAYER COLLECTION: ALL + SINGLE GACHA/S ========================
 
 
 @api_view(['GET'])
 def playerGachaCollections(request, player_id):
-    return forward_request(settings.PLAY_SERVICE, "GET", f"/play-service/player/{player_id}/collection/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.PLAY_SERVICE, "GET", f"/play-service/player/{player_id}/collection/", None, headers)
 # Admins can see a single collection details
 
 
 @api_view(['GET', 'DELETE'])
 def playerGachaCollectionDetails(request, collection_id):
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.PLAY_SERVICE, "GET", f"/play-service/player/collection/{collection_id}/")
+        return forward_request(settings.PLAY_SERVICE, "GET", f"/play-service/player/collection/{collection_id}/", None, headers)
     elif request.method == 'DELETE':
-        return forward_request(settings.PLAY_SERVICE, "DELETE", f"/play-service/player/collection/{collection_id}/")
+        return forward_request(settings.PLAY_SERVICE, "DELETE", f"/play-service/player/collection/{collection_id}/", None, headers)
 # ================= VIEW PLAYER TRANSACTIONS ========================
 
 
 @api_view(['GET'])
 def playerGameCurrencyTransactions(request, player_id):
-    return forward_request(settings.TRANSACTION_SERVICE, "GET", f"/transactions/player/{player_id}/all/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.TRANSACTION_SERVICE, "GET", f"/transactions/player/{player_id}/all/", None, headers)
 
 
 # ================= CREATE | UPDATE | DELETE AUCTIONS ========================
@@ -223,24 +304,36 @@ def playerGameCurrencyTransactions(request, player_id):
 
 @api_view(['GET'])
 def listAuctions(request):
-    return forward_request(settings.AUCTION_SERVICE, "GET", "/auction/list/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.AUCTION_SERVICE, "GET", "/auction/list/", None, headers)
 # only admins can create an auction
 
 
 @api_view(['POST'])
 def createAuction(request):
-    return forward_request(settings.AUCTION_SERVICE, "POST", "/auction/create/", data=request.data)
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.AUCTION_SERVICE, "POST", "/auction/create/", request.data, headers)
 # manage auction details
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def auctionDetails(request, id):
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/{id}/details/")
+        return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/{id}/details/", None, headers)
     elif request.method == 'PUT':
-        return forward_request(settings.AUCTION_SERVICE, "PUT", f"/auction/{id}/details/", data=request.data)
+        return forward_request(settings.AUCTION_SERVICE, "PUT", f"/auction/{id}/details/", request.data, headers)
     elif request.method == 'DELETE':
-        return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/{id}/details/")
+        return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/{id}/details/", None, headers)
 # admins can view gachas on auction
 
 # ================= VIEW AUCTION GACHAS ========================
@@ -248,26 +341,43 @@ def auctionDetails(request, id):
 
 @api_view(['GET'])
 def listAllGachasOnAuction(request, auction_id):
-    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_id}/list/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_id}/list/", None, headers)
 
 
 @api_view(['GET', 'DELETE'])
 def auctionGachaDetails(request, auction_gacha_id):
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
     if request.method == 'GET':
-        return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/details/")
+        return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/details/", None, headers)
     elif request.method == 'DELETE':
-        return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/gachas/{auction_gacha_id}/details/")
+        return forward_request(settings.AUCTION_SERVICE, "DELETE", f"/auction/gachas/{auction_gacha_id}/details/", None, headers)
 
 # ================= VIEW AUCTION BIDS ========================
 
 
 @api_view(['GET'])
 def listAllBids(request, auction_gacha_id):
-    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/bids/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+    }
+    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/bids/", None, headers)
 
 # ================= DECLARE THE WINNER ========================
 
 
 @api_view(['GET'])
 def gachaWinner(request, auction_gacha_id):
-    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/bids/winner/")
+    headers = {
+        "Authorization": request.headers.get("Authorization"),
+        "Role": ','.join(settings.ADMIN_ROLE),
+        "Content-Type": 'application/json'
+    }
+    return forward_request(settings.AUCTION_SERVICE, "GET", f"/auction/gachas/{auction_gacha_id}/bids/winner/", None, headers)

@@ -2,6 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # ================= LOGIN AND LOGOUT ========================
+    path('user/login/', views.loginUser, name='user-login'),
+    path('user/<int:id>/logout/', views.logoutUser, name='user-logout'),
+    path('token/verify/', views.verifyToken, name='verify-token'),
+
     # ================= CREATE | UPDATE | DELETE PLAYER/s ========================
     path('create/', views.createPlayer, name='gateway-create-player'),
     path('<int:id>/details/', views.playerDetails,

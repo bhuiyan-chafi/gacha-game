@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # load all env variables
 load_dotenv()
 DATABASE_TWO = os.getenv("DATABASE_TWO")
+AUTH_SERVICE = os.getenv("AUTH_SERVICE")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 

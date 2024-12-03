@@ -51,7 +51,8 @@ def rollToWinGacha(request):
     # Fetch player details from the user-service
     user_service_url = f"{settings.USER_SERVICE}/player/{player_id}/details/"
     try:
-        player_response = requests.get(user_service_url)
+        player_response = requests.get(
+            user_service_url, headers=request.headers)
         if player_response.status_code != 200:
             return Response({"detail": "Failed to fetch player details."}, status=player_response.status_code)
 
@@ -69,7 +70,7 @@ def rollToWinGacha(request):
     # Fetch available Gacha records from the external service
     gacha_service_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/list/"
     try:
-        response = requests.get(gacha_service_url)
+        response = requests.get(gacha_service_url, headers=request.headers)
         if response.status_code != 200:
             return Response({"detail": "Failed to fetch Gacha records."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
@@ -106,7 +107,7 @@ def rollToWinGacha(request):
     # Randomly select a Gacha from the not-owned list
     selected_gacha_id = random.choice(not_owned_gacha_ids)
     gacha_update_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/{selected_gacha_id}/details/"
-    gacha_response = requests.get(gacha_update_url)
+    gacha_response = requests.get(gacha_update_url, headers=request.headers)
     if gacha_response.status_code != 200:
         return Response({"detail": "Failed to fetch gacha details."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
     gacha_data = gacha_response.json()
@@ -117,13 +118,13 @@ def rollToWinGacha(request):
             # Deduct roll_price from player's current_balance
             new_balance = current_balance - roll_price
             balance_response = requests.put(user_service_url, json={
-                                            "current_balance": new_balance})
+                                            "current_balance": new_balance}, headers=request.headers)
             if balance_response.status_code != 200:
                 raise ValueError("Failed to update player balance.")
 
             # Reduce inventory for the selected Gacha
             inventory_response = requests.put(
-                gacha_update_url, json={"inventory": current_inventory-1})
+                gacha_update_url, json={"inventory": current_inventory-1}, headers=request.headers)
             if inventory_response.status_code != 200:
                 raise ValueError("Failed to update Gacha inventory.")
 
@@ -168,6 +169,7 @@ In this phase we just make the purchase: assign the gacha to the player gacha co
 
 @api_view(['POST'])
 def createPlayerGachaByPurchase(request):
+    # return Response({"location": "dbmthree", "header": request.headers}, status=status.HTTP_200_OK)
     # Get query parameters
     player_id = request.query_params.get(
         'player_id')  # or request.GET.get('player_id')
@@ -189,13 +191,14 @@ def createPlayerGachaByPurchase(request):
     try:
         with transaction.atomic():
             # Fetch player details
-            player_response = requests.get(player_url)
+            player_response = requests.get(player_url, headers=request.headers)
             player_data = player_response.json()
+            # return Response({"location": "dbmthree", "player": player_data}, status=status.HTTP_200_OK)
             current_balance = float(player_data['current_balance'])
-            print('current_balance:' + str(current_balance))
             # Fetch gacha details
-            gacha_response = requests.get(gacha_url)
+            gacha_response = requests.get(gacha_url, headers=request.headers)
             gacha_data = gacha_response.json()
+            # return Response({"location": "dbmthree", "gacha": gacha_data}, status=status.HTTP_200_OK)
             price = float(gacha_data['price'])
             inventory = int(gacha_data['inventory'])
             print('gacha_inventory:' + str(inventory))
@@ -210,15 +213,18 @@ def createPlayerGachaByPurchase(request):
 
             # Update player balance
             new_balance = current_balance - price
+            # return Response(request.headers, status=status.HTTP_200_OK)
             player_update_response = requests.put(
-                player_url, data={'current_balance': new_balance})
+                player_url, json={'current_balance': new_balance}, headers=request.headers)
+            # return Response({"location": "dbmthree", "player_updated": player_update_response.json()}, status=status.HTTP_200_OK)
             if player_update_response.status_code != 200:
                 raise ValueError("Failed to update player balance.")
 
             # Update gacha inventory
             new_inventory = inventory - 1
             gacha_update_response = requests.put(
-                gacha_url, data={'inventory': new_inventory})
+                gacha_url, json={'inventory': new_inventory}, headers=request.headers)
+            # return Response({"location": "dbmthree", "gacha_updated": gacha_update_response.json()}, status=status.HTTP_200_OK)
             if gacha_update_response.status_code != 200:
                 raise ValueError("Failed to update gacha inventory.")
 
@@ -283,7 +289,7 @@ def playerGachaCollectionDetails(request, collection_id):
         # Fetch gacha details from the GACHA_RECORDS_SERVICE
         gacha_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/{player_gacha.gacha_id}/details/"
         try:
-            gacha_response = requests.get(gacha_url)
+            gacha_response = requests.get(gacha_url, headers=request.headers)
             if gacha_response.status_code != 200:
                 return Response(
                     {"detail": "Failed to fetch gacha details."},
@@ -314,7 +320,7 @@ def playerGachaCollectionDetails(request, collection_id):
 
                 # Increase gacha inventory by 1
                 gacha_update_response = requests.put(
-                    gacha_url, json={"inventory": "increment"}
+                    gacha_url, json={"inventory": "increment"}, headers=request.headers
                 )
 
                 if gacha_update_response.status_code != 200:

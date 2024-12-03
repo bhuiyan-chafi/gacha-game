@@ -3,6 +3,7 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from . import helper
 
 
 def forward_request(method, path, data=None):
@@ -37,6 +38,14 @@ def listOfGacha(request):
     """
     Fetch a list of all Gachas from DbmTwo.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     return forward_request("GET", "/gacha/list/")
 
 
@@ -45,6 +54,14 @@ def createGacha(request):
     """
     Create a new Gacha via DbmTwo.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     return forward_request("POST", "/gacha/create/", request.data)
 
 
@@ -53,6 +70,14 @@ def gachaDetails(request, id):
     """
     Fetch or update Gacha details from DbmTwo.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     if request.method == 'GET':
         return forward_request("GET", f"/gacha/{id}/details/")
     elif request.method == 'PUT':
@@ -64,6 +89,14 @@ def deleteGacha(request, id):
     """
     Delete a Gacha via DbmTwo.
     """
+    # return Response(request.headers, status=status.HTTP_200_OK)
+    # Verify the token using the helper function
+    verify_token = helper.verifyToken(request)
+
+    # Check if the token verification failed
+    if not isinstance(verify_token, bool) or not verify_token:
+        return verify_token  # Return the failure response from verifyToken
+
     return forward_request("DELETE", f"/gacha/{id}/delete/")
 
 
