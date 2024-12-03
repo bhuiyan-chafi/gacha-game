@@ -6,7 +6,7 @@ services:
       - .env
     volumes:
       - gacha_db:/var/lib/mysql
-      - ./MySqlTest/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./MySql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     healthcheck:
@@ -18,10 +18,10 @@ services:
       - app_network
 
   dbm_one:
-    build: ./DbmOneTest
+    build: ./DbmOne
     container_name: dbmone
     volumes:
-      - ./DbmOneTest:/app
+      - ./DbmOne:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -30,10 +30,10 @@ services:
     command: ["python", "manage.py", "test"]
 
   dbm_two:
-    build: ./DbmTwoTest
+    build: ./DbmTwo
     container_name: dbmtwo
     volumes:
-      - ./DbmTwoTest:/app
+      - ./DbmTwo:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -42,10 +42,10 @@ services:
     command: ["python", "manage.py", "test"]
 
   dbm_three:
-    build: ./DbmThreeTest
+    build: ./DbmThree
     container_name: dbmthree
     volumes:
-      - ./DbmThreeTest:/app
+      - ./DbmThree:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -54,10 +54,10 @@ services:
     command: ["python", "manage.py", "test"]
 
   auth_service:
-    build: ./AuthServiceTest
+    build: ./AuthService
     container_name: authservice
     volumes:
-      - ./AuthServiceTest:/app
+      - ./AuthService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -67,10 +67,10 @@ services:
       - app_network
 
   user_service:
-    build: ./UserServiceTest
+    build: ./UserService
     container_name: userservice
     volumes:
-      - ./UserServiceTest:/app
+      - ./UserService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -80,10 +80,10 @@ services:
       - app_network
 
   gacha_service:
-    build: ./GachaServiceTest
+    build: ./GachaService
     container_name: gachaservice
     volumes:
-      - ./GachaServiceTest:/app
+      - ./GachaService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -95,10 +95,10 @@ services:
       - app_network
 
   play_service:
-    build: ./PlayServiceTest
+    build: ./PlayService
     container_name: playservice
     volumes:
-      - ./PlayServiceTest:/app
+      - ./PlayService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -110,10 +110,10 @@ services:
       - app_network
 
   auction_service:
-    build: ./AuctionServiceTest
+    build: ./AuctionService
     container_name: auctionservice
     volumes:
-      - ./AuctionServiceTest:/app
+      - ./AuctionService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -127,10 +127,10 @@ services:
       - app_network
 
   transaction_service:
-    build: ./TransactionServiceTest
+    build: ./TransactionService
     container_name: transactionservice
     volumes:
-      - ./TransactionServiceTest:/app
+      - ./TransactionService:/app
     depends_on:
       db_service:
         condition: service_healthy
@@ -144,10 +144,10 @@ services:
       - app_network
 
   gateway_one:
-    build: ./ApiGatewayOneTest
+    build: ./ApiGatewayOne
     container_name: gatewayone
     volumes:
-      - ./ApiGatewayOneTest:/app
+      - ./ApiGatewayOne:/app
     depends_on:
       auth_service:
         condition: service_started
@@ -157,10 +157,10 @@ services:
       - app_network
 
   gateway_two:
-    build: ./ApiGatewayTwoTest
+    build: ./ApiGatewayTwo
     container_name: gatewaytwo
     volumes:
-      - ./ApiGatewayTwoTest:/app
+      - ./ApiGatewayTwo:/app
     depends_on:
       user_service:
         condition: service_started
