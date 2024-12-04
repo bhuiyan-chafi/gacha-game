@@ -50,6 +50,12 @@ jobs:
         docker compose exec dbm_three python manage.py test auction --noinput
         docker compose exec dbm_three python manage.py test own_gacha --noinput
         docker compose exec dbm_three python manage.py test transaction --noinput
+        docker compose exec auth_service python manage.py test --noinput
+        docker compose exec user_service python manage.py test --noinput
+        docker compose exec gacha_service python manage.py test --noinput
+        docker compose exec play_service python manage.py test --noinput
+        docker compose exec auction_service python manage.py test --noinput
+        docker compose exec transaction_service python manage.py test --noinput
 
     # Step 9: Clean Up
     - name: Clean Up Docker Compose
