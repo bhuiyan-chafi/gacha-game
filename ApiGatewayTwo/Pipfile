@@ -9,6 +9,7 @@ djangorestframework = "*"
 django-extensions = "*"
 python-dotenv = "*"
 requests = "*"
+locust = "*"
 
 [dev-packages]
 
