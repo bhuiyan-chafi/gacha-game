@@ -37,6 +37,12 @@ def forward_request(service_url, method, path, data, query_params, headers):
 
 
 @api_view(['POST'])
+def createUser(request):
+    """Create a new user via AuthService."""
+    return forward_request(settings.AUTH_SERVICE, "POST", "/create/", request.data, None, None)
+
+
+@api_view(['POST'])
 def loginUser(request):
     """Login a user via AuthService."""
     return forward_request(settings.AUTH_SERVICE, "POST", "/user/login/", request.data, None, None)

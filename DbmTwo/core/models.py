@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator, EmailValidator, MinValueValidator
+from .helpers import encrypt_data, decrypt_data
 
 
 class Player(models.Model):
@@ -15,19 +16,38 @@ class Player(models.Model):
     email_address = models.EmailField(unique=True, validators=[
                                       EmailValidator(message="Enter a valid email address.")])
     phone_number = models.CharField(unique=True,
-                                    max_length=15, validators=[phone_validator])
+                                    max_length=255)  # Encrypted, so allow longer length
     bank_details = models.CharField(
-        # Ensure uniqueness
-        max_length=255, validators=[bank_details_validator], unique=True
-    )
+        max_length=255, unique=True)  # Encrypted, so allow longer length
     current_balance = models.FloatField(
         default=0.0,
         validators=[MinValueValidator(
             0.0, message="Balance cannot be negative.")]
     )
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+    def save(self, *args, **kwargs):
+        print("Before saving: phone_number =",
+              self.phone_number)  # Debug: Check value
+        print("Before saving: bank_details =",
+              self.bank_details)  # Debug: Check value
+        # Encrypt sensitive fields before saving
+        if self.phone_number:
+            self.phone_number = encrypt_data(self.phone_number)
+        if self.bank_details:
+            self.bank_details = encrypt_data(self.bank_details)
+        print("After encryption: phone_number =",
+              self.phone_number)  # Debug: Check encryption
+        print("After encryption: bank_details =",
+              self.bank_details)  # Debug: Check encryption
+        super().save(*args, **kwargs)
+
+    @property
+    def decrypted_phone_number(self):
+        return decrypt_data(self.phone_number)
+
+    @property
+    def decrypted_bank_details(self):
+        return decrypt_data(self.bank_details)
 
 
 class Admin(models.Model):

@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # ================= LOGIN AND LOGOUT ========================
+    # ================= CREATE AND LOGIN AND LOGOUT ========================
+    path('user/create/', views.createUser, name='auth-service-create-user'),
     path('user/login/', views.loginUser, name='user-login'),
     path('user/<int:id>/logout/', views.logoutUser, name='user-logout'),
     path('token/verify/', views.verifyToken, name='verify-token'),

@@ -1,7 +1,8 @@
+import re
+from .helpers import decrypt_data
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Player, Admin
-import re
 
 # Custom Validators
 
@@ -75,6 +76,22 @@ class PlayerSerializer(serializers.ModelSerializer):
         validated_data.pop('user_id', None)
         return super().update(instance, validated_data)
 
+    def to_representation(self, instance):
+        """Customize the serialized output for the response."""
+        representation = super().to_representation(instance)
+
+        # Decrypt sensitive fields
+        if representation.get('phone_number'):
+            representation['phone_number'] = decrypt_data(
+                representation['phone_number']
+            )
+        if representation.get('bank_details'):
+            representation['bank_details'] = decrypt_data(
+                representation['bank_details']
+            )
+
+        return representation
+
 
 class AdminSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField()  # Make it writable by default
@@ -114,3 +131,19 @@ class AdminSerializer(serializers.ModelSerializer):
         # Prevent user_id from being updated
         validated_data.pop('user_id', None)
         return super().update(instance, validated_data)
+
+    def to_representation(self, instance):
+        """Customize the serialized output for the response."""
+        representation = super().to_representation(instance)
+
+        # Decrypt sensitive fields
+        if representation.get('phone_number'):
+            representation['phone_number'] = decrypt_data(
+                representation['phone_number']
+            )
+        if representation.get('bank_details'):
+            representation['bank_details'] = decrypt_data(
+                representation['bank_details']
+            )
+
+        return representation

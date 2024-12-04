@@ -8,6 +8,7 @@ from own_gacha.models import PlayerGachaCollection
 from .models import Auction, AuctionGachaBid, AuctionGachas
 from .serializers import AuctionGachaBidSerializer, AuctionSerializer, AuctionGachasSerializer
 from django.conf import settings
+from django.utils.timezone import now
 
 # List all auctions
 
@@ -254,7 +255,17 @@ def gachaWinner(request):
 
             # Extract the collection_id
             collection_id = auction_gacha_serializer.data.get("collection_id")
+            # Extract the auction_id
             auction_id = auction_gacha_serializer.data.get("auction_id")
+            auction = get_object_or_404(Auction, pk=auction_id)
+
+            # Check if the auction has ended
+            if auction.end_date > now():
+                return Response(
+                    {"detail": "Winner cannot be declared before the auction ends."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             if not collection_id:
                 return Response(
                     {"detail": "Collection ID not found for the given auction gacha."},

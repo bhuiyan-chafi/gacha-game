@@ -25,6 +25,7 @@ TESTING = True  # Set to False in production
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-z^xe0rf%ie2!571920^^f8fh^60v9%gn6=lbi4@vhk@k=tut2o'
+SECRET_ENCRYPTION_KEY = b'8LPMlbMBU6YRtyNG-9BOLhMKcr581YnxssNH8baias4='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
