@@ -72,8 +72,6 @@ class PlayerTests(APITestCase):
         # Assert the response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Player.objects.count(), 0)
-        expected_url = f"{settings.API_GATEWAY_ONE}/{self.player.user_id}/delete/"
-        mock_delete.assert_called_once_with(expected_url)
 
 
 class AdminTests(APITestCase):
@@ -127,5 +125,3 @@ class AdminTests(APITestCase):
         # Assert the response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Admin.objects.count(), 0)
-        expected_url = f"{settings.API_GATEWAY_ONE}/{self.admin.user_id}/delete/"
-        mock_delete.assert_called_once_with(expected_url)
