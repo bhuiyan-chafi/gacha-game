@@ -15,13 +15,15 @@ def forward_request(service_url, method, path, data, query_params, headers):
             url = f"{url}?{query_params}"
         print('Service Url: '+url)
         if method == "GET":
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, verify=False)
         elif method == "POST":
-            response = requests.post(url, json=data, headers=headers)
+            response = requests.post(
+                url, json=data, headers=headers, verify=False)
         elif method == "PUT":
-            response = requests.put(url, json=data, headers=headers)
+            response = requests.put(
+                url, json=data, headers=headers, verify=False)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers)
+            response = requests.delete(url, headers=headers, verify=False)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -84,7 +86,7 @@ def createPlayer(request):
     try:
         # Step 1: Check if the user_id exists in the AUTH_SERVICE
         auth_service_url = f"{settings.AUTH_SERVICE}/{user_id}/details/"
-        auth_response = requests.get(auth_service_url)
+        auth_response = requests.get(auth_service_url, verify=False)
 
         if auth_response.status_code != 200:
             if auth_response.status_code == 404:
@@ -92,25 +94,17 @@ def createPlayer(request):
             return Response({"error": "Error validating user_id with AUTH_SERVICE because the response from AuthService is neither 200 or 404."}, status=auth_response.status_code)
 
         user_data = auth_response.json()
-
+        # return Response({'auth_user': user_data}, status=200)
         # Ensure the returned user_id matches the input user_id
         if str(user_data.get("id")) != str(user_id):
             return Response({"error": "Invalid user_id, the user_id fetched from AUTH_SERVICE does not match the given one."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Step 2: Check if the user_id is associated with an admin
-        admin_service_url = f"{settings.USER_SERVICE}/user-service/admin/{user_id}/details/"
-        admin_response = requests.get(admin_service_url)
-
-        if admin_response.status_code == 200:
+        if user_data.get('role') != settings.PLAYER_ROLE[0]:
             # user_id is already taken by an admin
             return Response(
                 {"error": "user_id is associated with an admin and cannot be used for a player."},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        elif admin_response.status_code != 404:
-            # Handle unexpected responses from the admin endpoint
-            return Response({"error": "Error validating user_id with admin check."}, status=admin_response.status_code)
-
         # Step 3: Proceed to create the Player
         return forward_request(settings.USER_SERVICE, "POST", "/user-service/player/create/", request.data, None, None)
 

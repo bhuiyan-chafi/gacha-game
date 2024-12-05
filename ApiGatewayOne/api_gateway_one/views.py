@@ -23,13 +23,15 @@ def forward_request(source, method, path, data=None, headers=None):
         url = f"{source}{path}"
         headers = headers or {}
         if method == "GET":
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, verify=False)
         elif method == "POST":
-            response = requests.post(url, json=data, headers=headers)
+            response = requests.post(
+                url, json=data, headers=headers, verify=False)
         elif method == "PUT":
-            response = requests.put(url, json=data, headers=headers)
+            response = requests.put(
+                url, json=data, headers=headers, verify=False)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers)
+            response = requests.delete(url, headers=headers, verify=False)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -92,6 +94,7 @@ def listOfUsers(request):
 def userDetails(request, id):
     headers = {
         "Authorization": request.headers.get("Authorization"),
+
     }
     """Retrieve or update user details via AuthService."""
     path = f"/{id}/details/"

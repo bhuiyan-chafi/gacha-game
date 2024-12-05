@@ -31,9 +31,9 @@ class Player(models.Model):
         # print("Before saving: bank_details =",
         #       self.bank_details)  # Debug: Check value
         # # Encrypt sensitive fields before saving
-        if self.phone_number:
+        if self.phone_number and not self.phone_number.startswith('gAAAAA'):
             self.phone_number = encrypt_data(self.phone_number)
-        if self.bank_details:
+        if self.bank_details and not self.bank_details.startswith('gAAAAA'):
             self.bank_details = encrypt_data(self.bank_details)
         # print("After encryption: phone_number =",
         #       self.phone_number)  # Debug: Check encryption

@@ -14,13 +14,13 @@ def forward_request(method, path, data=None):
         url = f"{settings.DATABASE_TWO}{path}"
         # print('Resource Called: ' + url)
         if method == "GET":
-            response = requests.get(url)
+            response = requests.get(url, verify=False)
         elif method == "POST":
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, verify=False)
         elif method == "PUT":
-            response = requests.put(url, json=data)
+            response = requests.put(url, json=data, verify=False)
         elif method == "DELETE":
-            response = requests.delete(url)
+            response = requests.delete(url, verify=False)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

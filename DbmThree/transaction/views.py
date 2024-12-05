@@ -68,11 +68,12 @@ def playerGameCurrencyPurchase(request, player_id):
     try:
         with transaction.atomic():
             # Fetch the player's current balance
-            player_response = requests.get(player_url, headers=request.headers)
+            player_response = requests.get(
+                player_url, headers=request.headers, verify=False)
             # return Response({"location": "dbmthree->transactions", "player_response": player_response.json()}, status=status.HTTP_200_OK)
 
             if player_response.status_code != 200:
-                return Response({"detail": "Failed to fetch player details."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                return Response({"detail": "Failed to fetch player details."}, status=status.HTTP_404_NOT_FOUND)
 
             player_data = player_response.json()
             current_balance = float(player_data.get('current_balance', 0))
@@ -80,7 +81,7 @@ def playerGameCurrencyPurchase(request, player_id):
             # Update the player's balance
             new_balance = current_balance + game_currency
             update_response = requests.put(
-                player_url, json={'current_balance': new_balance}, headers=request.headers)
+                player_url, json={'current_balance': new_balance}, headers=request.headers, verify=False)
             # return Response({"location": "dbmthree->transactions", "update_response": update_response.json()}, status=status.HTTP_200_OK)
 
             if update_response.status_code != 200:

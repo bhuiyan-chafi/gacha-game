@@ -1,23 +1,26 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9.20-slim
 
-# Install necessary system dependencies including curl
+# Install necessary system dependencies, including OpenSSL
 RUN apt-get update && \
-    apt-get install -y curl iputils-ping && \
+    apt-get install -y curl iputils-ping openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the Django project into the container
+# Copy the entire Django project into the container
 COPY . /app
 
-# Install pipenv and project dependencies
-RUN pip install --upgrade pip && pip install pipenv && pipenv install --system --deploy && pip install -r requirements.txt
+# Install Python dependencies from requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose port 8000 to allow access to the Django app
+# Ensure proper permissions for SSL certificates
+RUN chmod -R 600 /app/certs/*
+
+# Expose port 8000 for Django
 EXPOSE 8000
 
 # Use the entrypoint script to manage startup
-ENTRYPOINT ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
+ENTRYPOINT ["sh", "-c", "python manage.py runserver_plus --cert-file certs/cert.pem --key-file certs/key.pem 0.0.0.0:8000"]

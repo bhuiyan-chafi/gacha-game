@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "67005c30-9ce7-408d-8035-2689c8e70aae",
-		"name": "GachaDockered",
+		"_postman_id": "f0559a28-cf93-42a9-8f6d-b4200aac163e",
+		"name": "IsolatedEndpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39573101"
+		"_exporter_id": "39569857"
 	},
 	"item": [
 		{
@@ -12,68 +12,6 @@
 				{
 					"name": "DbmOne",
 					"item": [
-						{
-							"name": "Authentication",
-							"item": [
-								{
-									"name": "login",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"username\":\"chafi01\",\n    \"password\":\"Chafi@123\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{dbm_one}}/user/login/",
-											"host": [
-												"{{dbm_one}}"
-											],
-											"path": [
-												"user",
-												"login",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "logout",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{dbm_one}}/user/1004/logout/",
-											"host": [
-												"{{dbm_one}}"
-											],
-											"path": [
-												"user",
-												"1004",
-												"logout",
-												""
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
 						{
 							"name": "Test",
 							"request": {
@@ -183,7 +121,16 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"// Check if the status code is 201",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											" ",
+											"// Check if the response contains the expected detail message",
+											"pm.test(\"Response contains success message\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"detail\", \"User has been created successfully.\");",
+											"});"
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -195,7 +142,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\":\"player002\",\r\n    \"password\":\"Player002@password\",\r\n    \"status\":\"active\",\r\n    \"role\":\"player\"\r\n}",
+									"raw": "{\r\n    \"username\":\"admin003\",\r\n    \"password\":\"Admin003@password\",\r\n    \"status\":\"active\",\r\n    \"role\":\"admin\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -261,6 +208,22 @@
 							"item": [
 								{
 									"name": "create-player",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Check if the status code is 201",
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
 										"header": [],
@@ -290,12 +253,27 @@
 								},
 								{
 									"name": "update-player-details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "PUT",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"One\",\r\n    \"email_address\": \"player21@outlook.com\",\r\n    \"phone_number\": \"3533255792\",\r\n    \"bank_details\": \"IT1234678943\",\r\n    \"current_balance\": 10005\r\n}",
+											"raw": "{\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"One\",\r\n    \"email_address\": \"player21@outlook.com\",\r\n    \"current_balance\": 10005\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -303,14 +281,14 @@
 											}
 										},
 										"url": {
-											"raw": "{{dbm_two}}/core/player/3/details/",
+											"raw": "{{dbm_two}}/core/player/2/details/",
 											"host": [
 												"{{dbm_two}}"
 											],
 											"path": [
 												"core",
 												"player",
-												"3",
+												"2",
 												"details",
 												""
 											]
@@ -327,27 +305,7 @@
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200);",
-													"});",
-													"// Parse the response JSON",
-													"let responseData = pm.response.json();",
-													" ",
-													"// Test that the response contains player details",
-													"pm.test(\"Response contains expected player details\", function () {",
-													"    pm.expect(responseData).to.be.an(\"object\"); // Ensure the response is a JSON object",
-													" ",
-													"    // Validate the presence of specific fields in the response",
-													"    pm.expect(responseData).to.have.property(\"id\").that.is.a(\"number\");",
-													"    pm.expect(responseData).to.have.property(\"first_name\").that.is.a(\"string\");",
-													"    pm.expect(responseData).to.have.property(\"last_name\").that.is.a(\"string\");",
-													"    pm.expect(responseData).to.have.property(\"email_address\").that.is.a(\"string\");",
-													"    pm.expect(responseData).to.have.property(\"phone_number\").that.is.a(\"string\");",
-													"    pm.expect(responseData).to.have.property(\"bank_details\").that.is.a(\"string\");",
-													"    pm.expect(responseData).to.have.property(\"user_id\").that.is.a(\"number\");",
-													"    pm.expect(responseData).to.have.property(\"current_balance\").that.is.a(\"number\");",
-													"});",
-													" ",
-													"// Log the response for debugging purposes",
-													"console.log(\"Response:\", responseData);"
+													"});"
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -379,6 +337,58 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "player-list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{dbm_two}}/core/player/list/",
+											"host": [
+												"{{dbm_two}}"
+											],
+											"path": [
+												"core",
+												"player",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
 								}
 							]
 						},
@@ -392,7 +402,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"user_id\": 101,\r\n  \"first_name\": \"Samiullah\",\r\n  \"last_name\": \"Khairy\",\r\n  \"email_address\": \"chafi@test.com\",\r\n  \"phone_number\": \"3533299720\"\r\n}",
+											"raw": "{\r\n  \"user_id\": 6,\r\n  \"first_name\": \"Samiullah\",\r\n  \"last_name\": \"Khairy\",\r\n  \"email_address\": \"chafi@test.com\",\r\n  \"phone_number\": \"3533299720\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -420,14 +430,14 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{dbm_two}}/core/admin/1/delete/",
+											"raw": "{{dbm_two}}/core/admin/3/delete/",
 											"host": [
 												"{{dbm_two}}"
 											],
 											"path": [
 												"core",
 												"admin",
-												"1",
+												"3",
 												"delete",
 												""
 											]
@@ -497,6 +507,38 @@
 									},
 									"response": []
 								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzNDI4MzQ1LCJpYXQiOjE3MzM0MTAzNDV9.OaUSxFm5kkurFv8clFRjF-wkoYfJrbls_hguLXSRW3Q",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								}
 							]
 						},
 						{
@@ -512,13 +554,7 @@
 													"pm.test(\"Status code is 200 (OK)\", function () {",
 													"    pm.response.to.have.status(200);",
 													"});",
-													"",
-													"pm.test(\"Response contains success message\", function () {",
-													"    const responseJson = pm.response.json();",
-													"",
-													"    // Check that 'detail' key exists",
-													"    pm.expect(responseJson).to.have.property(\"detail\", \"User updated successfully.\");",
-													"});"
+													""
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -554,6 +590,21 @@
 								},
 								{
 									"name": "gacha-list",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "GET",
 										"header": [],
@@ -573,6 +624,21 @@
 								},
 								{
 									"name": "create-gacha",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
 										"header": [],
@@ -651,18 +717,33 @@
 							"item": [
 								{
 									"name": "player-gacha-collection",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{dbm_three}}/gacha-collection/player/3/collection/",
+											"raw": "{{dbm_three}}/gacha-collection/player/1/collection/",
 											"host": [
 												"{{dbm_three}}"
 											],
 											"path": [
 												"gacha-collection",
 												"player",
-												"3",
+												"1",
 												"collection",
 												""
 											]
@@ -672,9 +753,30 @@
 								},
 								{
 									"name": "roll-to-win",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
 											"raw": "{\r\n    \"roll_price\":\"100\"\r\n}",
@@ -706,11 +808,32 @@
 								},
 								{
 									"name": "direct-purchase",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"url": {
-											"raw": "{{dbm_three}}/gacha-collection/direct-purchase/?player_id=3&gacha_id=10",
+											"raw": "{{dbm_three}}/gacha-collection/direct-purchase/?player_id=1&gacha_id=4",
 											"host": [
 												"{{dbm_three}}"
 											],
@@ -722,11 +845,11 @@
 											"query": [
 												{
 													"key": "player_id",
-													"value": "3"
+													"value": "1"
 												},
 												{
 													"key": "gacha_id",
-													"value": "10"
+													"value": "4"
 												}
 											]
 										}
@@ -754,115 +877,368 @@
 									},
 									"response": []
 								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								}
 							]
 						},
 						{
 							"name": "AuctionService",
 							"item": [
 								{
-									"name": "Gachas",
+									"name": "Bids",
 									"item": [
 										{
-											"name": "Bids",
-											"item": [
+											"name": "bid for a gacha",
+											"event": [
 												{
-													"name": "bid for a gacha",
-													"request": {
-														"method": "POST",
-														"header": [],
-														"body": {
-															"mode": "raw",
-															"raw": "{\r\n    \"price\":105\r\n}",
-															"options": {
-																"raw": {
-																	"language": "json"
-																}
-															}
-														},
-														"url": {
-															"raw": "{{dbm_three}}/auction/gachas/4/player/1/bid/",
-															"host": [
-																"{{dbm_three}}"
-															],
-															"path": [
-																"auction",
-																"gachas",
-																"4",
-																"player",
-																"1",
-																"bid",
-																""
-															]
-														}
-													},
-													"response": []
-												},
-												{
-													"name": "list of bids",
-													"request": {
-														"method": "GET",
-														"header": [],
-														"url": {
-															"raw": "{{dbm_three}}/auction/gachas/4/bids/",
-															"host": [
-																"{{dbm_three}}"
-															],
-															"path": [
-																"auction",
-																"gachas",
-																"4",
-																"bids",
-																""
-															]
-														}
-													},
-													"response": []
-												},
-												{
-													"name": "winner",
-													"request": {
-														"method": "POST",
-														"header": [],
-														"body": {
-															"mode": "formdata",
-															"formdata": [
-																{
-																	"key": "auction_gacha_id",
-																	"value": "1",
-																	"type": "text"
-																},
-																{
-																	"key": "bidder_id",
-																	"value": "1",
-																	"type": "text"
-																},
-																{
-																	"key": "price",
-																	"value": "100",
-																	"type": "text"
-																}
-															]
-														},
-														"url": {
-															"raw": "{{dbm_three}}/auction/gachas/bids/winner/",
-															"host": [
-																"{{dbm_three}}"
-															],
-															"path": [
-																"auction",
-																"gachas",
-																"bids",
-																"winner",
-																""
-															]
-														}
-													},
-													"response": []
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 201\", function () {",
+															"    pm.response.to.have.status(201);",
+															"});",
+															" "
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
 												}
-											]
+											],
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"price\":105\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/4/player/1/bid/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"4",
+														"player",
+														"1",
+														"bid",
+														""
+													]
+												}
+											},
+											"response": []
 										},
 										{
+											"name": "list of bids",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/1/bids/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"1",
+														"bids",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "winner",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 201\", function () {",
+															"    pm.response.to.have.status(201);",
+															"});",
+															" "
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "auction_gacha_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "bidder_id",
+															"value": "2",
+															"type": "text"
+														},
+														{
+															"key": "price",
+															"value": "100",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/gachas/bids/winner/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"gachas",
+														"bids",
+														"winner",
+														""
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Auction",
+									"item": [
+										{
+											"name": "create-auction",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 201\", function () {",
+															"    pm.response.to.have.status(201);",
+															"});",
+															" "
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"School Sale\",\r\n    \"start_date\": \"2024-11-11T00:00:00Z\",\r\n    \"end_date\": \"2024-11-11T00:00:00Z\",\r\n    \"status\": \"inactive\"\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/create/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"create",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "list-auction",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{dbm_three}}/auction/list/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"list",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "auction-details",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{dbm_three}}/auction/2/details/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"2",
+														"details",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "delete-auction-details",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 204\", function () {",
+															"    pm.response.to.have.status(204);",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": []
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/1/details/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"1",
+														"details",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "update-auction-details Copy",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 200\", function () {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test(\"Response has the correct detail message\", function () {",
+															"    const jsonData = pm.response.json();",
+															"",
+															"    // Validate the detail attribute and its value",
+															"    pm.expect(jsonData).to.have.property(\"detail\");",
+															"    pm.expect(jsonData.detail).to.equal(\"Auction updated successfully.\");",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{dbm_three}}/auction/1/details/",
+													"host": [
+														"{{dbm_three}}"
+													],
+													"path": [
+														"auction",
+														"1",
+														"details",
+														""
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "AuctionGachas",
+									"item": [
+										{
 											"name": "Place gacha for auction",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Status code is 201\", function () {",
+															"    pm.response.to.have.status(201);",
+															"});",
+															" "
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
 											"request": {
 												"method": "POST",
 												"header": [],
@@ -896,14 +1272,14 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{dbm_three}}/auction/gachas/4/list/",
+													"raw": "{{dbm_three}}/auction/gachas/1/list/",
 													"host": [
 														"{{dbm_three}}"
 													],
 													"path": [
 														"auction",
 														"gachas",
-														"4",
+														"1",
 														"list",
 														""
 													]
@@ -933,162 +1309,6 @@
 											"response": []
 										}
 									]
-								},
-								{
-									"name": "create-auction",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"Black Friday Sell\",\r\n    \"start_date\": \"2024-11-11T00:00:00Z\",\r\n    \"end_date\": \"2024-11-11T00:00:00Z\",\r\n    \"status\": \"inactive\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{dbm_three}}/auction/create/",
-											"host": [
-												"{{dbm_three}}"
-											],
-											"path": [
-												"auction",
-												"create",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "list-auction",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{dbm_three}}/auction/list/",
-											"host": [
-												"{{dbm_three}}"
-											],
-											"path": [
-												"auction",
-												"list",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "auction-details",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{dbm_three}}/auction/2/details/",
-											"host": [
-												"{{dbm_three}}"
-											],
-											"path": [
-												"auction",
-												"2",
-												"details",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "delete-auction-details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 204\", function () {",
-													"    pm.response.to.have.status(204);",
-													"});"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": []
-										},
-										"url": {
-											"raw": "{{dbm_three}}/auction/1/details/",
-											"host": [
-												"{{dbm_three}}"
-											],
-											"path": [
-												"auction",
-												"1",
-												"details",
-												""
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "update-auction-details Copy",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"",
-													"pm.test(\"Response has the correct detail message\", function () {",
-													"    const jsonData = pm.response.json();",
-													"",
-													"    // Validate the detail attribute and its value",
-													"    pm.expect(jsonData).to.have.property(\"detail\");",
-													"    pm.expect(jsonData.detail).to.equal(\"Auction updated successfully.\");",
-													"});"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{dbm_three}}/auction/1/details/",
-											"host": [
-												"{{dbm_three}}"
-											],
-											"path": [
-												"auction",
-												"1",
-												"details",
-												""
-											]
-										}
-									},
-									"response": []
 								}
 							]
 						},
@@ -1118,18 +1338,48 @@
 								},
 								{
 									"name": "purchase game currency",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {",
+													"    pm.response.to.have.status(201);",
+													"});",
+													" "
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
 									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
+										"auth": {
+											"type": "bearer",
+											"bearer": [
 												{
-													"key": "cash_amount",
-													"value": "20",
-													"type": "text"
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+													"type": "string"
 												}
 											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cash_amount\": 200\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
 										},
 										"url": {
 											"raw": "{{dbm_three}}/transaction/player/4/purchase/game-currency/",
@@ -1170,7 +1420,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"username\":\"chfshuvo\",\n    \"password\":\"chfshuvo\"\n}",
+											"raw": "{\n    \"username\": \"admin001\",\n    \"password\": \"Admin001@password\"\n}\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1206,13 +1456,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{auth_service_gateway}}/user/1004/logout/",
+											"raw": "{{auth_service_gateway}}/user/1/logout/",
 											"host": [
 												"{{auth_service_gateway}}"
 											],
 											"path": [
 												"user",
-												"1004",
+												"1",
 												"logout",
 												""
 											]
@@ -1241,7 +1491,35 @@
 							"response": []
 						},
 						{
-							"name": "user-details or update",
+							"name": "user-details-update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"admin001\",\n    \"password\": \"Admin001@password\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{auth_service_gateway}}/7/details/",
+									"host": [
+										"{{auth_service_gateway}}"
+									],
+									"path": [
+										"7",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-details",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1367,6 +1645,38 @@
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzNDM2NzgyLCJpYXQiOjE3MzM0MTg3ODJ9.cQAPp8vuMTtMoxJfc_0cY0gCarUg5RuiloCYnn_kYxg",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				},
 				{
@@ -1419,10 +1729,16 @@
 									"name": "player-details",
 									"request": {
 										"method": "PUT",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"first_name\": \"Player\",\r\n    \"last_name\": \"One\",\r\n    \"email_address\": \"player1@outlook.com\",\r\n    \"phone_number\": \"3533299792\",\r\n    \"bank_details\": \"IT1234567893\",\r\n    \"current_balance\": 10005\r\n}",
+											"raw": "{\r\n    \"current_balance\": 10005\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1430,13 +1746,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{user_service_gateway}}/player/3/details/",
+											"raw": "{{user_service_gateway}}/player/2/details/",
 											"host": [
 												"{{user_service_gateway}}"
 											],
 											"path": [
 												"player",
-												"3",
+												"2",
 												"details",
 												""
 											]
@@ -1448,7 +1764,13 @@
 									"name": "delete-player",
 									"request": {
 										"method": "DELETE",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"url": {
 											"raw": "{{user_service_gateway}}/player/2/delete/",
 											"host": [
@@ -1468,7 +1790,13 @@
 									"name": "player-list",
 									"request": {
 										"method": "GET",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"url": {
 											"raw": "{{user_service_gateway}}/player/list/",
 											"host": [
@@ -1521,7 +1849,13 @@
 									],
 									"request": {
 										"method": "GET",
-										"header": [],
+										"header": [
+											{
+												"key": "Role",
+												"value": "player",
+												"type": "text"
+											}
+										],
 										"url": {
 											"raw": "{{user_service_gateway}}/player/1/details/",
 											"host": [
@@ -1536,6 +1870,38 @@
 										}
 									},
 									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
 								}
 							]
 						},
@@ -1699,7 +2065,13 @@
 							"name": "gacha-list",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{gacha_service_gateway}}/gacha/list/",
 									"host": [
@@ -1718,7 +2090,13 @@
 							"name": "create-gacha",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"name\": \"Mel4\",\r\n    \"rarity\": 80,\r\n    \"inventory\": 4,\r\n    \"price\": 150,\r\n    \"status\": \"active\",\r\n    \"description\": \"Jayce is .tt....\",\r\n    \"image\": \"jayc7.png\"\r\n}",
@@ -1746,7 +2124,13 @@
 							"name": "gacha-details",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{gacha_service_gateway}}/gacha/2/details/",
 									"host": [
@@ -1766,7 +2150,13 @@
 							"name": "delete-gacha",
 							"request": {
 								"method": "DELETE",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{gacha_service_gateway}}/gacha/1/delete/",
 									"host": [
@@ -1782,6 +2172,38 @@
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzNDI4MzQ1LCJpYXQiOjE3MzM0MTAzNDV9.OaUSxFm5kkurFv8clFRjF-wkoYfJrbls_hguLXSRW3Q",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				},
 				{
@@ -1791,7 +2213,13 @@
 							"name": "player-gacha-collection",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{play_service_gateway}}/player/1/collection/",
 									"host": [
@@ -1811,7 +2239,13 @@
 							"name": "roll-to-win",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"roll_price\":\"50\"\r\n}",
@@ -1844,9 +2278,15 @@
 							"name": "direct-purchase",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "{{play_service_gateway}}/direct-purchase/?player_id=3&gacha_id=5",
+									"raw": "{{play_service_gateway}}/direct-purchase/?player_id=2&gacha_id=5",
 									"host": [
 										"{{play_service_gateway}}"
 									],
@@ -1857,7 +2297,7 @@
 									"query": [
 										{
 											"key": "player_id",
-											"value": "3"
+											"value": "2"
 										},
 										{
 											"key": "gacha_id",
@@ -1872,7 +2312,13 @@
 							"name": "player-single-gacha-details",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{play_service_gateway}}/player/collection/2/",
 									"host": [
@@ -1888,13 +2334,45 @@
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				},
 				{
 					"name": "AuctionService",
 					"item": [
 						{
-							"name": "Gachas Copy",
+							"name": "AuctionGachas",
 							"item": [
 								{
 									"name": "Bids",
@@ -2050,34 +2528,114 @@
 							]
 						},
 						{
+							"name": "AuctionBids",
+							"item": [
+								{
+									"name": "list of bids",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Validate response status code",
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Role",
+												"value": "admin",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{auction_service_gateway}}/auction/gachas/2/bids/",
+											"host": [
+												"{{auction_service_gateway}}"
+											],
+											"path": [
+												"auction",
+												"gachas",
+												"2",
+												"bids",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "winner",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Validate response status code",
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Role",
+												"value": "admin",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{auction_service_gateway}}/auction/gachas/1/bids/winner/",
+											"host": [
+												"{{auction_service_gateway}}"
+											],
+											"path": [
+												"auction",
+												"gachas",
+												"1",
+												"bids",
+												"winner",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "create-auction",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "name",
-											"value": "Test Auction 3",
-											"type": "text"
-										},
-										{
-											"key": "start_date",
-											"value": "2024-11-11 00:00:00",
-											"type": "text"
-										},
-										{
-											"key": "end_date",
-											"value": "2024-11-11 00:00:00",
-											"type": "text"
-										},
-										{
-											"key": "status",
-											"value": "inactive",
-											"type": "text"
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Winter Sale\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									]
+									}
 								},
 								"url": {
 									"raw": "{{auction_service_gateway}}/auction/create/",
@@ -2097,7 +2655,13 @@
 							"name": "list-auction",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{auction_service_gateway}}/auction/list/",
 									"host": [
@@ -2116,7 +2680,13 @@
 							"name": "auction-details",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{auction_service_gateway}}/auction/1/details/",
 									"host": [
@@ -2133,35 +2703,25 @@
 							"response": []
 						},
 						{
-							"name": "list of bids",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"// Validate response status code",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
+							"name": "auction-details-delete",
 							"request": {
-								"method": "GET",
-								"header": [],
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "{{dbm_three}}/auction/gachas/2/bids/",
+									"raw": "{{auction_service_gateway}}/auction/6/details/",
 									"host": [
-										"{{dbm_three}}"
+										"{{auction_service_gateway}}"
 									],
 									"path": [
 										"auction",
-										"gachas",
-										"2",
-										"bids",
+										"6",
+										"details",
 										""
 									]
 								}
@@ -2169,40 +2729,71 @@
 							"response": []
 						},
 						{
-							"name": "winner",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"// Validate response status code",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
+							"name": "auction-details-update",
 							"request": {
-								"method": "GET",
-								"header": [],
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Role",
+										"value": "admin",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Winter Sale\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{dbm_three}}/auction/gachas/bids/winner/",
+									"raw": "{{auction_service_gateway}}/auction/1/details/",
 									"host": [
-										"{{dbm_three}}"
+										"{{auction_service_gateway}}"
 									],
 									"path": [
 										"auction",
-										"gachas",
-										"bids",
-										"winner",
+										"1",
+										"details",
 										""
 									]
 								}
 							},
 							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzNDI4MzQ1LCJpYXQiOjE3MzM0MTAzNDV9.OaUSxFm5kkurFv8clFRjF-wkoYfJrbls_hguLXSRW3Q",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -2213,7 +2804,13 @@
 							"name": "player transactions",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{transaction_service_gateway}}/transactions/player/1/all/",
 									"host": [
@@ -2234,16 +2831,21 @@
 							"name": "purchase game currency",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Role",
+										"value": "player",
+										"type": "text"
+									}
+								],
 								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "cash_amount",
-											"value": "20",
-											"type": "text"
+									"mode": "raw",
+									"raw": "{\n    \"cash_amount\": 200\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									]
+									}
 								},
 								"url": {
 									"raw": "{{transaction_service_gateway}}/transactions/player/4/purchase/game-currency/",
@@ -2261,6 +2863,38 @@
 								}
 							},
 							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				}
@@ -2292,47 +2926,47 @@
 	"variable": [
 		{
 			"key": "dbm_one",
-			"value": "http://localhost:6001/core",
+			"value": "https://localhost:6001/core",
 			"type": "string"
 		},
 		{
 			"key": "dbm_two",
-			"value": "http://localhost:6002",
+			"value": "https://localhost:6002",
 			"type": "string"
 		},
 		{
 			"key": "dbm_three",
-			"value": "http://localhost:6003",
+			"value": "https://localhost:6003",
 			"type": "string"
 		},
 		{
 			"key": "auth_service_gateway",
-			"value": "http://localhost:4001/authentication-service",
+			"value": "https://localhost:4001/authentication-service",
 			"type": "string"
 		},
 		{
 			"key": "user_service_gateway",
-			"value": "http://localhost:4002/user-service",
+			"value": "https://localhost:4002/user-service",
 			"type": "string"
 		},
 		{
 			"key": "gacha_service_gateway",
-			"value": "http://localhost:4003/gacha-service",
+			"value": "https://localhost:4003/gacha-service",
 			"type": "string"
 		},
 		{
 			"key": "play_service_gateway",
-			"value": "http://localhost:4004/play-service",
+			"value": "https://localhost:4004/play-service",
 			"type": "string"
 		},
 		{
 			"key": "auction_service_gateway",
-			"value": "http://localhost:4005",
+			"value": "https://localhost:4005",
 			"type": "string"
 		},
 		{
 			"key": "transaction_service_gateway",
-			"value": "http://localhost:4006",
+			"value": "https://localhost:4006",
 			"type": "string"
 		}
 	]

@@ -6,3 +6,5 @@ requests
 cryptography
 pymysql
 mock
+pyopenssl
+werkzeug

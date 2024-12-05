@@ -9,6 +9,8 @@ djangorestframework = "*"
 django-extensions = "*"
 python-dotenv = "*"
 requests = "*"
+pyopenssl = "*"
+werkzeug = "*"
 
 [dev-packages]
 

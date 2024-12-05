@@ -62,16 +62,18 @@ def AdminDetails(request, id):
 
 @api_view(['DELETE'])
 def deleteAdmin(request, id):
+    # return Response({'headers': request.headers}, status=200)
     # Get the Admin by ID
     admin = get_object_or_404(Admin, pk=id)
 
     # External API endpoint for auth information
-    auth_api_url = f"{settings.API_GATEWAY_ONE}/{admin.user_id}/delete/"
+    auth_api_url = f"{settings.AUTH_SERVICE}/{admin.user_id}/delete/"
     print(auth_api_url)
 
     # Check if the user can be deleted from the auth app
     try:
-        auth_response = requests.delete(auth_api_url)
+        auth_response = requests.delete(
+            auth_api_url, headers=request.headers, verify=False)
 
         # If the auth app allows deletion (returns 204), proceed
         if auth_response.status_code == status.HTTP_204_NO_CONTENT:
@@ -142,12 +144,13 @@ def deletePlayer(request, id):
     player = get_object_or_404(Player, pk=id)
 
     # External API endpoint for auth information
-    auth_api_url = f"{settings.API_GATEWAY_ONE}/{player.user_id}/delete/"
+    auth_api_url = f"{settings.AUTH_SERVICE}/{player.user_id}/delete/"
     print(auth_api_url)
 
     # Check if the user can be deleted from the auth app
     try:
-        auth_response = requests.delete(auth_api_url)
+        auth_response = requests.delete(
+            auth_api_url, headers=request.headers, verify=False)
         # If the auth app allows deletion (returns 204), proceed
         if auth_response.status_code == status.HTTP_204_NO_CONTENT:
             # Delete the player record

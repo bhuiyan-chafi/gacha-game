@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "c84c0dc0-09a3-47f2-b47a-0c4e14b67cdd",
-		"name": "Final Submission",
+		"name": "IntegratedEndpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39569857"
 	},
@@ -9,6 +9,386 @@
 		{
 			"name": "GatewayOne[Admin]",
 			"item": [
+				{
+					"name": "NegativeTests",
+					"item": [
+						{
+							"name": "create-user-wrong-input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 201",
+											"pm.test(\"The endpoint is checked with malformed data\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"98989@\",\n    \"password\": \"Admin002@password\",\n    \"status\": \"wrong_status\",\n    \"role\": \"wrong_role\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-delete-wrong-user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"The delete user function should return 404 if the user id is wrong\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											" "
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{gateway_one}}/user/10/delete/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"user",
+										"10",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-admin-wrong-input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 201",
+											"pm.test(\"Checking with malformed data 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_id\": 2,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/admin/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"admin",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-player-details-wrong-player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Player not found 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 10005\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/player/100/details/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"player",
+										"100",
+										"details",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "player transactions-wrong-player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Player not found 404\", function () {",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/transaction-service/player/100/all/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"100",
+										"all",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-gacha-with-malformed-data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test with malformed data 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Teemu\",\n    \"rarity\": 95,\n    \"inventory\": 12,\n    \"price\": 150,\n    \"status\": \"active\",\n    \"description\": \"teemu is .....\",\n    \"image\": \"teemu.png\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/gacha/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"gacha",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-auction-with-malformed-data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Test with malformed data 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Easter Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/auction/create/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"auction",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-gachas-wrong-auction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate response status code",
+											"pm.test(\"Wrong Auction Call 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/gachas/100/list/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"100",
+										"list",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auction-winner-malformed-request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Auction Gacha nor present 404 or the winner has been called before the auctions ends 400\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 404]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_one}}/auction-service/gachas/1/bids/winner/",
+									"host": [
+										"{{gateway_one}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"1",
+										"bids",
+										"winner",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Authentication",
 					"item": [
@@ -61,6 +441,21 @@
 						},
 						{
 							"name": "verify-token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Checking Valid/Invalid Token\", function () {",
+											"    pm.expect([200, 401]).to.include(pm.response.code);",
+											"});",
+											" "
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -302,7 +697,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": \"admin001\",\n    \"status\": \"inactive\"\n}",
+									"raw": "{\n    \"role\": \"player\",\n    \"status\": \"active\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -310,13 +705,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway_one}}/user/1/details/",
+									"raw": "{{gateway_one}}/user/2/details/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"user",
-										"1",
+										"2",
 										"details",
 										""
 									]
@@ -346,27 +741,16 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "username",
-											"value": "chafi06_mod",
-											"type": "text"
-										},
-										{
-											"key": "status",
-											"value": "inactive",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{gateway_one}}/user/3/delete/",
+									"raw": "{{gateway_one}}/user/1/delete/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"user",
-										"3",
+										"1",
 										"delete",
 										""
 									]
@@ -456,7 +840,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"user_id\": 2,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
+									"raw": "{\n  \"user_id\": 1,\n  \"first_name\": \"CHAFIULLAH\",\n  \"last_name\": \"BHUIYAN\",\n  \"email_address\": \"chafiullah@test.com\",\n  \"phone_number\": \"3533299790\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -609,13 +993,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_one}}/admin/2/delete/",
+									"raw": "{{gateway_one}}/admin/1/delete/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"admin",
-										"2",
+										"1",
 										"delete",
 										""
 									]
@@ -713,7 +1097,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299792\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 10005\n}",
+									"raw": "{\n    \"first_name\": \"Player\",\n    \"last_name\": \"One\",\n    \"email_address\": \"player1@outlook.com\",\n    \"phone_number\": \"3533299791\",\n    \"bank_details\": \"IT1234567893\",\n    \"current_balance\": 10005\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -756,13 +1140,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_one}}/player/1/delete/",
+									"raw": "{{gateway_one}}/player/3/delete/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"player",
-										"1",
+										"3",
 										"delete",
 										""
 									]
@@ -1154,13 +1538,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_one}}/gacha/10/delete/",
+									"raw": "{{gateway_one}}/gacha/1/delete/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"gacha",
-										"10",
+										"1",
 										"delete",
 										""
 									]
@@ -1196,7 +1580,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Easter Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"inactive\"\n}",
+									"raw": "{\n    \"name\": \"Winter Sale\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1330,14 +1714,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{gateway_one}}/auction-service/auction/2/details/",
+									"raw": "{{gateway_one}}/auction-service/auction/4/details/",
 									"host": [
 										"{{gateway_one}}"
 									],
 									"path": [
 										"auction-service",
 										"auction",
-										"2",
+										"4",
 										"details",
 										""
 									]
@@ -1374,7 +1758,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": 1,\n    \"name\": \"Black Friday Sell\",\n    \"start_date\": \"2024-11-11T00:00:00Z\",\n    \"end_date\": \"2024-11-11T00:00:00Z\",\n    \"status\": \"active\"\n}",
+									"raw": "{\n    \"status\": \"active\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1569,7 +1953,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzMjE2MjM3LCJpYXQiOjE3MzMxOTgyMzd9.vg--UOLKrDv0D7M1i-a5Ija3a0gWdD3iOFH8jGwgTzU",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluMDAxIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjoiYWN0aXZlIiwiZXhwIjoxNzMzNDI4MzQ1LCJpYXQiOjE3MzM0MTAzNDV9.OaUSxFm5kkurFv8clFRjF-wkoYfJrbls_hguLXSRW3Q",
 						"type": "string"
 					}
 				]
@@ -1600,6 +1984,246 @@
 		{
 			"name": "GatewayTwo[Player]",
 			"item": [
+				{
+					"name": "NegativeTests",
+					"item": [
+						{
+							"name": "create-player-malformed-data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Invalid user_id 404 or Malformed Player Details 400\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 404]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": 3,\n    \"first_name\": \"Player\",\n    \"last_name\": \"Two\",\n    \"email_address\": \"player3@outlook.com\",\n    \"phone_number\": \"3533299793\",\n    \"bank_details\": \"IT1234567895\",\n    \"current_balance\": 1000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/create/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "roll-to-win-malformed-data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Malformed body 400 or Invalid player_id 404 or player not authenticated 401 or not authorized 403\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 401, 404]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"roll_price\":\"50\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/play-service/roll-to-win/?player_id=1",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"roll-to-win",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "direct-purchase-malformed-data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Player or Gacha not found 404 / Authentication or Authorization Issue 401 or 403 / The gacha already belongs to the player 400\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 401, 404]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{gateway_two}}/play-service/direct-purchase/?player_id=1&gacha_id=1",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"play-service",
+										"direct-purchase",
+										""
+									],
+									"query": [
+										{
+											"key": "player_id",
+											"value": "1"
+										},
+										{
+											"key": "gacha_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "gacha-on-auction-malformed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Invalid Gacha 404, Malformed body 400 or player not authenticated 401 or not authorized 403\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 401, 403, 404]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"auction_id\":1,\n    \"collection_id\":1,\n    \"price\":100,\n    \"status\":\"active\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/auction-service/gachas/place/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"auction-service",
+										"gachas",
+										"place",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "purchase-currency-malformed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Invalid Player 404, Malformed body 400 or player not authenticated 401 or not authorized 403\", function () {",
+											"    // Check if the status is either 200 or 401",
+											"    pm.expect([400, 401, 403, 503]).to.include(pm.response.code);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "cash_amount",
+											"value": "20",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{gateway_two}}/transaction-service/player/1/purchase/game-currency/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"transaction-service",
+										"player",
+										"1",
+										"purchase",
+										"game-currency",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Authentication",
 					"item": [
@@ -1729,6 +2353,39 @@
 					]
 				},
 				{
+					"name": "UserManagement",
+					"item": [
+						{
+							"name": "create-user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"player003\",\n    \"password\": \"Player003@password\",\n    \"status\": \"active\",\n    \"role\": \"player\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_two}}/user/create/",
+									"host": [
+										"{{gateway_two}}"
+									],
+									"path": [
+										"user",
+										"create",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "PlayerManagement",
 					"item": [
 						{
@@ -1755,7 +2412,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"user_id\": 3,\n    \"first_name\": \"Player\",\n    \"last_name\": \"Two\",\n    \"email_address\": \"player3@outlook.com\",\n    \"phone_number\": \"3533299793\",\n    \"bank_details\": \"IT1234567895\",\n    \"current_balance\": 1000\n}",
+									"raw": "{\n    \"user_id\": 4,\n    \"first_name\": \"Player\",\n    \"last_name\": \"Four\",\n    \"email_address\": \"player4@outlook.com\",\n    \"phone_number\": \"3533299794\",\n    \"bank_details\": \"IT1234567894\",\n    \"current_balance\": 1000\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1873,12 +2530,12 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{gateway_two}}/1/details/",
+									"raw": "{{gateway_two}}/9/details/",
 									"host": [
 										"{{gateway_two}}"
 									],
 									"path": [
-										"1",
+										"9",
 										"details",
 										""
 									]
@@ -2119,7 +2776,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"roll_price\":\"50\"\n}",
+									"raw": "{\n    \"roll_price\":\"90\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2172,7 +2829,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{gateway_two}}/play-service/direct-purchase/?player_id=1&gacha_id=1",
+									"raw": "{{gateway_two}}/play-service/direct-purchase/?player_id=1&gacha_id=4",
 									"host": [
 										"{{gateway_two}}"
 									],
@@ -2188,7 +2845,7 @@
 										},
 										{
 											"key": "gacha_id",
-											"value": "1"
+											"value": "4"
 										}
 									]
 								}
@@ -2459,7 +3116,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"price\":101\n}",
+									"raw": "{\n    \"price\":103\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2616,7 +3273,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzMyMTQ0MDAsImlhdCI6MTczMzE5NjQwMH0.XFHKvxh_tnnxIORIhTULws292YYGVqBQuuQkSKnOgTo",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InBsYXllcjAwMSIsInJvbGUiOiJwbGF5ZXIiLCJzdGF0dXMiOiJhY3RpdmUiLCJleHAiOjE3MzM0MzIwNjAsImlhdCI6MTczMzQxNDA2MH0.AehK1eBVtgTYd_4wEct6Ex7mDk-I6bFGBWEzz4PleFw",
 						"type": "string"
 					}
 				]
@@ -2670,12 +3327,12 @@
 	"variable": [
 		{
 			"key": "gateway_one",
-			"value": "http://localhost:8001/api/admin",
+			"value": "https://localhost:8001/api/admin",
 			"type": "string"
 		},
 		{
 			"key": "gateway_two",
-			"value": "http://localhost:8002/api/player",
+			"value": "https://localhost:8002/api/player",
 			"type": "string"
 		}
 	]
