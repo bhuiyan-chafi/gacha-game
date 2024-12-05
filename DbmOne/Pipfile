@@ -5,10 +5,14 @@ name = "pypi"
 
 [packages]
 django = "*"
-pymysql = "*"
 djangorestframework = "*"
-cryptography = "*"
+django-extensions = "*"
 python-dotenv = "*"
+requests = "*"
+cryptography = "*"
+pymysql = "*"
+pyopenssl = "*"
+werkzeug = "*"
 
 [dev-packages]
 

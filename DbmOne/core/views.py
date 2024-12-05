@@ -68,7 +68,7 @@ def deleteUser(request, id):
     if user.status == 'active':
         return Response({
             'detail': 'Active users cannot be deleted. Please deactivate the user first.'
-        }, status=status.HTTP_204_NO_CONTENT)
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     # Delete the user if inactive
     user.delete()
