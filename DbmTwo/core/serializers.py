@@ -131,19 +131,3 @@ class AdminSerializer(serializers.ModelSerializer):
         # Prevent user_id from being updated
         validated_data.pop('user_id', None)
         return super().update(instance, validated_data)
-
-    def to_representation(self, instance):
-        """Customize the serialized output for the response."""
-        representation = super().to_representation(instance)
-
-        # Decrypt sensitive fields
-        if representation.get('phone_number'):
-            representation['phone_number'] = decrypt_data(
-                representation['phone_number']
-            )
-        if representation.get('bank_details'):
-            representation['bank_details'] = decrypt_data(
-                representation['bank_details']
-            )
-
-        return representation

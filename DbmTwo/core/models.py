@@ -26,19 +26,19 @@ class Player(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        print("Before saving: phone_number =",
-              self.phone_number)  # Debug: Check value
-        print("Before saving: bank_details =",
-              self.bank_details)  # Debug: Check value
-        # Encrypt sensitive fields before saving
+        # print("Before saving: phone_number =",
+        #       self.phone_number)  # Debug: Check value
+        # print("Before saving: bank_details =",
+        #       self.bank_details)  # Debug: Check value
+        # # Encrypt sensitive fields before saving
         if self.phone_number:
             self.phone_number = encrypt_data(self.phone_number)
         if self.bank_details:
             self.bank_details = encrypt_data(self.bank_details)
-        print("After encryption: phone_number =",
-              self.phone_number)  # Debug: Check encryption
-        print("After encryption: bank_details =",
-              self.bank_details)  # Debug: Check encryption
+        # print("After encryption: phone_number =",
+        #       self.phone_number)  # Debug: Check encryption
+        # print("After encryption: bank_details =",
+        #       self.bank_details)  # Debug: Check encryption
         super().save(*args, **kwargs)
 
     @property
