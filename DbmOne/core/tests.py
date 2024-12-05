@@ -75,7 +75,20 @@ class UserTests(APITestCase):
 
     def test_delete_active_user(self):
         """Test trying to delete an active user"""
+        # Ensure the user is active before attempting deletion
+        self.user.status = 'active'
+        self.user.save()
+
         response = self.client.delete(
-            reverse('core:user-delete', args=[self.user.id]))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            reverse('core:user-delete', args=[self.user.id])
+        )
+
+        # Assert the response status code and error message
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data['detail'],
+            'Active users cannot be deleted. Please deactivate the user first.'
+        )
+
+        # Ensure the user still exists in the database
         self.assertTrue(User.objects.filter(pk=self.user.id).exists())
