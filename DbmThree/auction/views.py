@@ -282,10 +282,10 @@ def gachaWinner(request):
             bidder_detail_url = f"{settings.USER_SERVICE}/player/{bidder_id}/details/"
 
             seller_response = requests.get(
-                seller_detail_url, headers=request.headers, verify=False, timeout=5)
+                seller_detail_url, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
             # return Response({"location": "dbmthree", "seller_response": seller_response.json()}, status=status.HTTP_200_OK)
             bidder_response = requests.get(
-                bidder_detail_url, headers=request.headers, verify=False, timeout=5)
+                bidder_detail_url, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
             # return Response({"location": "dbmthree", "bidder_response": bidder_response.json()}, status=status.HTTP_200_OK)
 
             if seller_response.status_code != 200:
@@ -307,7 +307,7 @@ def gachaWinner(request):
             # Update seller's balance
             seller_update_response = requests.put(
                 seller_balance_url,
-                json={"current_balance": seller_new_balance}, headers=request.headers, verify=False, timeout=5
+                json={"current_balance": seller_new_balance}, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5
             )
             # return Response({"location": "dbmthree", "seller_update_response": seller_update_response.json()}, status=status.HTTP_200_OK)
             if seller_update_response.status_code != 200:
@@ -316,7 +316,7 @@ def gachaWinner(request):
             # Update bidder's balance
             bidder_update_response = requests.put(
                 bidder_balance_url,
-                json={"current_balance": bidder_new_balance}, headers=request.headers, verify=False, timeout=5
+                json={"current_balance": bidder_new_balance}, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5
             )
             # return Response({"location": "dbmthree", "bidder_update_response": bidder_update_response.json()}, status=status.HTTP_200_OK)
             if bidder_update_response.status_code != 200:

@@ -16,16 +16,16 @@ def forward_request(service_url, method, path, data, query_params, headers, time
         print('Service Url: '+url)
         if method == "GET":
             response = requests.get(
-                url, headers=headers, verify=False, timeout=timeout)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False, timeout=timeout)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False, timeout=timeout)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "DELETE":
             response = requests.delete(
-                url, headers=headers, verify=False, timeout=timeout)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -88,7 +88,8 @@ def createPlayer(request):
     try:
         # Step 1: Check if the user_id exists in the AUTH_SERVICE
         auth_service_url = f"{settings.AUTH_SERVICE}/{user_id}/details/"
-        auth_response = requests.get(auth_service_url, verify=False)
+        auth_response = requests.get(
+            auth_service_url, verify=settings.SSL_VERIFY)
 
         if auth_response.status_code != 200:
             if auth_response.status_code == 404:

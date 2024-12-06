@@ -1,0 +1,169 @@
+openapi: 3.0.0
+info:
+  title: API Gateway for Admin and Player Services
+  description: API with services for authentication, user management, and other system operations.
+  version: 1.0.0
+servers:
+ - url : "https://localhost:4001/authentication-service"
+paths:
+  # Authentication Endpoints
+  /user/login/:
+    post:
+      summary: Login a user
+      description: Authenticate a user with their username and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin001
+                password:
+                  type: string
+                  example: Admin001@password
+      responses:
+        '200':
+          description: Login successful, returns authentication token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Unauthorized, invalid credentials
+
+  /user/{id}/logout/:
+    parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 7
+    post:
+      summary: Logout a user
+      description: Logs out the user by invalidating their session.
+      responses:
+        '200':
+          description: Logout successful
+        '401':
+          description: Unauthorized, invalid session
+
+  /user/create/:
+    post:
+      summary: Create a new user
+      description: Allows the creation of a new user in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: chafi01
+                password:
+                  type: string
+                  example: chafi01password
+                status:
+                  type: string
+                  example: inactive
+      responses:
+        '201':
+          description: User successfully created
+        '400':
+          description: Bad request, invalid input
+
+  /user/{user_id}/details/:
+    get:
+      summary: Retrieve user details
+      description: Fetches the details of a user by their ID.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 7
+      responses:
+        '200':
+          description: Successfully retrieved user details
+        '404':
+          description: User not found
+
+    put:
+      summary: Update user details
+      description: Allows updating the details of an existing user.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 7
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin001
+                password:
+                  type: string
+                  example: Admin001@password
+      responses:
+        '200':
+          description: User details successfully updated
+        '400':
+          description: Bad request, invalid input
+  /user/{user_id}/delete/:
+    delete:
+      summary: Delete a user
+      description: Deletes the user from the system.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+            example: 6
+      responses:
+        '200':
+          description: User successfully deleted
+        '404':
+          description: User not found
+
+  /user/list/:
+    get:
+      summary: Get list of users
+      description: Retrieves a list of all users.
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    username:
+                      type: string
+                    status:
+                      type: string

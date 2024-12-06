@@ -1,0 +1,116 @@
+
+openapi: 3.0.0
+info:
+  title: Gacha Service API
+  description: API for managing gachas, including creating, retrieving, listing, and deleting gachas.
+  version: 1.0.0
+servers:
+ - url : "https://localhost:4003/Gacha-service"
+paths:
+  # Gacha Endpoints
+  /gacha/list/:
+    get:
+      summary: Get a list of all gachas
+      description: Retrieves a list of all available gachas.
+      parameters:
+        - name: Role
+          in: header
+          required: true
+          description: Role of the user (e.g., admin).
+          schema:
+            type: string
+            example: admin
+      responses:
+        '200':
+          description: List of gachas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    gacha_id:
+                      type: integer
+                    name:
+                      type: string
+                    rarity:
+                      type: integer
+                    price:
+                      type: integer
+                    status:
+                      type: string
+
+  /gacha/create/:
+    post:
+      summary: Create a new gacha
+      description: Allows admins to create a new gacha item.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Mel4
+                rarity:
+                  type: integer
+                  example: 80
+                inventory:
+                  type: integer
+                  example: 4
+                price:
+                  type: integer
+                  example: 150
+                status:
+                  type: string
+                  example: active
+                description:
+                  type: string
+                  example: Jayce is .tt....
+                image:
+                  type: string
+                  example: jayc7.png
+      responses:
+        '201':
+          description: Gacha successfully created
+        '400':
+          description: Bad request, invalid input
+
+  /gacha/{gacha_id}/details/:
+    get:
+      summary: Get details of a specific gacha
+      description: Retrieves the details of a gacha by its ID.
+      parameters:
+        - name: gacha_id
+          in: path
+          required: true
+          description: The ID of the gacha.
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Successfully retrieved gacha details
+        '404':
+          description: Gacha not found
+
+  /gacha/{gacha_id}/delete/:
+    delete:
+      summary: Delete a specific gacha
+      description: Deletes a gacha item from the system by its ID.
+      parameters:
+        - name: gacha_id
+          in: path
+          required: true
+          description: The ID of the gacha to be deleted.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Gacha successfully deleted
+        '404':
+          description: Gacha not found

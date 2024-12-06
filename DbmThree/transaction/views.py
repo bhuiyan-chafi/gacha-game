@@ -69,7 +69,7 @@ def playerGameCurrencyPurchase(request, player_id):
         with transaction.atomic():
             # Fetch the player's current balance
             player_response = requests.get(
-                player_url, headers=request.headers, verify=False, timeout=5)
+                player_url, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
             # return Response({"location": "dbmthree->transactions", "player_response": player_response.json()}, status=status.HTTP_200_OK)
 
             if player_response.status_code != 200:
@@ -81,7 +81,7 @@ def playerGameCurrencyPurchase(request, player_id):
             # Update the player's balance
             new_balance = current_balance + game_currency
             update_response = requests.put(
-                player_url, json={'current_balance': new_balance}, headers=request.headers, verify=False, timeout=5)
+                player_url, json={'current_balance': new_balance}, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
             # return Response({"location": "dbmthree->transactions", "update_response": update_response.json()}, status=status.HTTP_200_OK)
 
             if update_response.status_code != 200:

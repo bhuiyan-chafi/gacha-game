@@ -1,0 +1,266 @@
+openapi: 3.0.0
+info:
+  title: User Service API
+  description: API for managing player and admin accounts, including user creation, details management, and deletion.
+  version: 1.0.0
+servers:
+ - url: "https://localhost:4002/user-service"
+paths:
+  # Player Endpoints
+  /player/create/:
+    post:
+      summary: Create a new player
+      description: Creates a new player account with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 4
+                first_name:
+                  type: string
+                  example: Player
+                last_name:
+                  type: string
+                  example: Two
+                email_address:
+                  type: string
+                  example: player3s@outlook.com
+                phone_number:
+                  type: string
+                  example: 353329793
+                bank_details:
+                  type: string
+                  example: IT1234567495
+                current_balance:
+                  type: number
+                  format: float
+                  example: 1000
+      responses:
+        '201':
+          description: Player successfully created
+        '400':
+          description: Bad request, invalid input
+
+  /player/{user_id}/details/:
+    get:
+      summary: Get player details
+      description: Retrieves the details of a player by their user ID.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the player.
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Successfully retrieved player details
+        '404':
+          description: Player not found
+
+    put:
+      summary: Update player details
+      description: Updates the player's details (e.g., balance or personal information).
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the player.
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_balance:
+                  type: number
+                  format: float
+                  example: 10005
+      responses:
+        '200':
+          description: Player details successfully updated
+        '400':
+          description: Bad request, invalid input
+  /player/{user_id}/delete/:
+    delete:
+      summary: Delete a player
+      description: Deletes the player account.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the player to be deleted.
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Player successfully deleted
+        '404':
+          description: Player not found
+
+  /player/list/:
+    get:
+      summary: Get a list of players
+      description: Retrieves a list of all players in the system.
+      responses:
+        '200':
+          description: List of players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email_address:
+                      type: string
+                    current_balance:
+                      type: number
+                      format: float
+
+  # Admin Endpoints
+  /admin/create/:
+    post:
+      summary: Create a new admin
+      description: Creates a new admin account with the provided details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 3
+                first_name:
+                  type: string
+                  example: Admin
+                last_name:
+                  type: string
+                  example: One
+                email_address:
+                  type: string
+                  example: admin@test.com
+                phone_number:
+                  type: string
+                  example: 3533299790
+      responses:
+        '201':
+          description: Admin successfully created
+        '400':
+          description: Bad request, invalid input
+
+  /admin/{user_id}/details/:
+    get:
+      summary: Get admin details
+      description: Retrieves the details of an admin by their user ID.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the admin.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successfully retrieved admin details
+        '404':
+          description: Admin not found
+    put:
+      summary: Update admin details
+      description: Allows updating of admin details, such as name, email, and phone number.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the admin to be updated.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: ASM CHAFIULLAH
+                last_name:
+                  type: string
+                  example: BHUIYAN
+                email_address:
+                  type: string
+                  example: chafiullah@outlook.com
+                bank_details:
+                  type: string
+                  example: IT1234567890
+                phone_number:
+                  type: string
+                  example: 3533299790
+      responses:
+        '200':
+          description: Admin details successfully updated
+        '400':
+          description: Bad request, invalid input
+  /admin/{user_id}/delete/:
+    delete:
+      summary: Delete an admin
+      description: Deletes the admin account.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the admin to be deleted.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Admin successfully deleted
+        '404':
+          description: Admin not found
+
+  /admin/list/:
+    get:
+      summary: Get a list of admins
+      description: Retrieves a list of all admins in the system.
+      responses:
+        '200':
+          description: List of admins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email_address:
+                      type: string
+

@@ -73,7 +73,7 @@ def deleteAdmin(request, id):
     # Check if the user can be deleted from the auth app
     try:
         auth_response = requests.delete(
-            auth_api_url, headers=request.headers, verify=False, timeout=5)
+            auth_api_url, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
 
         # If the auth app allows deletion (returns 204), proceed
         if auth_response.status_code == status.HTTP_204_NO_CONTENT:
@@ -150,7 +150,7 @@ def deletePlayer(request, id):
     # Check if the user can be deleted from the auth app
     try:
         auth_response = requests.delete(
-            auth_api_url, headers=request.headers, verify=False, timeout=5)
+            auth_api_url, headers=request.headers, verify=settings.SSL_VERIFY, timeout=5)
         # If the auth app allows deletion (returns 204), proceed
         if auth_response.status_code == status.HTTP_204_NO_CONTENT:
             # Delete the player record

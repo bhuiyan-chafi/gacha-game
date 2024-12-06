@@ -24,16 +24,16 @@ def forward_request(source, method, path, data=None, headers=None, timeout=5):
         headers = headers or {}
         if method == "GET":
             response = requests.get(
-                url, headers=headers, verify=False, timeout=timeout)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False, timeout=timeout)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False, timeout=timeout)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         elif method == "DELETE":
             response = requests.delete(
-                url, headers=headers, verify=False, timeout=timeout)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=timeout)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

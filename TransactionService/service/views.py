@@ -14,16 +14,16 @@ def forward_request(method, path, data=None, headers=None):
         url = f"{settings.DATABASE_THREE}{path}"
         if method == "GET":
             response = requests.get(
-                url, headers=headers, verify=False, timeout=5)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=5)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False, timeout=5)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=5)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False, timeout=5)
+                url, json=data, headers=headers, verify=settings.SSL_VERIFY, timeout=5)
         elif method == "DELETE":
             response = requests.delete(
-                url, headers=headers, verify=False, timeout=5)
+                url, headers=headers, verify=settings.SSL_VERIFY, timeout=5)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

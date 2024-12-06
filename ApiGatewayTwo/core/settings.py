@@ -29,8 +29,17 @@ PLAYER_ROLE = ['player']
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# nosec
 SECRET_KEY = 'django-insecure-*t(k-kzwj%69*8(1x31tav5e4eg3m#xfo%1r090wsm-1)+r9!c'
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Path to the SSL certificate
+SSL_CERT_PATH = os.path.join(BASE_DIR, 'certs', 'cert.pem')
+
+# Example usage for requests
+SSL_VERIFY = SSL_CERT_PATH
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

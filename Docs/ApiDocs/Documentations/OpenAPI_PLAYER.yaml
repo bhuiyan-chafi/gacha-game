@@ -6,6 +6,47 @@ info:
 servers:
   - url: "https://localhost:8002"  
 paths:
+  /user/create/:
+    post:
+      summary: Create User
+      description: Add a new user to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: player001
+                password:
+                  type: string
+                  example: player001@password
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+                role:
+                  type: string
+                  enum: [player, user]
+                  example: player
+      responses:
+        '201':
+          description: User created successfully.
+        '400':
+          description: Invalid input - User creation failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to create a user.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Server error while creating the user.
+        '503':
+          description: User creation service is unavailable.
+  
   /api/player/user/login/:
     post:
       summary: User Login

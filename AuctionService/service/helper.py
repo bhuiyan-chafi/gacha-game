@@ -23,7 +23,7 @@ def verifyToken(request):
     try:
         # Forward the request to the AuthService's /token/verify/ endpoint
         auth_response = requests.post(
-            verify_url, json=None, headers=request.headers, verify=False)
+            verify_url, json=None, headers=request.headers, timeout=5, verify=settings.SSL_VERIFY)
 
         # Check the response status code
         if auth_response.status_code != 200:

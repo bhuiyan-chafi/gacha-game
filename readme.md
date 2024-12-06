@@ -145,6 +145,8 @@ We will perform performance testing using **Locust**. You can perform locust tes
 
 > locust -f locust.py
 
+<span style="color:blue">The locust file is also given [here](Docs/Tests/locust.py) but to run this your machine must have locust installed.</span>
+
 Will start the **locust server** on http://localhost:8089/ which you can access from your browser. If locust is running correctly you should see this interface:
 ![locust-image](Docs/images/locust.png)
 
