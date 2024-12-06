@@ -12,9 +12,10 @@
 
 ## Documentation and Game Rules
 - [Game Rules]()
-- [API Documentation for Admins](Docs/ApiDocs/OpenAPI_ADMIN.yaml)
-- [API Documentation for Players](Docs/ApiDocs/OpenAPI_PLAYER.yaml)
-- [Architecture PDF]()
+- [API Documentation](Docs/ApiDocs/Documentations/)
+- [API Collections](Docs/ApiDocs/Collections/)
+- [Report PDF](Docs/Report.pdf)
+- [Performace Test with Locust](Docs/Tests/locust.py)
 ---
 ## Prerequisities
 - docker
@@ -131,6 +132,15 @@ Now you can test each of these services as you want but remember the issue of **
 
 ### Running the test manually from application level
 -----
+> docker exec -it 'container_name' /bin/sh
+
+For example if we want to test **Gacha Service**
+
+> docker exec -it gachaservice /bin/sh
+
+> python manage.py test
+
+
 You can also test the service in isolation from docker. The process has already been discussed. You can learn more about the testing from the [Report]()
 
 ### Performance Testing
