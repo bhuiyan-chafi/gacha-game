@@ -91,6 +91,7 @@ If you have imported the **API Endpoints** your postman collection should look l
 ![postman-collection-negative-test](Docs/images/run-collection-result.png)
 
 ### Running Integration Test manually
+---
 
 You can also test each of the functionalities directly from the application level. To perform unit testing follow the given proceedure:
 > docker exec -it 'container_name' /bin/sh
@@ -130,3 +131,36 @@ Now you can test each of these services as you want but remember the issue of **
 ### Running the test manually from application level
 -----
 You can also test the service in isolation from docker. The process has already been discussed. You can learn more about the testing from the [Report]()
+
+### Performance Testing
+---
+We will perform performance testing using **Locust**. You can perform locust test directly from your machine as it works independently, if you don't want to install locust globally in your machine you can also test it from **ApiGatewayTwo** as we have virtualenv in our applications and locust is installed in **ApiGatewayTwo**. To start locust testing:
+
+> cd ApiGatewayTwo
+
+> pipenv shell
+
+> pipenv --clear
+
+> locust -f locust.py
+
+Will start the **locust server** on http://localhost:8089/ which you can access from your browser. If locust is running correctly you should see this interface:
+![locust-image](Docs/images/locust.png)
+
+> Next step is to set your load parameters under which you want to test the application. 
+
+> Press Start
+
+The performance test will start and when you stop it, you can go to charts to see the performance:
+
+Running Interface:
+
+![locust-image](Docs/images/locust-running.png)
+
+Result:
+
+![locust-image](Docs/images/locust-result.png)
+
+After stopping locust you will get another aggregated result from the terminal:
+
+![locust-cmd](Docs/images/locust-cmd.png)
