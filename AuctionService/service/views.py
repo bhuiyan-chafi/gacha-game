@@ -6,22 +6,24 @@ from rest_framework import status
 from . import helper
 
 
-def forward_request(method, path, data=None, headers=None):
+def forward_request(method, path, data=None, headers=None, timeout=5):
     """
     Helper function to forward requests to DbmThree Auction endpoints.
     """
     try:
         url = f"{settings.DATABASE_THREE}{path}"
         if method == "GET":
-            response = requests.get(url, headers=headers, verify=False)
+            response = requests.get(
+                url, headers=headers, verify=False, timeout=timeout)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers, verify=False)
+            response = requests.delete(
+                url, headers=headers, verify=False, timeout=timeout)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

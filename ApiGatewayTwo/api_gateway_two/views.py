@@ -5,7 +5,7 @@ from rest_framework import status
 from django.conf import settings
 
 
-def forward_request(service_url, method, path, data, query_params, headers):
+def forward_request(service_url, method, path, data, query_params, headers, timeout=5):
     """
     Helper function to forward requests to UserService.
     """
@@ -15,15 +15,17 @@ def forward_request(service_url, method, path, data, query_params, headers):
             url = f"{url}?{query_params}"
         print('Service Url: '+url)
         if method == "GET":
-            response = requests.get(url, headers=headers, verify=False)
+            response = requests.get(
+                url, headers=headers, verify=False, timeout=timeout)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers, verify=False)
+            response = requests.delete(
+                url, headers=headers, verify=False, timeout=timeout)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

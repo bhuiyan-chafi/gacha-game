@@ -13,15 +13,17 @@ def forward_request(method, path, data=None, headers=None):
     try:
         url = f"{settings.DATABASE_TWO}{path}"
         if method == "GET":
-            response = requests.get(url, verify=False, headers=headers)
+            response = requests.get(
+                url, verify=False, timeout=5, headers=headers)
         elif method == "POST":
             response = requests.post(
-                url, json=data, verify=False, headers=headers)
+                url, json=data, verify=False, timeout=5, headers=headers)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, verify=False, headers=headers)
+                url, json=data, verify=False, timeout=5, headers=headers)
         elif method == "DELETE":
-            response = requests.delete(url, verify=False, headers=headers)
+            response = requests.delete(
+                url, verify=False, timeout=5, headers=headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

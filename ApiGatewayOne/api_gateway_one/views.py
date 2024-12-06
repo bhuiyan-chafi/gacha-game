@@ -15,7 +15,7 @@ def gateWayOneTest(request):
 # === Forward function to forward all the request that needs to access AuthService ===
 
 
-def forward_request(source, method, path, data=None, headers=None):
+def forward_request(source, method, path, data=None, headers=None, timeout=5):
     """
     Helper function to forward requests to AuthService.
     """
@@ -23,15 +23,17 @@ def forward_request(source, method, path, data=None, headers=None):
         url = f"{source}{path}"
         headers = headers or {}
         if method == "GET":
-            response = requests.get(url, headers=headers, verify=False)
+            response = requests.get(
+                url, headers=headers, verify=False, timeout=timeout)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=timeout)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers, verify=False)
+            response = requests.delete(
+                url, headers=headers, verify=False, timeout=timeout)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 

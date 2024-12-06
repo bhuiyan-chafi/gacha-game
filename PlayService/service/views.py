@@ -17,15 +17,17 @@ def forward_request(method, path, data=None, query_params=None, headers=None):
             url = f"{url}?{query_params}"
 
         if method == "GET":
-            response = requests.get(url, headers=headers, verify=False)
+            response = requests.get(
+                url, headers=headers, verify=False, timeout=5)
         elif method == "POST":
             response = requests.post(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=5)
         elif method == "PUT":
             response = requests.put(
-                url, json=data, headers=headers, verify=False)
+                url, json=data, headers=headers, verify=False, timeout=5)
         elif method == "DELETE":
-            response = requests.delete(url, headers=headers, verify=False)
+            response = requests.delete(
+                url, headers=headers, verify=False, timeout=5)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -79,7 +81,7 @@ def rollToWinGacha(request):
 
         user_service_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
         response = requests.get(
-            user_service_url, headers=request.headers, verify=False)
+            user_service_url, headers=request.headers, verify=False, timeout=5)
         if response.status_code == 200:
             # return Response(request.headers, status=status.HTTP_200_OK)
             # Parse the response JSON
@@ -144,7 +146,7 @@ def createPlayerGachaByPurchase(request):
     player_collection_url = f"{settings.DATABASE_THREE}/gacha-collection/player/{player_id}/collection/"
     try:
         collection_response = requests.get(
-            player_collection_url, headers=request.headers, verify=False)
+            player_collection_url, headers=request.headers, verify=False, timeout=5)
         if collection_response.status_code != 200:
             return Response({"detail": "Failed to fetch player's gacha collection."}, status=collection_response.status_code)
 
@@ -163,7 +165,7 @@ def createPlayerGachaByPurchase(request):
     user_detail_url = f"{settings.USER_SERVICE}/user-service/player/{player_id}/details/"
     try:
         player_response = requests.get(
-            user_detail_url, headers=request.headers, verify=False)
+            user_detail_url, headers=request.headers, verify=False, timeout=5)
         if player_response.status_code != 200:
             return Response({"detail": "Failed to fetch player details."}, status=player_response.status_code)
 
@@ -178,7 +180,7 @@ def createPlayerGachaByPurchase(request):
     gacha_detail_url = f"{settings.GACHA_RECORDS_SERVICE}/gacha-service/gacha/{gacha_id}/details/"
     try:
         gacha_response = requests.get(
-            gacha_detail_url, headers=request.headers, verify=False)
+            gacha_detail_url, headers=request.headers, verify=False, timeout=5)
         if gacha_response.status_code != 200:
             return Response({"detail": "Failed to fetch gacha details."}, status=gacha_response.status_code)
 

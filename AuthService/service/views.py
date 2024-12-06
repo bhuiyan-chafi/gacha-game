@@ -13,7 +13,8 @@ def authAppTest(request):
     # Proxy to core service
     try:
         print(f"{settings.DATABASE_ONE}/test")
-        response = requests.get(f"{settings.DATABASE_ONE}/test/", verify=False)
+        response = requests.get(
+            f"{settings.DATABASE_ONE}/test/", verify=False, timeout=5)
         return Response(response.json(), status=response.status_code)
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Core service unavailable", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
@@ -41,7 +42,7 @@ def listOfUsers(request):
     # Proxy to core service
     try:
         response = requests.get(
-            f"{settings.DATABASE_ONE}/user/list", verify=False)
+            f"{settings.DATABASE_ONE}/user/list", verify=False, timeout=5)
         return Response(response.json(), status=response.status_code)
     except requests.exceptions.RequestException as e:
         return Response({"detail": "Core service unavailable", "error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
@@ -57,7 +58,7 @@ def createUser(request):
     try:
         # Forwarding the POST request with data to the core/auth service
         response = requests.post(auth_create_user_url,
-                                 json=request.data, verify=False)
+                                 json=request.data, verify=False, timeout=5)
 
         # Return the response from the backend service to the client
         return Response(response.json(), status=response.status_code)
@@ -78,7 +79,7 @@ def userDetails(request, id):
     service_url = f"{settings.DATABASE_ONE}/user/{id}/details/"
     try:
         if request.method == 'GET':
-            response = requests.get(service_url, verify=False)
+            response = requests.get(service_url, verify=False, timeout=5)
             return Response(response.json(), status=response.status_code)
         elif request.method == 'PUT':
             # Check if the request is authenticated and if the user is an admin
@@ -87,7 +88,7 @@ def userDetails(request, id):
 
             # Forwarding the POST request with data to the core/auth service
             response = requests.put(
-                service_url, json=request.data, verify=False)
+                service_url, json=request.data, verify=False, timeout=5)
 
             # Return the response from the backend service to the client
             return Response(response.json(), status=response.status_code)
@@ -101,7 +102,7 @@ def userDetails(request, id):
 def deleteUser(request, id):
     try:
         response = requests.delete(
-            f"{settings.DATABASE_ONE}/user/{id}/delete/", verify=False)
+            f"{settings.DATABASE_ONE}/user/{id}/delete/", verify=False, timeout=5)
         # why did we checked the status where it is already checked and replied in the application?
         '''The issue arises because 204 No Content specifically means “no content in the response body.” While you are technically returning a JSON response, the HTTP status 204 instructs clients (including requests) to expect no content, which is why response.json() doesn’t work in this case.'''
 
@@ -127,7 +128,8 @@ def loginUser(request):
 
     try:
         # Forward the login request to the core service
-        response = requests.post(login_url, json=request.data, verify=False)
+        response = requests.post(
+            login_url, json=request.data, verify=False, timeout=5)
         if response.status_code != status.HTTP_200_OK:
             return Response({"detail": "User does not match with given credentials!"}, status=response.status_code)
         user = response.json().get('user')
@@ -159,7 +161,7 @@ def logoutUser(request, id):
 
     try:
         # Forward the logout request to the core service
-        response = requests.post(logout_url, verify=False)
+        response = requests.post(logout_url, verify=False, timeout=5)
 
         # Return the response from the core service
         return Response(response.json(), status=response.status_code)
