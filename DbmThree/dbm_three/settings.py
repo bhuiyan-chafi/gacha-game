@@ -24,12 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # nosec
 SECRET_KEY = 'django-insecure-r9)$2+c-vnb%bl-8zu2qvq5p*_c!s1^+h==(6a=b@$9mjj_@&#'
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Path to the SSL certificate
-SSL_CERT_PATH = os.path.join(BASE_DIR, 'certs', 'cert.pem')
+SSL_CERT_PATH = BASE_DIR / 'certs' / 'cert.pem'
 
 # Example usage for requests
 SSL_VERIFY = SSL_CERT_PATH

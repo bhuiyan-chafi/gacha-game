@@ -26,11 +26,8 @@ AUTH_SERVICE = os.getenv("AUTH_SERVICE")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)6xa-6&*9^7#-q@s4dk*-+_g9%5vf$8ee@%!1mk^kh0xt8z$@0'  # nosec
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Path to the SSL certificate
-SSL_CERT_PATH = os.path.join(BASE_DIR, 'certs', 'cert.pem')
+SSL_CERT_PATH = BASE_DIR / 'certs' / 'cert.pem'
 
 # Example usage for requests
 SSL_VERIFY = SSL_CERT_PATH

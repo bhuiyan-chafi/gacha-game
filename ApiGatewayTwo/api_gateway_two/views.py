@@ -89,7 +89,7 @@ def createPlayer(request):
         # Step 1: Check if the user_id exists in the AUTH_SERVICE
         auth_service_url = f"{settings.AUTH_SERVICE}/{user_id}/details/"
         auth_response = requests.get(
-            auth_service_url, verify=settings.SSL_VERIFY)
+            auth_service_url, verify=settings.SSL_VERIFY, timeout=5)
 
         if auth_response.status_code != 200:
             if auth_response.status_code == 404:

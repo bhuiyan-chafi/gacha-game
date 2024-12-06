@@ -28,11 +28,8 @@ SECRET_KEY = 'django-insecure-z^xe0rf%ie2!571920^^f8fh^60v9%gn6=lbi4@vhk@k=tut2o
 SECRET_ENCRYPTION_KEY = b'8LPMlbMBU6YRtyNG-9BOLhMKcr581YnxssNH8baias4='  # nosec
 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Path to the SSL certificate
-SSL_CERT_PATH = os.path.join(BASE_DIR, 'certs', 'cert.pem')
+SSL_CERT_PATH = BASE_DIR / 'certs' / 'cert.pem'
 
 # Example usage for requests
 SSL_VERIFY = SSL_CERT_PATH
