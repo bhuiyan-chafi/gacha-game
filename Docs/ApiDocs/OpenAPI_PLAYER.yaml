@@ -1,0 +1,529 @@
+openapi: 3.0.0
+info:
+  title: API Collection
+  description: APIs for GatewayTwo, including authentication, player management, gacha management, play management, auction management, and transaction services.
+  version: 1.0.0
+servers:
+  - url: "https://localhost:8002"  
+paths:
+  /api/player/user/login/:
+    post:
+      summary: User Login
+      description: Authenticate a user by providing credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: player001
+                password:
+                  type: string
+                  example: Player001@password
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Unauthenticate, unpreviliged access  
+        '403':
+          description: Unauthorized, invalid username or password
+        '400':
+          description: Bad request, invalid input
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/token/verify/:
+    post:
+      summary: Verify Token
+      description: Verify the validity of a token.
+      responses:
+        '200':
+          description: Token verified successfully
+        '401':
+          description: Unauthorized, token is invalid or expired
+        '400':
+          description: Bad request, token missing
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/user/{id}/logout/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: User ID
+    post:
+      summary: Logout
+      description: Logout a user.
+      responses:
+        '200':
+          description: Logout successful
+        '401':
+          description: Unauthorized, user not authenticated
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/create/:
+    post:
+      summary: Create Player
+      description: Create a new player profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 3
+                first_name:
+                  type: string
+                  example: Player
+                last_name:
+                  type: string
+                  example: Two
+                email_address:
+                  type: string
+                  example: player3@outlook.com
+                phone_number:
+                  type: string
+                  example: 3533299793
+                bank_details:
+                  type: string
+                  example: IT1234567895
+                current_balance:
+                  type: integer
+                  example: 1000
+      responses:
+        '201':
+          description: Player created successfully
+        '400':
+          description: Bad request, missing or invalid input,user with provided ID already exists
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+        
+  /api/player/{id}/details/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: player ID
+    put:
+      summary: Update Player Details
+      description: Update details of an existing player.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: Player
+                last_name:
+                  type: string
+                  example: One
+                email_address:
+                  type: string
+                  example: player1@outlook.com
+                phone_number:
+                  type: string
+                  example: 3533299792
+                bank_details:
+                  type: string
+                  example: IT1234567893
+                current_balance:
+                  type: integer
+                  example: 10005
+      responses:
+        '200':
+          description: Player updated successfully
+        '400':
+          description: Bad request, invalid input data
+        '404':
+          description: Player not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+    get:
+      summary: Get Player Details
+      description: Retrieve details of a specific player.
+      responses:
+        '200':
+          description: Player details retrieved successfully
+        '404':
+          description: Player not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/gacha/list/:
+    get:
+      summary: List Gacha Items
+      description: Retrieve a list of all gacha items.
+      responses:
+        '200':
+          description: Gacha list retrieved successfully
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/gacha/{id}/details/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: gacha ID
+    get:
+      summary: Gacha Details
+      description: Retrieve details of a specific gacha.
+      responses:
+        '200':
+          description: Gacha details retrieved successfully
+        '404':
+          description: Gacha item not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/play-service/player/{id}/collection/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: player ID
+    get:
+      summary: Player Gacha Collection
+      description: Retrieve the gacha collection for a specific player.
+      responses:
+        '200':
+          description: Player gacha collection retrieved successfully
+        '404':
+          description: Player or gacha collection not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/play-service/player/collection/{id}/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: gacha ID
+    get:
+      summary: Player Single Gacha Details
+      description: Retrieve details of a single gacha for a specific player.
+      responses:
+        '200':
+          description: Single gacha details retrieved successfully
+        '404':
+          description: Gacha not found for player
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/play-service/roll-to-win/:
+    post:
+      summary: Roll to Win
+      description: Participate in the gacha roll-to-win event.
+      parameters:
+        - name: player_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roll_price:
+                  type: string
+                  example: "50"
+      responses:
+        '201':
+          description: Roll successful
+        '400':
+          description: Bad request, missing or invalid roll price
+        '404':
+          description: Player not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/play-service/direct-purchase/:
+    post:
+      summary: Direct Purchase
+      description: Allow players to purchase a gacha directly.
+      parameters:
+        - name: player_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: gacha_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '201':
+          description: Direct purchase successful
+        '400':
+          description: Bad request, missing or invalid input
+        '404':
+          description: Player or gacha not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/auction/list/:
+    get:
+      summary: List Auctions
+      description: Retrieve a list of all auctions.
+      responses:
+        '200':
+          description: Auction list retrieved successfully
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/auction/{id}/details/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: auction ID
+    get:
+      summary: Auction Details
+      description: Retrieve details of a specific auction.
+      responses:
+        '200':
+          description: Auction details retrieved successfully
+        '404':
+          description: Auction not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/gachas/place/:
+    post:
+      summary: Place Gacha for Auction
+      description: Place a specific gacha item for auction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auction_id:
+                  type: integer
+                  example: 1
+                collection_id:
+                  type: integer
+                  example: 1
+                price:
+                  type: number
+                  example: 100
+                status:
+                  type: string
+                  example: active
+      responses:
+        '201':
+          description: Gacha placed for auction successfully
+        '400':
+          description: Bad request, invalid input
+        '404':
+          description: Auction or gacha not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+
+  /api/player/auction-service/gachas/{id}/list/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: auction ID
+    get:
+      summary: Auction Gachas
+      description: List all gachas in a specific auction.
+      responses:
+        '200':
+          description: Auction gachas retrieved successfully
+        '404':
+          description: Auction not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/gachas/{id}/details/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: gacha ID
+    get:
+      summary: Auction Gacha Details
+      description: Retrieve details of a specific gacha in an auction.
+      responses:
+        '200':
+          description: Auction gacha details retrieved successfully
+        '404':
+          description: Gacha not found in the auction
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/gachas/{gacha-id}/player/{player-id}/bid/:
+    parameters:
+        - name: gacha-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: The ID of the gacha in the auction.
+        - name: player-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 2
+          description: The ID of the player placing the bid.
+    post:
+      summary: Bid for a Gacha
+      description: Place a bid for a gacha in an auction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                  example: 101
+      responses:
+        '201':
+          description: Bid placed successfully
+        '400':
+          description: Bad request, invalid or missing bid price,Conflict, bid price is too low
+        '404':
+          description: Gacha or auction not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/auction-service/gachas/{gacha-id}/bids/:
+    parameters:
+        - in: path
+          name: gacha-id
+          required: true
+          schema:
+            type: integer
+          description: gacha ID
+    get:
+      summary: List of Bids
+      description: Retrieve the list of bids for a specific gacha in an auction.
+      responses:
+        '200':
+          description: List of bids retrieved successfully
+        '404':
+          description: Gacha or auction not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/transaction-service/player/{id}/purchase/game-currency/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: player ID
+    post:
+      summary: Purchase Game Currency
+      description: Allow a player to purchase game currency.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cash_amount:
+                  type: string
+                  example: "20"
+     
+          
+            
+      responses:
+        '201':
+          description: Game currency purchased successfully
+        '400':
+          description: Bad request, invalid or missing cash amount
+        '404':
+          description: Player not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+  /api/player/transaction-service/player/{id}/all/:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: player ID
+    get:
+      summary: Player Transactions
+      description: Retrieve all transactions for a specific player.
+      responses:
+        '200':
+          description: Player transactions retrieved successfully
+        '404':
+          description: Player not found
+        '500':
+          description: Internal server error
+        '503': 
+         description: requested service is not responding
+

@@ -15,7 +15,8 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   dbm_one:
     build: ./DbmOne
@@ -28,7 +29,8 @@ services:
     ports:
       - 6001:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   dbm_two:
     build: ./DbmTwo
@@ -41,7 +43,8 @@ services:
     ports:
       - 6002:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   dbm_three:
     build: ./DbmThree
@@ -54,7 +57,8 @@ services:
     ports:
       - 6003:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   auth_service:
     build: ./AuthService
@@ -69,7 +73,8 @@ services:
     ports:
       - 4001:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   user_service:
     build: ./UserService
@@ -84,7 +89,8 @@ services:
     ports:
       - 4002:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   gacha_service:
     build: ./GachaService
@@ -101,7 +107,8 @@ services:
     ports:
       - 4003:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   play_service:
     build: ./PlayService
@@ -118,7 +125,8 @@ services:
     ports:
       - 4004:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   auction_service:
     build: ./AuctionService
@@ -137,7 +145,8 @@ services:
     ports:
       - 4005:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   transaction_service:
     build: ./TransactionService
@@ -156,7 +165,8 @@ services:
     ports:
       - 4006:8000
     networks:
-      - app_network
+      - services_network
+      - shared_services_network
 
   gateway_one:
     build: ./ApiGatewayOne
@@ -169,7 +179,8 @@ services:
     ports:
       - 8001:8000
     networks:
-      - app_network
+      - gateway_one_network
+      - shared_services_network
 
   gateway_two:
     build: ./ApiGatewayTwo
@@ -184,12 +195,19 @@ services:
     ports:
       - 8002:8000
     networks:
-      - app_network
+      - gateway_two_network
+      - shared_services_network
 
 volumes:
   gacha_db:
 
 
 networks:
-  app_network:
-    name: gachafinaldockered_app_network
+  services_network:
+    name: gachafinaldockered_services_network
+  gateway_one_network:
+    name: gachafinaldockered_gateway_one_network
+  gateway_two_network:
+    name: gachafinaldockered_gateway_two_network
+  shared_services_network:
+    name: gachafinaldockered_shared_services_network

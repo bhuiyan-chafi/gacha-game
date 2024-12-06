@@ -126,8 +126,8 @@ class PlayServiceTests(APITestCase):
             headers=self.auth_headers,
         )
         # Debugging: Print response details
-        print("Response Status Code:", response.status_code)
-        print("Response Data:", response.data)
+        # print("Response Status Code:", response.status_code)
+        # print("Response Data:", response.data)
 
         # Assertions
         self.assertEqual(response.status_code, 200)

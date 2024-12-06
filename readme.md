@@ -12,7 +12,8 @@
 
 ## Documentation and Game Rules
 - [Game Rules]()
-- [API Documentation]()
+- [API Documentation for Admins](Docs/ApiDocs/OpenAPI_ADMIN.yaml)
+- [API Documentation for Players](Docs/ApiDocs/OpenAPI_PLAYER.yaml)
 - [Architecture PDF]()
 ---
 ## Prerequisities

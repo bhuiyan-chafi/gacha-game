@@ -1,0 +1,1013 @@
+openapi: 3.0.1
+info:
+  title: GatewayOne API
+  description: Gateway one holds all the API endpoints for admins.
+  version: 1.0.0
+servers:
+  - url: "https://localhost:8001/api/admin"
+
+paths:
+  # Authentication Endpoints
+  /user/login/:
+    post:
+      summary: Login
+      description: Authenticate user with username and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin001
+                password:
+                  type: string
+                  example: Admin001@password
+      responses:
+        '200':
+          description: Login successful. Returns a token for authentication.
+        '400':
+          description: Invalid request body or missing required fields.
+        '401':
+          description: Invalid credentials provided.
+        '403':
+          description: Access denied. User does not have permission.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Server error while processing the login request.
+        '503':
+          description: Authentication service is unavailable.
+
+  /token/verify/:
+    post:
+      summary: Verify Token
+      description: Verify the validity of a token.
+      responses:
+        '200':
+          description: Token is valid.
+        '400':
+          description: Missing or invalid token in the request body.
+        '401':
+          description: Token has expired or is invalid.
+        '403':
+          description: Access to this operation is forbidden.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Server error while verifying the token.
+        '503':
+          description: Token verification service is unavailable.
+
+  /user/{id}/logout/:
+    post:
+      summary: Logout
+      description: Logout a user session.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: User ID
+      responses:
+        '200':
+          description: Logout successful. The session has been terminated.
+        '400':
+          description: Invalid request or missing user ID.
+        '401':
+          description: User is not authenticated.
+        '403':
+          description: User does not have permission to log out this session.
+        '404':
+          description: User not found or endpoint not found.
+        '500':
+          description: Server error during logout operation.
+        '503':
+          description: Logout service is unavailable.
+
+  # User Management Endpoints
+  /user/list/:
+    get:
+      summary: List Users
+      description: Retrieve a list of all users.
+      responses:
+        '200':
+          description: List of users retrieved successfully.
+        '400':
+          description: Invalid request.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to access the user list.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Error retrieving the user list from the server.
+        '503':
+          description: User service is unavailable.
+
+  /user/create/:
+    post:
+      summary: Create User
+      description: Add a new user to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin001
+                password:
+                  type: string
+                  example: Admin001@password
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+                role:
+                  type: string
+                  enum: [admin, user]
+                  example: admin
+      responses:
+        '201':
+          description: User created successfully.
+        '400':
+          description: Invalid input - User creation failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to create a user.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Server error while creating the user.
+        '503':
+          description: User creation service is unavailable.
+
+  /user/{id}/details/:
+    get:
+      summary: Get User Details
+      description: Retrieve details of a specific user by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: User ID
+      responses:
+        '200':
+          description: User details retrieved successfully.
+        '400':
+          description: Invalid request or user ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to access user details.
+        '404':
+          description: User not found.
+        '500':
+          description: Error retrieving user details from the server.
+        '503':
+          description: User service is unavailable.
+
+    put:
+      summary: Update User Details
+      description: Update details of a specific user.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: User ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin001
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: inactive
+      responses:
+        '200':
+          description: User updated successfully.
+        '400':
+          description: Invalid input - Update failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to update user details.
+        '404':
+          description: User not found.
+        '500':
+          description: Server error while updating the user.
+        '503':
+          description: User update service is unavailable.
+
+  /user/{id}/delete/:
+    delete:
+      summary: Delete User
+      description: Remove a user by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: User ID
+      responses:
+        '204':
+          description: User deleted successfully.
+        '400':
+          description: Invalid request or user ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to delete the user.
+        '404':
+          description: User not found.
+        '500':
+          description: Server error while deleting the user.
+        '503':
+          description: User deletion service is unavailable.
+
+  # Admin Management Endpoints
+  /admin/list/:
+    get:
+      summary: List Admins
+      description: Retrieve a list of all admins.
+      responses:
+        '200':
+          description: List of admins retrieved successfully.
+        '400':
+          description: Invalid request.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to access the admin list.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Error retrieving the admin list from the server.
+        '503':
+          description: Admin service is unavailable.
+          
+  # Admin Management Endpoints
+  /admin/create/:
+    post:
+      summary: Create Admin
+      description: Add a new admin to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 2
+                first_name:
+                  type: string
+                  example: CHAFIULLAH
+                last_name:
+                  type: string
+                  example: BHUIYAN
+                email_address:
+                  type: string
+                  format: email
+                  example: chafiullah@test.com
+                phone_number:
+                  type: string
+                  example: 3533299790
+      responses:
+        '201':
+          description: Admin created successfully.
+        '400':
+          description: Invalid input - Admin creation failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to create an admin.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Server error while creating the admin.
+        '503':
+          description: Admin creation service is unavailable.
+
+  /admin/{id}/details/:
+    get:
+      summary: Get Admin Details
+      description: Retrieve details of a specific admin.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Admin ID
+      responses:
+        '200':
+          description: Admin details retrieved successfully.
+        '400':
+          description: Invalid admin ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to view admin details.
+        '404':
+          description: Admin not found.
+        '500':
+          description: Error retrieving admin details.
+        '503':
+          description: Admin service is unavailable.
+
+    put:
+      summary: Update Admin Details
+      description: Update details of a specific admin.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Admin ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                first_name:
+                  type: string
+                  example: CHAFIULLAH
+                last_name:
+                  type: string
+                  example: BHUIYAN
+                email_address:
+                  type: string
+                  format: email
+                  example: chafiullah@test.com
+                phone_number:
+                  type: string
+                  example: 3533299790
+      responses:
+        '200':
+          description: Admin updated successfully.
+        '400':
+          description: Invalid input - Update failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to update admin details.
+        '404':
+          description: Admin not found.
+        '500':
+          description: Server error while updating the admin.
+        '503':
+          description: Admin update service is unavailable.
+
+  /admin/{id}/delete/:
+    delete:
+      summary: Delete Admin
+      description: Remove a specific admin.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Admin ID
+      responses:
+        '204':
+          description: Admin deleted successfully.
+        '400':
+          description: Invalid admin ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to delete the admin.
+        '404':
+          description: Admin not found.
+        '500':
+          description: Server error while deleting the admin.
+        '503':
+          description: Admin deletion service is unavailable.
+
+  # Player Management Endpoints
+  /player/list/:
+    get:
+      summary: List Players
+      description: Retrieve a list of all players.
+      responses:
+        '200':
+          description: List of players retrieved successfully.
+        '400':
+          description: Invalid request.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to access the player list.
+        '404':
+          description: Endpoint not found.
+        '500':
+          description: Error retrieving the player list from the server.
+        '503':
+          description: Player service is unavailable.
+
+  # Player Management Endpoints
+  /player/{id}/details/:
+    get:
+      summary: Get Player Details
+      description: Retrieve details of a specific player.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Player ID
+      responses:
+        '200':
+          description: Player details retrieved successfully.
+        '400':
+          description: Invalid player ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to view player details.
+        '404':
+          description: Player not found.
+        '500':
+          description: Server error while retrieving player details.
+        '503':
+          description: Player service is unavailable.
+
+    put:
+      summary: Update Player Details
+      description: Modify details of a specific player.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Player ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: Player
+                last_name:
+                  type: string
+                  example: One
+                email_address:
+                  type: string
+                  format: email
+                  example: player1@outlook.com
+                phone_number:
+                  type: string
+                  example: 3533299792
+                bank_details:
+                  type: string
+                  example: IT1234567893
+                current_balance:
+                  type: number
+                  example: 10005
+      responses:
+        '200':
+          description: Player updated successfully.
+        '400':
+          description: Invalid input - Update failed.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to update player details.
+        '404':
+          description: Player not found.
+        '500':
+          description: Server error while updating player details.
+        '503':
+          description: Player update service is unavailable.
+
+    delete:
+      summary: Delete Player
+      description: Remove a specific player.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Player ID
+      responses:
+        '204':
+          description: Player deleted successfully.
+        '400':
+          description: Invalid player ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to delete player.
+        '404':
+          description: Player not found.
+        '500':
+          description: Server error while deleting player.
+        '503':
+          description: Player deletion service is unavailable.
+
+  /play-service/player/{id}/collection/:
+    get:
+      summary: Get Player Gacha Collection
+      description: Retrieve the gacha collection for a specific player.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Player ID
+      responses:
+        '200':
+          description: Player gacha collection retrieved successfully.
+        '400':
+          description: Invalid player ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to view player gacha collection.
+        '404':
+          description: Player not found.
+        '500':
+          description: Server error while retrieving player gacha collection.
+        '503':
+          description: Gacha service is unavailable.
+
+  /play-service/player/collection/{id}/:
+    get:
+      summary: Get Player Single Gacha Details
+      description: Retrieve details for a specific gacha in a player's collection.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '200':
+          description: Player single gacha details retrieved successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to view gacha details.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while retrieving gacha details.
+        '503':
+          description: Gacha service is unavailable.
+
+  /transaction-service/player/{id}/all/:
+    get:
+      summary: Get Player Transactions
+      description: Retrieve all transactions for a specific player.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Player ID
+      responses:
+        '200':
+          description: Player transactions retrieved successfully.
+        '400':
+          description: Invalid player ID format.
+        '401':
+          description: User not authenticated.
+        '403':
+          description: Insufficient permissions to view player transactions.
+        '404':
+          description: Player not found.
+        '500':
+          description: Server error while retrieving player transactions.
+        '503':
+          description: Transaction service is unavailable.
+
+  # Gacha Management Endpoints
+  /gacha/list/:
+    get:
+      summary: List Gachas
+      description: Retrieve a list of all gachas.
+      responses:
+        '200':
+          description: List of gachas retrieved successfully.
+        '400':
+          description: Invalid request format.
+        '500':
+          description: Server error while retrieving gachas.
+        '503':
+          description: Gacha service is temporarily unavailable.
+
+  /gacha/create/:
+    post:
+      summary: Create Gacha
+      description: Add a new gacha.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Teemu
+                rarity:
+                  type: integer
+                  example: 95
+                inventory:
+                  type: integer
+                  example: 12
+                price:
+                  type: number
+                  example: 150
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+                description:
+                  type: string
+                  example: "Teemu is a rare character."
+                image:
+                  type: string
+                  format: binary
+                  example: teemu.png
+      responses:
+        '201':
+          description: Gacha created successfully.
+        '400':
+          description: Invalid input - Gacha creation failed.
+        '500':
+          description: Server error while creating the gacha.
+        '503':
+          description: Gacha creation service is unavailable.
+
+  /gacha/{id}/details/:
+    get:
+      summary: Get Gacha Details
+      description: Retrieve details of a specific gacha.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '200':
+          description: Gacha details retrieved successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while retrieving gacha details.
+        '503':
+          description: Gacha service is temporarily unavailable.
+
+    put:
+      summary: Update Gacha Details
+      description: Modify details of a specific gacha.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Azir
+                rarity:
+                  type: integer
+                  example: 10
+                inventory:
+                  type: integer
+                  example: 50
+                price:
+                  type: number
+                  example: 80
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: inactive
+      responses:
+        '200':
+          description: Gacha updated successfully.
+        '400':
+          description: Invalid input - Update failed.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while updating gacha details.
+        '503':
+          description: Gacha update service is temporarily unavailable.
+
+    delete:
+      summary: Delete Gacha
+      description: Remove a specific gacha.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '204':
+          description: Gacha deleted successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while deleting gacha.
+        '503':
+          description: Gacha deletion service is temporarily unavailable.
+
+  # Auction Management Endpoints
+  /auction-service/auction/create/:
+    post:
+      summary: Create Auction
+      description: Add a new auction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Easter Sell
+                start_date:
+                  type: string
+                  format: date-time
+                  example: 2024-11-11T00:00:00Z
+                end_date:
+                  type: string
+                  format: date-time
+                  example: 2024-11-11T00:00:00Z
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: inactive
+      responses:
+        '201':
+          description: Auction created successfully.
+        '400':
+          description: Invalid input - Auction creation failed.
+        '500':
+          description: Server error while creating auction.
+        '503':
+          description: Auction creation service is temporarily unavailable.
+
+  /auction-service/auction/list/:
+    get:
+      summary: List Auctions
+      description: Retrieve a list of all auctions.
+      responses:
+        '200':
+          description: List of auctions retrieved successfully.
+        '400':
+          description: Invalid request format.
+        '500':
+          description: Server error while retrieving auctions.
+        '503':
+          description: Auction service is temporarily unavailable.
+
+  /auction-service/auction/{id}/details/:
+    get:
+      summary: Get Auction Details
+      description: Retrieve details of a specific auction.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Auction ID
+      responses:
+        '200':
+          description: Auction details retrieved successfully.
+        '400':
+          description: Invalid auction ID format.
+        '404':
+          description: Auction not found.
+        '500':
+          description: Server error while retrieving auction details.
+        '503':
+          description: Auction service is temporarily unavailable.
+
+    put:
+      summary: Update Auction Details
+      description: Modify details of a specific auction.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Auction ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: Black Friday Sell
+                start_date:
+                  type: string
+                  format: date-time
+                  example: 2024-11-11T00:00:00Z
+                end_date:
+                  type: string
+                  format: date-time
+                  example: 2024-11-11T00:00:00Z
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+      responses:
+        '200':
+          description: Auction updated successfully.
+        '400':
+          description: Invalid input - Update failed.
+        '404':
+          description: Auction not found.
+        '500':
+          description: Server error while updating auction.
+        '503':
+          description: Auction update service is temporarily unavailable.
+
+    delete:
+      summary: Delete Auction
+      description: Remove a specific auction.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Auction ID
+      responses:
+        '204':
+          description: Auction deleted successfully.
+        '400':
+          description: Invalid auction ID format.
+        '404':
+          description: Auction not found.
+        '500':
+          description: Server error while deleting auction.
+        '503':
+          description: Auction deletion service is temporarily unavailable.
+
+  /auction-service/gachas/{id}/list/:
+    get:
+      summary: List Auction Gachas
+      description: Retrieve all gachas for a specific auction.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Auction ID
+      responses:
+        '200':
+          description: List of auction gachas retrieved successfully.
+        '400':
+          description: Invalid auction ID format.
+        '404':
+          description: Auction not found.
+        '500':
+          description: Server error while retrieving auction gachas.
+        '503':
+          description: Auction gachas service is temporarily unavailable.
+
+  /auction-service/gachas/{id}/details/:
+    get:
+      summary: Get Auction Gacha Details
+      description: Retrieve details of a specific gacha in an auction.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '200':
+          description: Auction gacha details retrieved successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while retrieving gacha details.
+        '503':
+          description: Gacha service is temporarily unavailable.
+
+  /auction-service/gachas/{id}/bids/:
+    get:
+      summary: List Bids
+      description: Retrieve all bids for a specific auction gacha.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '200':
+          description: List of bids retrieved successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while retrieving bids.
+        '503':
+          description: Bids service is temporarily unavailable.
+
+  /auction-service/gachas/{id}/bids/winner/:
+    get:
+      summary: Get Winning Bid
+      description: Retrieve the winning bid for a specific gacha.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Gacha ID
+      responses:
+        '200':
+          description: Winning bid retrieved successfully.
+        '400':
+          description: Invalid gacha ID format.
+        '404':
+          description: Gacha not found.
+        '500':
+          description: Server error while retrieving the winning bid.
+        '503':
+          description: Winning bid service is temporarily unavailable.
+
+  /test/:
+    get:
+      summary: Gateway Test
+      description: Test the gateway endpoint.
+      responses:
+        '200':
+          description: Gateway is operational.
